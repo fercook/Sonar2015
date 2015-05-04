@@ -103,9 +103,9 @@ function ready(error, fulllog) {
     records_by_time = records.dimension(function (d) {
         return Math.floor(d.time / (2*15.0)); // Why is this 2*minutes???
     });
-    records_by_room = records.dimension(function (d) {
-        return d.room;
-    });
+//   records_by_room = records.dimension(function (d) {
+//        return d.room;
+//    });
     records_by_id = records.dimension(function (d) {
         return d.id;
     });
@@ -152,9 +152,11 @@ function ready(error, fulllog) {
             var enter_idx = maxindex(records_by_id.top(Infinity), function (d) {
                 return d.time;
             });
-            var start_room = records_by_id.top(Infinity)[start_idx].room;
-            var enter_room = records_by_id.top(Infinity)[enter_idx].room;
-            analysis.links[linkidx(t, start_room, enter_room)]["value"] += 1;
+            if (start_idx>=0 && enter_idx>=0) {
+                var start_room = records_by_id.top(Infinity)[start_idx].room;
+                var enter_room = records_by_id.top(Infinity)[enter_idx].room;
+                analysis.links[linkidx(t, start_room, enter_room)]["value"] += 1;
+            }
         });
         records_by_id.filterAll();
     }
@@ -185,7 +187,7 @@ function draw() {
         .attr("class", "link")
         .attr("d", path)
         .style("stroke-width", function (d) {
-            return Math.max(1, d.dy);
+            return Math.max(0, d.dy);
         })
         .style("stroke", function (d) {
           if (d.source.room == 4 || d.target.room == 4) {return colors(d.source.room);}
