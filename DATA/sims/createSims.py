@@ -4,7 +4,7 @@ import json
 import math
 
 tendency_to_stay = 0.7
-num_personas = 500
+num_personas = 1000
 num_salas = 6
 time_steps = 3600*12 # In Seconds
 sampling_frequency = 30 # In seconds
@@ -70,17 +70,21 @@ separated_log = open("separated.json",'w') #Open file
 separated_times = []
 joined_times = []
 sigma = 2.0*3600 # 3 hs width
-enter_peak = 4.0*3600 # at 4 pm
-exit_peak = 9.0*3600 # at 9 pm
+enter_peak = 3.0*3600 # at 4 pm
+exit_peak = 8.0*3600 # at 9 pm
+total_people = 0
+out_people = 0
 for t in range(time_steps/sampling_frequency):
     if (dynamic_population):
         # New people
         time = ((t*sampling_frequency)-enter_peak)/sigma
-        new_people = int(sampling_frequency*(num_personas*math.exp(-0.5*time)/(math.sqrt(2)*sigma)))
+        new_people = int(sampling_frequency*(num_personas*math.exp(-0.5*time*time)/(math.sqrt(2)*sigma)))
+        total_people = total_people + new_people
         for n in range(new_people):
             personas.append(Person(4))
         time = ((t*sampling_frequency)-exit_peak)/sigma
-        num_exit_people = int(prob_leaving*sampling_frequency*len(personas)*math.exp(-0.5*time)/(math.sqrt(2)*sigma))    
+        num_exit_people = int(sampling_frequency*len(personas)*math.exp(-0.5*time*time)/(math.sqrt(2)*sigma))  
+        out_people = out_people+num_exit_people
         exit_people = []
         for n in range(num_exit_people):
             exit_people.append( int(num_exit_people * random.random()) )
@@ -93,4 +97,5 @@ for t in range(time_steps/sampling_frequency):
             separated_times.append(p.to_dic(t))
 separated_log.write(json.dumps(separated_times))
 
-print (str(len(personas))+" people entered")
+print (str(total_people)+" people entered")
+print (str(out_people)+" people exited")
