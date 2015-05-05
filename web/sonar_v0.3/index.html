@@ -2,18 +2,31 @@
 
 <link rel="stylesheet" type="text/css" href="../bootstrap.css">
 <link rel="stylesheet" type="text/css" href="sonar_style.css">
-    
+
 <head>
     <script src="../jquery-1.11.2.min.js"></script>
     <script src="../d3.v3.min.js"></script>
     <script src="../queue.v1.min.js"></script>
     <script src="../crossfilter.v1.min.js"></script>
+    <script type="text/javascript" src="../dat.gui.min.js"></script>
     <script src="sankeyStream.js"></script>
 </head>
 
 <body>
     <div id="svg"></div>
-
+    <script>
+        window.onload = function () {
+            var sonargraph = new CreateGraph();
+            var gui = new dat.GUI();
+            gui.remember(sonargraph);
+            gui.add(sonargraph, 'graphWidth', 100, 6000);
+            gui.add(sonargraph, 'graphHeight', 100, 2000);
+            gui.add(sonargraph, 'svgHeight', 100, 2000);
+            gui.add(sonargraph, 'nodeWidth', 0, 1);
+            gui.add(sonargraph, 'nodePadding', 0, 100);
+            gui.add(sonargraph, 'offset', ['Centered', 'Top', 'Bottom']);
+        };
+    </script>
     <script src="sonarSankey.js"></script>
 
 </body>
