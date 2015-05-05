@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<title>Tarjetas Oscuras - 1</title>
+<style>
+    #chart {
+        height: 900px;
+    }
+    .node rect {
+        cursor: move;
+        fill-opacity: .9;
+        shape-rendering: crispEdges;
+    }
+    .node text {
+        font-family: sans-serif;
+        font-size: 9pt;
+        pointer-events: none;
+        text-shadow: 0 1px 0 #fff;
+    }
+    .link {
+        fill: none;
+        stroke: #000;
+        stroke-opacity: .2;
+    }
+    .link:hover {
+        stroke-opacity: .5;
+    }
+</style>
+
+<body>
+
+    <p id="chart">
+
+       <!-- <script src="http://d3js.org/d3.v2.min.js?2.9.1"></script> -->
+        <script src="../d3/d3.min.js"></script>
+        <script src="sankey.js"></script>
+        <script>
+            var margin = {
+                    top: 10,
+                    right: 1,
+                    bottom: 10,
+                    left: 1
+                },
+                width = 960 - margin.left - margin.right,
+                height = 2500 - margin.top - margin.bottom;
+
+            var formatNumber = d3.format(",.0f"),
+                format = function (d) {
+                    return formatNumber(d) + " €";
+                },
+                color = {"PP": "steelblue", "PSOE": "red", "Caja Madrid": "lightgreen",
+                        "CC.OO.": "grey", "Consejero ejecutivo": "yellow", "IU": "violet",
+                         "Patronal CEIM": "white", "Responsable de la Direccion de Riesgos": "darkgreen",
+                         "UGT": "pink", "Gasto": "tan"
+                        };//d3.scale.category20();                    
+
+            var svg = d3.select("#chart").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            
+            var sankey = d3.sankey()
+                .nodeWidth(50)
+                .nodePadding(10)
+                .size([width, height]);
+
+            var path = sankey.link();
+
+            d3.json("tarjetas_oscuras.json", function (rawdata) {
+                chorisycategorias = [];
+                choris = {};
+                newcatidx = 0;
+                var gastoAbsoluto = 0;
+                rawdata.people.forEach(function (chori) {
+                    choris[chori.name] = {
+                        idx: newcatidx, total: Math.abs(parseFloat(chori.total)),
+                        gasto: {}
+                    };
+                    newcatidx = newcatidx + 1;
+                    chorisycategorias.push({"name": chori.name, "party": chori.partido});
+                });
+                console.log(chorisycategorias);
+                categories = {};
+                rawdata.people.forEach(function (chori) {
+                    chori.entries.forEach(function (entry) {
+                        if (entry.activity in categories) { // We already have cat in the dic
+                            thecat = categories[entry.activity];
+                        } else { // This category is not in dic still
+                            categories[entry.activity] = newcatidx;
+                            thecat = newcatidx;
+                            chorisycategorias.push(
+                                {"name": entry.activity, "party": "Gasto"});
+                            newcatidx = newcatidx + 1;
+                        }
+                        var esteGasto = Math.abs(parseFloat(entry.amount));
+                        if (thecat in choris[chori.name].gasto) {
+                            choris[chori.name].gasto[thecat] = choris[chori.name].gasto[thecat] + esteGasto;
+                        } else {
+                            choris[chori.name].gasto[thecat] = esteGasto;
+                        }
+                        gastoAbsoluto=gastoAbsoluto + esteGasto;
+                    });
+                });
+                links = [];
+                gastosComparison = 0;
+                gastoAcumulado = 0;
+                for (var choriname in choris) {
+                    chori = choris[choriname];
+                    localg=0;
+                    trueg=chori.total;
+                    for (var catidx in chori.gasto) {
+                        localg=localg+chori.gasto[catidx];
+                        if (gastoAcumulado>gastoAbsoluto/2) {
+                            links.push({
+                                "source": chori.idx,
+                                "target": parseInt(catidx),
+                                "value": chori.gasto[catidx]
+                            });
+                        } else { // Invertimos y pasamos los choris a la derecaha
+                            links.push({
+//                                "source": parseInt(catidx),
+//                                "target": chori.idx,
+                                "source": chori.idx,
+                                "target": parseInt(catidx),
+                                "value": chori.gasto[catidx]
+                            });                            
+                        }
+                    }
+                    gastoAcumulado=gastoAcumulado+trueg;
+                    gastosComparison=gastosComparison+Math.abs(trueg-localg);
+                }
+                if (gastosComparison> 1e-5) {
+                    console.log();
+                    alert("mierda, expenses don't match");    
+                }
+                cleandata = {"nodes": chorisycategorias,
+                    "links": links};
+                console.log(cleandata);
+
+                sankey
+                    .nodes(cleandata.nodes)
+                    .links(cleandata.links)
+                    .layout(32);
+
+                var link = svg.append("g").selectAll(".link")
+                    .data(cleandata.links)
+                    .enter().append("path")
+                    .attr("class", "link")
+                    .attr("d", path)
+                    .style("stroke-width", function (d) {
+                        return Math.max(1, d.dy);
+                    })
+                    .sort(function (a, b) {
+                        return b.dy - a.dy;
+                    });
+
+                link.append("title")
+                    .text(function (d) {
+                        return d.source.name + " → " + d.target.name + "\n" + format(d.value);
+                    });
+
+                var node = svg.append("g").selectAll(".node")
+                    .data(cleandata.nodes)
+                    .enter().append("g")
+                    .attr("class", "node")
+                    .attr("transform", function (d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    })
+                    .call(d3.behavior.drag()
+                        .origin(function (d) {
+                            return d;
+                        })
+                        .on("dragstart", function () {
+                            this.parentNode.appendChild(this);
+                        })
+                        .on("drag", dragmove));
+
+                node.append("rect")
+                    .attr("height", function (d) {
+                        return d.dy;
+                    })
+                    .attr("width", sankey.nodeWidth())
+                    .style("fill", function (d) {
+                        return d.color = color[d.party];
+                    })
+                    .style("stroke", function (d) {
+                        return d3.rgb(d.color).darker(2);
+                    })
+                    .append("title")
+                    .text(function (d) {
+                        return d.name + "\n" + format(d.value);
+                    });
+
+                node.append("text")
+                    .attr("x", -6)
+                    .attr("y", function (d) {
+                        return d.dy / 2;
+                    })
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", "end")
+                    .attr("transform", null)
+                    .text(function (d) {
+                        return d.name;
+                    })
+                    .filter(function (d) {
+                        return d.x < width / 2;
+                    })
+                    .attr("x", 6 + sankey.nodeWidth())
+                    .attr("text-anchor", "start");
+
+                
+                claves = ["PP", "PSOE", "Caja Madrid", "CC.OO.", "Consejero ejecutivo", "IU", "Patronal CEIM", "Responsable de la Direccion de Riesgos", "UGT", "Gasto"];
+                labelHeight = 10;
+                labelWidth = 30;
+                labelPadding = 5;
+                
+                labels = svg.append("g")
+                    .attr("transform", "translate(" + (width-labelWidth) + "," + 10 + ")")
+                    .selectAll(".label")
+                    .data(claves)
+                    .enter().append("g")
+                    .attr("class", "node")
+                    .attr("transform", function (d,i) {
+                        return "translate(" + 0 + "," + (i*(labelHeight+labelPadding)) + ")";
+                    });
+                
+                labels.append("rect")
+                    .attr("height", labelHeight+"px")
+                    .attr("width", labelWidth+"px")
+                    .style("fill", function (d) {return color[d];})
+                    .style("stroke", function (d) {
+                        return d3.rgb(color[d]).darker(2);
+                    })
+                    .append("title")
+                    .text(function (d) {
+                        return d.name + "\n" + format(d.value);
+                    });
+                
+                labels.append("text")
+                    .attr("x", -labelWidth)
+                    .attr("y", labelHeight/2 )
+                    .attr("dy", ".35em")
+                    .attr("dx", -labelWidth*2)
+                    .attr("text-anchor", "end")
+                    .attr("transform", null)
+                    .text(function (d) {return d;})
+                    .attr("x", 6 + sankey.nodeWidth())
+                    ;// .attr("text-anchor", "left");
+
+                    
+
+                function dragmove(d) {
+                    d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
+                    sankey.relayout();
+                    link.attr("d", path);
+                }
+            });
+        </script>
+
+
+
+        <!--
+
+d3.json("energy.json", function(energy) {
+
+  sankey
+      .nodes(energy.nodes)
+      .links(energy.links)
+      .layout(32);
+
+  var link = svg.append("g").selectAll(".link")
+      .data(energy.links)
+    .enter().append("path")
+      .attr("class", "link")
+      .attr("d", path)
+      .style("stroke-width", function(d) { return Math.max(1, d.dy); })
+      .sort(function(a, b) { return b.dy - a.dy; });
+
+  link.append("title")
+      .text(function(d) { return d.source.name + " → " + d.target.name + "\n" + format(d.value); });
+
+  var node = svg.append("g").selectAll(".node")
+      .data(energy.nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
+    .call(d3.behavior.drag()
+      .origin(function(d) { return d; })
+      .on("dragstart", function() { this.parentNode.appendChild(this); })
+      .on("drag", dragmove));
+
+  node.append("rect")
+      .attr("height", function(d) { return d.dy; })
+      .attr("width", sankey.nodeWidth())
+      .style("fill", function(d) { return d.color = color(d.name.replace(/ .*/, "")); })
+      .style("stroke", function(d) { return d3.rgb(d.color).darker(2); })
+    .append("title")
+      .text(function(d) { return d.name + "\n" + format(d.value); });
+
+  node.append("text")
+      .attr("x", -6)
+      .attr("y", function(d) { return d.dy / 2; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", "end")
+      .attr("transform", null)
+      .text(function(d) { return d.name; })
+    .filter(function(d) { return d.x < width / 2; })
+      .attr("x", 6 + sankey.nodeWidth())
+      .attr("text-anchor", "start");
+
+  function dragmove(d) {
+    d3.select(this).attr("transform", "translate(" + d.x + "," + (d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))) + ")");
+    sankey.relayout();
+    link.attr("d", path);
+  }
+});
+
+
+-->
