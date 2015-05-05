@@ -16,15 +16,14 @@
     <div id="svg"></div>
     <script>
         window.onload = function () {
-            var sonargraph = new CreateGraph();
             var gui = new dat.GUI();
-            gui.remember(sonargraph);
-            gui.add(sonargraph, 'graphWidth', 100, 6000);
-            gui.add(sonargraph, 'graphHeight', 100, 2000);
-            gui.add(sonargraph, 'svgHeight', 100, 2000);
-            gui.add(sonargraph, 'nodeWidth', 0, 1);
-            gui.add(sonargraph, 'nodePadding', 0, 100);
-            gui.add(sonargraph, 'offset', ['Centered', 'Top', 'Bottom']);
+            gui.remember(GraphParameters);
+            gui.add(GraphParameters, 'graphWidth', 100, 6000).onFinishChange(draw);
+            gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'svgHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'nodeWidth', 0, 1).onFinishChange(draw);
+            gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
+            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);          
         };
     </script>
     <script src="sonarSankey.js"></script>
