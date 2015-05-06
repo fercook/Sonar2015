@@ -18,52 +18,58 @@ function ready(error, data) {
 }
 
 function draw() {
-    
-d3.selectAll("svg").remove();
 
-var width = $("#svg").width(),
-    m_width = GraphParameters.graphWidth,
-    m_height = GraphParameters.graphHeight,
-    height = GraphParameters.svgHeight,
-    nodePadding = GraphParameters.nodePadding,
-    nodeWidth = GraphParameters.nodeWidth,
-    curvature = GraphParameters.curvature,
-    offset = GraphParameters.offset;
+    d3.selectAll("svg").remove();
 
-var svg = d3.select("#svg").append("svg")
-    .attr("preserveAspectRatio", "xMidYMid")
-    .attr("viewBox", "0 0 " + GraphParameters.graphWidth + " " + height)
-    .attr("width", GraphParameters.graphWidth)
-    .attr("height", height);
+    var width = $("#svg").width(),
+        m_width = GraphParameters.graphWidth,
+        m_height = GraphParameters.graphHeight,
+        height = GraphParameters.svgHeight,
+        nodePadding = GraphParameters.nodePadding,
+        nodeWidth = GraphParameters.nodeWidth,
+        curvature = GraphParameters.curvature,
+        offset = GraphParameters.offset;
 
-svg.append("rect")
-    .attr("class", "sea")
-    .attr("width", GraphParameters.graphWidth)
-    .attr("height", height)
-    .style("fill", "white");
-//    .on("click", click);
+    svg = d3.select("#svg").append("svg")
+        .attr("preserveAspectRatio", "xMidYMid")
+        .attr("viewBox", "0 0 " + GraphParameters.graphWidth + " " + height)
+        .attr("width", GraphParameters.graphWidth)
+        .attr("height", height);
 
-var maing = svg.append("g");
+    svg.append("rect")
+        .attr("class", "sea")
+        .attr("width", GraphParameters.graphWidth)
+        .attr("height", height)
+        .style("fill", "white");
+    //    .on("click", click);
 
-var sankey = sankeyStream()
-    .nodeWidth(nodeWidth)
-    .curvature(curvature)
-    .nodePadding(nodePadding)
-    .size([GraphParameters.graphWidth, m_height])
-    .offset(offset);
+    var maing = svg.append("g");
 
-var path = sankey.link();
+    sankey = sankeyStream()
+        .nodeWidth(nodeWidth)
+        .curvature(curvature)
+        .nodePadding(nodePadding)
+        .size([GraphParameters.graphWidth, m_height])
+        .offset(offset);
 
-colors = d3.scale.category10();
+    path = sankey.link();
+
+    colors = d3.scale.category10();
 
     sankey
         .nodes(analysis.nodes)
         .links(analysis.links)
         .layout();
+    
+    mainplot = drawComponents(analysis);
+}
 
-    link = svg.append("g").selectAll(".link")
-        .data(analysis.links).enter();
-
+function drawComponents(graph){
+    
+    var link = svg.append("g").selectAll(".link")
+        .data(graph.links).enter();
+    console.log("Links");
+    console.log(graph.links);
     link.append("path")
         .attr("class", "link")
         .attr("d", path)
@@ -86,8 +92,8 @@ colors = d3.scale.category10();
         });
         */
 
-    node = svg.append("g").selectAll(".node")
-        .data(analysis.nodes)
+    var node = svg.append("g").selectAll(".node")
+        .data(graph.nodes)
         .enter().append("g")
         .attr("class", "node")
         .attr("transform", function (d) {
@@ -110,12 +116,58 @@ colors = d3.scale.category10();
         .style("fill", function (d) {
             return d.color = colors(d.room);
         })
-        .on("mouseover", function (d) {
-            var links = svg.selectAll(".link");
-
+        .on("mouseover", function (d) {       
+            highlight = drawHighlight(d);
         })
         .on("mouseout", function (d) {
-            var links = svg.selectAll(".link");
+            d3.selectAll(".highlightLink").remove();
         });
 
+}
+
+
+function drawHighlight(highlightNode){
+    graph = {}
+    graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks)
+        .filter(function(d){return d.value > 0 && d.sy>0 && d.ty >0 ;});
+    console.log("highlight:");
+    console.log(graph.links);
+    //graph.nodes = [highlightNode];
+    
+        //console.log(graph.links.filter(function(d){return d.value > 0;}));
+    var link = svg.append("g").selectAll(".highlightLink")
+        .data(graph.links).enter();
+
+    link.append("path")
+        .attr("class", "highlightLink")
+        .attr("d", path)
+        .style("stroke-width", function (d) {
+            return Math.max(0, d.dy);
+        })
+        .style("fill", "none")
+        .style("stroke", function (d) {
+                return colors(d.source.room);
+        })
+        .sort(function (a, b) {
+            return b.dy - a.dy;
+        });
+/*
+    var node = svg.append("g").selectAll(".highlightNode")
+        .data(graph.nodes)
+        .enter().append("g")
+        .attr("class", "highlightNode")
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+
+    node.append("rect")
+        .attr("height", function (d) {
+            return d.dy;
+        })
+        .attr("width", sankey.nodeWidth())
+        .style("fill", function (d) {
+            return d.color = colors(d.room);
+        });
+*/
+    return link;
 }
