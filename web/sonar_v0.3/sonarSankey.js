@@ -68,8 +68,8 @@ function drawComponents(graph){
     
     var link = svg.append("g").selectAll(".link")
         .data(graph.links).enter();
-    console.log("Links");
-    console.log(graph.links);
+//    console.log("Links");
+//    console.log(graph.links);
     link.append("path")
         .attr("class", "link")
         .attr("d", path)
@@ -128,10 +128,10 @@ function drawComponents(graph){
 
 function drawHighlight(highlightNode){
     graph = {}
-    graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks)
-        .filter(function(d){return d.value > 0 && d.sy>0 && d.ty >0 ;});
-    console.log("highlight:");
-    console.log(graph.links);
+    graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks);
+//        .filter(function(d){return d.value > 0 && d.sy>0 && d.ty >0 ;});
+//    console.log("highlight:");
+//    console.log(graph.links);
     //graph.nodes = [highlightNode];
     
         //console.log(graph.links.filter(function(d){return d.value > 0;}));
