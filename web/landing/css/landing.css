@@ -1,0 +1,57 @@
+@font-face {
+    font-family: 'Nexa';
+    font-weight: bold;
+    src: url("../fonts/Nexa_bold.otf") format("opentype");
+}
+@font-face {
+    font-family: 'Nexa';
+    font-weight: light;
+    src: url("../fonts/Nexa_light.otf") format("opentype");
+}
+body {
+   // margin: 0px;
+}
+
+.background {
+    background-color: dodgerblue;
+    color: dodgerblue;
+}
+.boid {
+    stroke: navy;
+    fill: none;
+}
+.leader {
+    opacity: 0.9;
+}
+.vis {
+    position: relative;
+}
+.left {
+    float: left;
+    padding-right: 10px;
+}
+.text {
+    vertical-align: top;
+    overflow-y: auto;
+}
+.content {
+    float: left;
+    vertical-align: top;
+    font-family: 'Nexa';
+    font-weight: bold;
+    position: relative;
+    width: 110px;
+    text-align: center;
+}
+.right {
+    float: left;
+}
+.maintitle {
+    position: absolute;
+    width: 100%;
+    top: 40%;
+    font-family: 'Nexa';
+    color: yellow;
+    font-size: 46px;
+    align-content: center;
+}
