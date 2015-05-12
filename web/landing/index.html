@@ -16,19 +16,23 @@
 
 <body>
     
-
-
+    
 <div id="vis"> 
        <div id="title" class="maintitle">
-           <span>
-            <div class="text left">What did</div>
-            <div class="content" id="person">you</div>
-            <div class="text right">do last Sónar?</div>
+           <div class="container">
+                <div class="text left">What did</div>
+                <div class="content left" id="person">you</div>
+                <div class="text right">do last Sónar?</div>
+           </div>
        </div>
-           </span>
 </div>
-
-    
+<image src="imgs/landing_BG.jpg" width="100%"></image>
+    <script>
+        d3.select("#vis").append("svg")
+    .attr("width", 200)
+    .attr("height", 200)
+    .attr("class", "background");
+    </script>
     
     <script>
         var w = window.innerWidth,

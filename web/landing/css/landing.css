@@ -9,49 +9,60 @@
     src: url("../fonts/Nexa_light.otf") format("opentype");
 }
 body {
-   // margin: 0px;
+    margin: 0px;
 }
 
 .background {
-    background-color: dodgerblue;
-    color: dodgerblue;
+    fill: none;
+    position: absolute;
+    top: 0%;
+    fill:none;
+
 }
+
 .boid {
     stroke: navy;
     fill: none;
 }
 .leader {
-    opacity: 0.9;
+    opacity: 0.0;
 }
 .vis {
-    position: relative;
+    position: absolute;
+    top: 0%;
+    fill:none;
 }
+
+div.maintitle {
+    height: 100%;    
+    font-family: 'Nexa';
+    color: yellow;
+    font-size: 46px;
+}
+
+div.container {
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 40%);
+}
+
 .left {
     float: left;
     padding-right: 10px;
 }
-.text {
-    vertical-align: top;
-    overflow-y: auto;
-}
+
 .content {
     float: left;
-    vertical-align: top;
     font-family: 'Nexa';
     font-weight: bold;
-    position: relative;
     width: 110px;
     text-align: center;
 }
+
 .right {
     float: left;
 }
-.maintitle {
-    position: absolute;
-    width: 100%;
-    top: 40%;
-    font-family: 'Nexa';
-    color: yellow;
-    font-size: 46px;
-    align-content: center;
-}
+
