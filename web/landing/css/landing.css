@@ -66,3 +66,10 @@ div.container {
     float: left;
 }
 
+html { 
+  background: url(../imgs/landing_BG.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}

@@ -1,9 +1,8 @@
-
 var w = window.innerWidth,
     h = window.innerHeight,
     mouse = [0, 0],
     leaders = [
-        [0, 0],[0,0]
+        [0, 0], [0, 0]
     ];
 time = 0;
 speed = 0.01;
@@ -26,10 +25,21 @@ function combine() {
     return leaders[0]; //a.map(function(d,i){return d+b[i];});
 }
 
-function createBoids() {
-    boids = d3.range(Math.floor(Parameters.particles)).map(function() {
+function createBoids(restart) {
+    if (!restart) {
+        var my_ini_pos = d3.range(
+            Math.floor(Parameters.particles)).map(function () {
+            return {x: Math.random() * w, y:Math.random() * h};
+        });
+        console.log(my_ini_pos);
+    } else {
+        my_ini_pos = boids.map(function (boid) {
+            return boid(boids);
+        });
+    }
+    boids = d3.range(Math.floor(Parameters.particles)).map(function (d,i) {
         return boid()
-            .position([Math.random() * w, Math.random() * h])
+            .position([my_ini_pos[i].x, my_ini_pos[i].y])
             .velocity([Math.random() * 2 - 1, Math.random() * 2 - 1])
             .gravityCenter(leaders)
             .neighborRadius(Parameters.neighborRadius)
@@ -42,7 +52,7 @@ function createBoids() {
     });
 
     // Compute initial positions.
-    vertices = boids.map(function(boid) {
+    vertices = boids.map(function (boid) {
         return boid(boids);
     });
 
@@ -81,7 +91,7 @@ svg.selectAll(".boid")
     .data(vertices)
     .enter().append("circle")
     .attr("class", "boid")
-    .attr("transform", function(d) {
+    .attr("transform", function (d) {
         return "translate(" + d + ")";
     })
     .attr("r", 2);
@@ -90,45 +100,45 @@ svg.selectAll(".leader")
     .data(leaders)
     .enter().append("circle")
     .attr("class", "leader")
-    .attr("transform", function(d) {
+    .attr("transform", function (d) {
         return "translate(" + d + ")";
     })
     .attr("r", 5);
 
-d3.timer(function() {
+d3.timer(function () {
     // Update boid positions.
-    boids.forEach(function(boid, i) {
+    boids.forEach(function (boid, i) {
         vertices[i] = boid(boids);
         boid.gravityCenter(leaders);
     });
 
     svg.selectAll(".boid")
-    .data(vertices)
-    .enter().append("circle")
-    .attr("class", "boid")
-    .attr("transform", function(d) {
-        return "translate(" + d + ")";
-    })
-    .attr("r", 2);
+        .data(vertices)
+        .enter().append("circle")
+        .attr("class", "boid")
+        .attr("transform", function (d) {
+            return "translate(" + d + ")";
+        })
+        .attr("r", 2);
     // Update circle positions.
     svg.selectAll(".boid")
         .data(vertices)
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + d + ")";
         })
-    .exit().remove();
+        .exit().remove();
 
     svg.selectAll(".leader")
         .data(leaders)
-        .attr("transform", function(d) {
+        .attr("transform", function (d) {
             return "translate(" + d + ")";
         });
 
-    leaders = leaders.map(function(lead,i) {
-        var center = [w*(0.5*i+0.25),h/2];
-        var theta = 2* Math.PI * (Math.cos(time*speed) + 0.1*Math.sin(time*speed/10))/1.1 + (Math.PI*i);
-        var r = d3.min([w,h])*0.2*Math.pow(Math.sin(time*speed*(i+1)/10),2);
-        return [center[0]+r*Math.cos(theta),center[1]+r*Math.sin(theta)];
+    leaders = leaders.map(function (lead, i) {
+        var center = [w * (0.5 * i + 0.25), h / 2];
+        var theta = 2 * Math.PI * (Math.cos(time * speed) + 0.1 * Math.sin(time * speed / 10)) / 1.1 + (Math.PI * i);
+        var r = d3.min([w, h]) * 0.2 * Math.pow(Math.sin(time * speed * (i + 1) / 10), 2);
+        return [center[0] + r * Math.cos(theta), center[1] + r * Math.sin(theta)];
     });
     time++;
 
