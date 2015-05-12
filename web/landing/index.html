@@ -26,13 +26,11 @@
            </div>
        </div>
 </div>
-<image src="imgs/landing_BG.jpg" width="100%"></image>
-    <script>
-        d3.select("#vis").append("svg")
-    .attr("width", 200)
-    .attr("height", 200)
-    .attr("class", "background");
-    </script>
+    <!--
+<div id="imgwrap">
+    <image src="imgs/landing_BG.jpg" width="100%"></image>
+</div>
+-->
     
     <script>
         var w = window.innerWidth,
@@ -53,10 +51,13 @@
             },200);
         
         function update() {
+            d3.selectAll(".svg")
+                .attr("width", w)
+                .attr("height", h);
             createBoids();
         }
 
-        window.onload = function () {
+/*        window.onload = function () {
             var gui = new dat.GUI();
             gui.remember(Parameters);
             gui.add(Parameters, 'particles', 10, 400).onFinishChange(update);
@@ -68,6 +69,12 @@
             gui.add(Parameters, 'cohesionWeight', 0.0, 5.0).onFinishChange(update);
             gui.add(Parameters, 'desiredSeparation', 0, 200).onFinishChange(update);
         };
+*/
+        $( window ).resize( function() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+            update();
+            });
 
     </script>
     <script src="flocks/flock.js"></script>
