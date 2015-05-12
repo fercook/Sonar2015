@@ -55,8 +55,14 @@ var svg = d3.select("#vis")
     .append("svg")
     .attr("width", w)
     .attr("height", h)
-    .attr("class", "background")
-    .on("mousemove", function() {
+    .attr("class", "background");
+/*
+svg.append("image")
+    .attr("xlink:href","imgs/landing_BG.jpg")
+    .attr("src","imgs/landing_BG.jpg")
+    .attr("width","100%");
+    
+/*    .on("mousemove", function() {
         var m = d3.mouse(this);
         mouse[0] = m[0];
         mouse[1] = m[1];
