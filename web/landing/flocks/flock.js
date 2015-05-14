@@ -21,7 +21,6 @@ Parameters = {
 
 
 function combine() {
-    console.log("question");
     return leaders[0]; //a.map(function(d,i){return d+b[i];});
 }
 
@@ -31,7 +30,6 @@ function createBoids(restart) {
             Math.floor(Parameters.particles)).map(function () {
             return {x: Math.random() * w, y:Math.random() * h};
         });
-        console.log(my_ini_pos);
     } else {
         my_ini_pos = boids.map(function (boid) {
             return boid(boids);

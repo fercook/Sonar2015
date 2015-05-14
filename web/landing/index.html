@@ -1,7 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!--meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,    user-scalable=no" /-->
 <link rel="stylesheet" type="text/css" href="css/landing.css">
+
+<script>    
+    if (navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) {
+        document.write('<'+'link rel="stylesheet" href="css/landing_safari.css" />');
+    }
+</script>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -11,7 +18,7 @@
     <script type="text/javascript" src="../js/dat.gui.min.js"></script>
     <script type="text/javascript" src="flocks/boids_lib.js"></script>
 
-
+<meta name="viewport" content="width=device-width" />
 </head>
 
 <body>
@@ -26,21 +33,12 @@
            </div>
        </div>
 </div>
-    <!--
-<div id="imgwrap">
-    <image src="imgs/landing_BG.jpg" width="100%"></image>
-</div>
--->
     
     <script>
         var w = window.innerWidth,
             h = window.innerHeight;
         document.getElementById("title");
-        //.style("top",h/2).style("width",w);
-//        d3.selectAll(".maintitle")
-//          .style("top",h/2+"px")
-//          .style("width",w+"px");
-        //setInterval
+
         
         nameElement = document.getElementById("person");
         names = ["you","she","he ","I ","they","it"];
@@ -73,6 +71,9 @@
         $( window ).resize( function() {
             w = window.innerWidth;
             h = window.innerHeight;
+            if (w<500) { Parameters.particles= 120; }
+            else if (w<800 && w >= 500) { Parameters.particles= 200; }
+            else { Parameters.particles= 300; }
             update();
             });
 
