@@ -22,7 +22,8 @@ body {
 
 .boid {
     stroke: navy;
-    fill: none;
+    fill: navy;
+    opacity: 0.3;
 }
 .leader {
     opacity: 0.0;
@@ -36,7 +37,7 @@ body {
 div.maintitle {
     height: 100%;    
     font-family: 'Nexa';
-    color: yellow;
+    color: #ffcd00;
     font-size: 46px;
 }
 
@@ -60,6 +61,10 @@ div.container {
     font-weight: bold;
     width: 110px;
     text-align: center;
+    
+    /*position:absolute;
+    left:50%;
+    top:50%;*/
 }
 
 .right {
@@ -68,8 +73,104 @@ div.container {
 
 html { 
   background: url(../imgs/landing_BG.jpg) no-repeat center center fixed; 
+  /*background: url(../imgs/landing_BG.jpg); */
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
 }
+
+@media (max-width:1200px){
+
+}
+
+
+
+
+
+@media (max-width:1000px){
+}
+
+
+
+
+/* ************  Tablet ************** */
+/* ************  Tablet ************** */
+/* ************  Tablet ************** */
+@media (max-width:800px){
+    .content {
+    font-size:46px; /*2 em*/
+    }
+    
+    div.maintitle {
+    height: 100%;    
+    font-family: 'Nexa';
+    color: #ffcd00; /*#ff0023;*/
+    font-size: 46px;    
+    }
+    
+    .left {
+    float: left;
+     font-size: 46px; 
+    }
+}
+
+/* ************  Tablet ************** */
+/* ************  Tablet ************** */
+/* ************  Tablet ************** */
+@media (max-width:800px){
+    .content {
+    font-size:46px; /*2 em*/
+    }
+    
+    div.maintitle {
+    height: 100%;    
+    font-family: 'Nexa';
+    color: #ffcd00; /*#ff0023;*/
+    font-size: 46px;    
+    }
+    
+    .left {
+    float: left;
+     font-size: 46px; 
+    }
+}
+/* ************  Smartphone ************** */
+/* ************  Smartphone ************** */
+/* ************  Smartphone ************** */
+
+@media (max-width:500px){
+
+    .content {
+    
+    font-size:36px;
+    }
+
+    div.maintitle {
+    height: 100%;    
+    font-family: 'Nexa';
+    padding-left: 30px;
+    font-size: 36px;
+   
+    color:#ffcd00; /*#ffffff   ffcd00*/;
+    }
+    
+    div.container {
+    position: absolute;
+        text-align: center;
+    top: 40%;
+    left: 62%;
+    margin-right: -50%;
+    transform: translate(-50%, 40%);
+    }
+    
+    .left {
+     float: left;
+     font-size: 36px; 
+    }
+    
+
+
+}
+
+
