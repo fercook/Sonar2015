@@ -1,0 +1,76 @@
+@font-face {
+    font-family: 'Nexa';
+    font-weight: bold;
+    src: url("../fonts/Nexa_bold.otf") format("opentype");
+}
+@font-face {
+    font-family: 'Nexa';
+    font-weight: light;
+    src: url("../fonts/Nexa_light.otf") format("opentype");
+}
+body {
+    margin: 0px;
+}
+
+.background {
+    fill: none;
+    position: absolute;
+    top: 0%;
+    fill:none;
+
+}
+
+.boid {
+    stroke: navy;
+    fill: navy;
+    opacity: 0.3;
+}
+.leader {
+    opacity: 0.0;
+}
+.vis {
+    position: absolute;
+    top: 0%;
+    fill:none;
+}
+
+div.maintitle {
+    height: 100%;    
+    font-family: 'Nexa';
+    color: #ffcd00;
+    font-size: 46px;
+}
+
+div.container {
+    margin: 0;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 40%);
+}
+
+.left {
+    float: left;
+    padding-right: 10px;
+}
+
+.content {
+    float: left;
+    font-family: 'Nexa';
+    font-weight: bold;
+    width: 110px;
+    text-align: center;
+}
+
+.right {
+    float: left;
+}
+
+html { 
+  background: url(../imgs/landing_BG.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
