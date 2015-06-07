@@ -70,8 +70,8 @@ queue()
 .await(ready);
 
 function ready(error, data) {
-    //need to process data here
     var timeslots = data.graph.length;
+    //Collect all slots that correspond to the same time window
     data.graph.forEach(function(slot) {
         var slotstart = parseDate(slot["time_start"]);
         var slotend = slot["time_end"];
@@ -79,6 +79,15 @@ function ready(error, data) {
             if ( (timeWindows[n].start<=slotstart && slotend<=timeWindows[n].end) || // Clear case inside the period
                (timeWindows[n].start<=slotstart && timeWindows[n].end<= slotend) ) // Straddle the break between periods, arbitrary choice
               { timeWindows[n].toprocess.push(slot); }
+        }
+    });
+    //Now we compress each timeWindow into a single layer of the sankey
+    timeWindows.forEach(function(window){
+        window.toprocess.sort(function(a,b){return a.time_start>=b.time_start ? true | false});
+        window.nodes = [];
+        window.links = []; 
+        for (var n=0;n<window.toprocess.length;n++){
+            
         }
     });
     //analysis = data; // HERE GOES THE ANALYSIS OF THE DATA
