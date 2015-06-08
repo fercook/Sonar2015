@@ -104,8 +104,8 @@ function createCurves(canvasBounds) {
             y1: y + r
         };
         var paramsCircle = {
-            radius: 0*r * RELATIVE_SIZE_OF_CIRCLES,
-            width: r * RELATIVE_SIZE_OF_CIRCLES,
+            radius: 0.1*r * RELATIVE_SIZE_OF_CIRCLES,
+            width: 0.5*r * RELATIVE_SIZE_OF_CIRCLES,
             center: new Vector(x, y)
         };
         var paramsLine = {
@@ -114,13 +114,13 @@ function createCurves(canvasBounds) {
             center: new Vector(x, y)
         };
 
-        fields.push(VectorField.circle(50, canvasBounds, paramsCircle)); // Create this room circle
+        fields.push(VectorField.circle(100, canvasBounds, paramsCircle)); // Create this room circle
         log.push({ in : salain.name,
             out: salain.name
         });
         var cur;
         for (var sout = 0; sout < salas.length; sout++) {
-            if (sin != sout) {
+            if (sin != sout && sin == 0) {
                 var salaout = salas[sout];
                 var r_o = salaout.radius/2,
                     x_o = salaout.centrex,
@@ -194,7 +194,7 @@ function createCurves(canvasBounds) {
                 });
             }
         }
-        return fields;
+        //return fields;
      
 
     }

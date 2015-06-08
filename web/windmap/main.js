@@ -50,7 +50,7 @@ function init() {
     console.log("HEcho");
     fields.forEach(function (field) {
         var color = [1,1,1]; //[0.5+0.5*Math.random(),0.5+0.5*Math.random() ,0.5+0.5*Math.random() ];
-        field.maxLength = 50*Math.random();
+        field.maxLength = 100*Math.random();
         var display = new MotionDisplay(canvas, bak_image, field, numParticles, color);
         mapAnimator.add(display);
     });
