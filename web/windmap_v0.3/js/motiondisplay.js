@@ -75,8 +75,8 @@ MotionDisplay.prototype.makeParticle = function(animator) {
         var pos = this.field.getPos(u, v);
         var x = pos.x, y = pos.y;
         if (this.field.maxLength == 0) { // safeguard??
-            var p = new Particle(u, v, 1 + 40 * Math.random());
-            p.x = pos.x; p.y = pos.y;
+            var p = new Particle(u, v, 1 + 100 * Math.random());
+            p.x = p.oldX = pos.x; p.y = p.oldY = pos.y;
             return p;
         }
         var m = vel.length() / this.field.maxLength;
@@ -85,8 +85,8 @@ MotionDisplay.prototype.makeParticle = function(animator) {
         // overall distribution appear more even.
         if ((vel.x || vel.y) && (++safecount > 10 || Math.random() > m * .3)) { // HAD TO CHANGE THIS MAGIC NUMBER TO A LOWER THRESHOLD
             //if (++safecount > 10 || !(x < 0 || y < 0 || x > this.canvas.width || y > this.canvas.height)) {
-            var p = new Particle(u, v, 1 + 40 * Math.random());
-            p.x = pos.x; p.y = pos.y;
+            var p = new Particle(u, v, 1 + 100 * Math.random());
+            p.x = p.oldX = pos.x; p.y = p.oldY = pos.y;
             return p;
       //}
         }
@@ -117,14 +117,14 @@ MotionDisplay.prototype.animate = function(animator) {
 mierda=0;
 MotionDisplay.prototype.moveThings = function(animator) {
     var speed = .01 * this.speedScale ; /// animator.scale;
-    var a = new Vector(0,0),pos=new Vector(0,0);
+    var vel = new Vector(0,0),pos=new Vector(0,0);
     for (var i = 0; i < this.particles.length; i++) {
         var p = this.particles[i];
-        if (p.age > 0 && this.field.inBounds(p.x, p.y)) {
-          var vel = this.field.getValue(p.u, p.v,a,pos);
+        if (p.age > 0 && this.field.inBounds(p.u, p.v)) {
+          var a = this.field.getValue(p.u, p.v);
             p.u += speed * a.x;
             p.v += speed * a.y;
-//          var pos = this.field.getPos(p.u, p.v);
+          var pos = this.field.getPos(p.u, p.v);
             p.x = pos.x;
             p.y = pos.y;
             p.age--;
@@ -153,7 +153,7 @@ MotionDisplay.prototype.draw = function(animator) {
     g.lineWidth = .75;
     for (var i = 0; i < this.particles.length; i++) {
         var p = this.particles[i];
-        if (!this.field.inBounds(p.x, p.y)) {
+        if (!this.field.inBounds(p.u, p.v)) {
             p.age = -2;
             continue;
         }
