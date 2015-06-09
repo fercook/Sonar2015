@@ -3,7 +3,7 @@
  * informs other components of what's going on.
  */
 var Animator = function(element, opt_animFunc, opt_unzoomButton) {
-     this.element = element;
+    this.element = element;
     this.mouseIsDown = false;
     this.mouseX = -1;
     this.mouseY = -1;

@@ -100,7 +100,7 @@ MotionDisplay.prototype.animate = function(animator) {
         g.globalAlpha=1.0;
         this.first = false;
     } else {
-        g.globalAlpha=0.01;
+        g.globalAlpha=0.02;
     }
     g.drawImage(this.backgroundImage,0,0,w,h);
     g.globalAlpha=1.0;

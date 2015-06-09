@@ -105,16 +105,16 @@ function createCurves(canvasBounds) {
         };
         var paramsCircle = {
             radius: 0.1*r * RELATIVE_SIZE_OF_CIRCLES,
-            width: 0.5*r * RELATIVE_SIZE_OF_CIRCLES,
+            width: 1*r * RELATIVE_SIZE_OF_CIRCLES,
             center: new Vector(x, y)
         };
         var paramsLine = {
             radius: 0,
-            width: 10,
+            width: 50,
             center: new Vector(x, y)
         };
 
-        fields.push(VectorField.circle(100, canvasBounds, paramsCircle)); // Create this room circle
+        //fields.push(VectorField.circle(100, canvasBounds, paramsCircle)); // Create this room circle
         log.push({ in : salain.name,
             out: salain.name
         });
