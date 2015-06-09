@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!--meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,    user-scalable=no" /-->
+
+<link rel="stylesheet" type="text/css" href="css/mMenu_style.css">
+<link rel="stylesheet" type="text/css" href="css/landing.css">
+<link rel="stylesheet" type="text/css" href="css/goo_style.css">
+<link rel="stylesheet" type="text/css" href="css/goo_normalize.css">
+
+
+
+<script>    
+    if (navigator.userAgent.search("Safari") >= 0 && navigator.userAgent.search("Chrome") < 0) {
+        document.write('<'+'link rel="stylesheet" href="css/landing_safari.css" />');
+    }
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>We know what they did last Sónar</title>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="js/dat.gui.min.js"></script>
+    <script type="text/javascript" src="flocks/boids_lib.js"></script>
+
+<meta name="viewport" content="width=device-width" />
+</head>
+
+<body>
+    
+    
+<div id="vis"> 
+       <div id="title" class="maintitle">
+           <div class="container">
+                <div class="text left">What did</div>
+                <div class="content left" id="person">you</div>
+                <div class="text right">do last Sónar?</div>
+           </div>
+       </div>
+</div>
+    
+<!--header>
+  <button><i class="fa fa-bars"></i></button>  <!-- nMenu -->
+<!--/header-->
+    
+<!--nav>
+  <ul>
+    <li><a href="#"> Right now...</a></li>
+    <li><a href="#"> People flow</a></li>
+    <li><a href="#"> Your activity</a></li>
+    <!--li><a href="#"> cosas</a></li-->
+  <!--/ul>
+</nav-->
+    
+
+<nav class="menu">
+  <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
+  <label class="menu-open-button" for="menu-open">
+    <span class="hamburger hamburger-1"></span>
+    <span class="hamburger hamburger-2"></span>
+    <span class="hamburger hamburger-3"></span>
+  </label>
+
+  <a href="#" class="menu-item"> <i class="fa fa-bar-chart"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-plus"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-heart"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-envelope"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-cog"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-ellipsis-h"></i> </a>
+
+</nav>
+    
+    
+
+
+
+    
+    <script>
+        var w = window.innerWidth,
+            h = window.innerHeight;
+        document.getElementById("title");
+
+        
+        nameElement = document.getElementById("person");
+        names = ["you","she","he ","I ","they","it"];
+        window.setInterval(function(){
+            var temp = names.shift();
+            names.push(temp);
+            nameElement.innerHTML=names[0];            
+            },200);
+        
+        function update() {
+            d3.selectAll(".svg")
+                .attr("width", w)
+                .attr("height", h);
+            createBoids();
+        }
+
+/*        window.onload = function () {
+            var gui = new dat.GUI();
+            gui.remember(Parameters);
+            gui.add(Parameters, 'particles', 10, 400).onFinishChange(update);
+            gui.add(Parameters, 'neighborRadius', 1, 200).onFinishChange(update);
+            gui.add(Parameters, 'maxForce', 0, 2.0).onFinishChange(update);
+            gui.add(Parameters, 'maxSpeed', 0, 5.0).onFinishChange(update);
+            gui.add(Parameters, 'separationWeight', 0.0, 5.0).onFinishChange(update);
+            gui.add(Parameters, 'alignmentWeight', 0.0, 5.0).onFinishChange(update);
+            gui.add(Parameters, 'cohesionWeight', 0.0, 5.0).onFinishChange(update);
+            gui.add(Parameters, 'desiredSeparation', 0, 200).onFinishChange(update);
+        };
+*/
+        $( window ).resize( function() {
+            w = window.innerWidth;
+            h = window.innerHeight;
+            if (w<500) { Parameters.particles= 120; }
+            else if (w<800 && w >= 500) { Parameters.particles= 200; }
+            else { Parameters.particles= 300; }
+            update();
+            });
+
+    </script>
+    <script src="flocks/flock.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-63218291-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+    
+<script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
+
+<script src="js/mMenu_index.js"></script>
+    
+<div id="fotter" align="center">
+    Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
+</div>
+
+
+</body>
+
+</html>
+<!--
+Copyright
+Code copied from  http://www.jasondavies.com Jason Davies 2012.
+-->
