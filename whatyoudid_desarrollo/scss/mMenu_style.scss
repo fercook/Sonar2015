@@ -1,0 +1,167 @@
+@import url(http://fonts.googleapis.com/css?family=Glegoo|Oswald:400,700);
+@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
+
+$heading_font: Oswald;
+$body_font: Glegoo;
+
+*, *:before, *:after {
+	box-sizing: border-box;
+}
+
+html, body {
+	height: 100%;
+}
+
+body {
+	background: #292929;
+	perspective: 800px;
+}
+
+header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	padding: 1em;
+	h1 {
+		color: #ecf0f1;
+		flex-basis: 100%;
+		font-family: Oswald;
+		text-align:center;
+		margin: 0;
+		font-size: 4rem;
+		span {
+			opacity: .1;
+		}
+	}
+	button {
+		width: 3.5em;
+		height: 3.5em;
+		border-radius: 3.5em;
+		border: 0;
+		background: #fff;
+		margin: 1em;
+		box-shadow: 1px 2px 6px 0 rgba(0, 0, 0, .1);
+		&:hover {
+			background: #fffc72;
+		}
+		&:focus {
+			outline: 0;
+		}
+	}
+}
+
+.fa-bars, .fa-times {
+	font-size: 2rem;
+	color: #292929;
+}
+
+nav {
+	position: fixed;
+	z-index: 10;
+	width: 100%;
+	top: 11em;
+	padding: 2rem;
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		transition: background .2s;
+		li {
+			flex-basis: 33.33333%;
+			transform: translateY(-30em);
+			transition: all .4s ease;
+			opacity: 0;
+			@media (max-width: 560px) {
+				flex-basis: 100%;
+			}
+			text-align: center;
+			a {
+				font-family: $heading_font;
+				font-size: 4rem;
+				@media (max-width: 1260px) {
+					font-size: 2rem;
+				}
+				text-decoration: none;
+				color: #fff;
+				letter-spacing: .1em;
+				&:hover {
+					color: #fffc72;
+					position: relative;
+					&:after {
+						position: absolute;
+						left: 50%;
+						transform: translateX(-50%);
+						content: '';
+						display: block;
+						border: 1px dashed #fff;
+						border-left: 0;
+						border-right: 0;
+						border-top: 0;
+						width: 100%;
+					}
+				}
+				&:focus {
+					outline: 0;
+					border: 1px dotted #fff;
+					color: #fffc72;
+					padding: .25em;
+				}
+			}
+		}
+	}
+}
+
+main {
+	background: #ecf0f1;
+	min-height: 100%;
+	transition: transform .4s;
+	transform-origin: 50% 100%;
+	padding: 2em;
+	article {
+		max-width: 60em;
+		@media (max-width: 700px) {
+			width: 100%;
+		}
+		padding: 3em;
+		background: #fff;
+		box-shadow: 1px 2px 6px 0 rgba(0, 0, 0, .1);
+		margin: 0 auto 2em auto;
+		&:last-child {
+			margin-bottom: 0;
+		}
+		h1 {
+			margin: 0;
+			font-family: $heading_font;
+			font-size: 2.5rem;
+		}
+		p {
+			font-family: $body_font;
+			font-size: 1.5rem;
+		}
+	}
+}
+
+.active {
+	transform: rotateX(20deg);
+	transform-origin: 50% 100%;
+	transition: 1s;
+}
+
+.nav-visible {
+	padding: 1em 0;
+	background: #292929;
+	transition: background 1s;
+	transition-delay: 1s;
+	li {
+		transform: translateY(0em);
+		transition: all 1s ease;
+		opacity: 1;
+		&:nth-child(1) { transition-delay: .1s; }
+		&:nth-child(2) { transition-delay: .2s; }
+		&:nth-child(3) { transition-delay: .3s }
+	}
+}

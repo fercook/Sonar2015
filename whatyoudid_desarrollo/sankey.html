@@ -1,0 +1,60 @@
+<html>
+
+<!--link rel="stylesheet" type="text/css" href="../bootstrap.css"-->
+<link rel="stylesheet" type="text/css" href="css/sankey_style.css">
+
+<head>
+    <script src="js/jquery-1.11.2.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/queue.v1.min.js"></script>
+    <script src="js/crossfilter.v1.min.js"></script>
+    <script type="text/javascript" src="js/dat.gui.min.js"></script>
+    <script src="js/sankeyStream.js"></script>
+    
+   <link rel="stylesheet" type="text/css" href="css/mMenu_style.css">
+   <link rel="stylesheet" type="text/css" href="css/landing.css">
+   <link rel="stylesheet" type="text/css" href="css/goo_style.css">
+   <link rel="stylesheet" type="text/css" href="css/goo_normalize.css">
+    
+</head>
+
+<body>
+    
+<nav class="menu">
+  <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
+  <label class="menu-open-button" for="menu-open">
+    <span class="hamburger hamburger-1"></span>
+    <span class="hamburger hamburger-2"></span>
+    <span class="hamburger hamburger-3"></span>
+  </label>
+
+  <a href="#" class="menu-item"> <i class="fa fa-bar-chart"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-plus"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-heart"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-envelope"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-cog"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-ellipsis-h"></i> </a>
+
+</nav>
+    
+    <div id="svg"></div>
+    <script>
+        window.onload = function () {
+            var gui = new dat.GUI();
+            gui.remember(GraphParameters);
+            gui.add(GraphParameters, 'graphWidth', 100, 6000).onFinishChange(draw);
+            gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'svgHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'nodeWidth', 0, 1).onFinishChange(draw);
+            gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
+            gui.add(GraphParameters, 'curvature', 0.0, 1.0).onFinishChange(draw);
+            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);          
+        };
+    </script>
+    <script src="js/sankey.js"></script>
+    
+<div id="fotter" align="center">
+    Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
+</div>
+
+</body>
