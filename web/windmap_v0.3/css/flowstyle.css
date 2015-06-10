@@ -1,17 +1,33 @@
 body {
   font: 14px Verdana;
   color: rgb(148, 148, 148);
-    background-color: #000
+    background-color: #000;
+    background-image: url(../../imgs/back_tile.jpg)
+
+}
+
+.overlay {
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  -webkit-transition: 0.25s opacity;
+  background: -webkit-radial-gradient(rgba(255, 255, 255, 0.2),
+                                      rgba(127, 127, 127, 0.5) 5%,
+                                      rgba(12, 18, 16, 0.95));
+  bottom: 0;
+  display: -webkit-box;
+  left: 0;
+  padding: 0px;
+  padding-bottom: 0px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
 }
 
 a {
     color: #000
 }
 
-.fine-print {
-  font: 12px Verdana;
-  color: #777;
-}
 
 .unselectable {
   -moz-user-select: -moz-none;
@@ -22,130 +38,12 @@ a {
 }
 
 
-#callout {
-    position: absolute;
-    visibility: hidden;
-    background: #fff;
-    padding: 10px;
-    z-index: 20000;
-    width: 150px;
-    height: 45px;
-    font-size: 11px;
-    border: 1px solid #bbb;
-    -moz-box-shadow: 3px 3px 3px rgba(0,0,0,.4);
-  -webkit-box-shadow: 3px 3px 3px rgba(0,0,0,.4);
-  box-shadow: 3px 3px 3px rgba(0,0,0,.4);
-    -moz-border-radius: 4px;
-  border-radius: 4px;
-}
-
-#city-display {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 20;
-}
-
-#display {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-}
-
-#day {
-    font-size: 18px;
-    font-weight: 700;
-}
-
-#header-line {
-    border: 0;
-    height: 1px;
-    color: rgb(148, 148, 148);
-    background-color: #ccc;
-    width: 1080px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
-
-#image-canvas {
-    visibility: hidden;
-     position: absolute;
-    clip-path: polygon(100px 100px, 500px 150px, 550px 300px, 90px 400px);
-
+canvas {
+  -webkit-clip-path: url(#theClip);
+  -moz-clip-path: url(#theClip);
+  -ms-clip-path: url(#theClip);
+  clip-path: url(#theClip);
 }
 
 
-#legend {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 20;
-}
-
-#map-data {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-}
-
-#map-heading {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 20;
-}
-
-#mask {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 10
-}
-
-#mask-holder {
-    position: absolute;
-    overflow: hidden;
-    left: 0px;
-    top: 0px;
-    width: 1920px;
-    height: 1200px;
-}
-
-.imageWrap {
-  position:relative;
-}
-
-.mask {
-    left: 0px;
-    top: 0px;
-    width: 1920;
-    height: 1200;
-  position: absolute;
-  background: url(map_now_alpha.png) 0 0 no-repeat;
-    z-index:
-}
-
-#time-explanation {
-    font-size: 10px;
-    color: #999;
-}
-
-#title {
-    font-family: Verdana;
-    font-size: 40px;
-    color: #555;
-}
-
-caca{
- position: absolute;
-    clip-path: polygon(100px 100px, 500px 150px, 550px 300px, 90px 400px);
-}
-
-#unzoom {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    z-index: 20;
-}
 

@@ -17,8 +17,8 @@
 <body onload="init()">
 
 <!-- MAP AND TITLE -->
-<div style="position:absolute;left:0px;top:0px">
-     <input style="visibility:hidden" id="animating" type="checkbox" checked></input><br><br>
+<div class="overlay">
+
 <!--
   <div id="legend">
     <canvas id="legend1" width=80 height=20></canvas> 1 mph<br><br>
@@ -30,19 +30,33 @@
 
   </div>
 -->
-  <canvas id="display" width=1920 height=1200 unselectable="on" class="unselectable">    If the image is missing, we recommend the latest
+  <canvas id="display" width=819 height=837 unselectable="on" class="unselectable">    If the image is missing, we recommend the latest
     <a href="http://www.google.com/chrome">Chrome</a> browser.
 </canvas>
-  <canvas id="city-display" width=1920 height=1200 unselectable="on" class="unselectable"></canvas>
-  <canvas id="image-canvas" width=1920 height=1200 unselectable="on" class="unselectable"></canvas>
 
-  <div id="callout"></div>
-  <div id="mask-holder">
-    <img alt="mask" id="mask" src="../imgs/map_now_alpha.png" unselectable="on" class="unselectable">
+<!--    <div id="mask-holder">
+    <img alt="mask" id="mask" src="../imgs/outlines_clipped_alpha.png" unselectable="on" class="unselectable">
   </div>
-    <div class="mask"></div>
+-->
+  <div id="callout"></div>
+<input style="visibility:hidden" id="animating" type="checkbox" checked></input><br><br>
+
 </div>
 
+    <!-- Clipping path -->
+ <svg width="0" height="0">
+  <defs>
+    <clipPath id="theClip">
+      <circle cx="138" cy="145" r="127.5" id="clip_Dome"/>
+      <circle cx="642" cy="155" r="123.5" id="clip_Hall"/>
+      <circle cx="693" cy="436" r="113" id="clip_Planta"/>
+      <circle cx="509" cy="679" r="140.5" id="clip_SonarPlusD"/>
+      <circle cx="148" cy="576" r="119.5" id="clip_Complex"/>
+      <circle cx="387" cy="359" r="205" id="clip_Village"/>
+
+    </clipPath>
+  </defs>
+</svg>
 
 
 
