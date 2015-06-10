@@ -1,14 +1,16 @@
 body{
     font-family: 'Source Sans Pro', sans-serif;
     text-align:center;
-    background-image: url(../imgs/BG_Scary.jpg);
-background: #000;
+    /*background-image: url(../imgs/BG_Scary.jpg);*/
+    /*background: #000;*/
     margin:0;
 
 
 }   
 
-
+rect.sea {
+    opacity: 100%;
+}
 #chart {
         height: 900px;
     }
