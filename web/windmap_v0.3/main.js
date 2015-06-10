@@ -22,7 +22,7 @@ function format(x) {
 function init() {
 
     var bak_image = new Image();
-    bak_image.src = "imgs/map_now.jpg";
+    bak_image.src = "../imgs/map_now_outlines.png";
     
     //var imageCanvas = document.getElementById('image-canvas');
     var isMacFF = navigator.platform.indexOf('Mac') != -1 &&
@@ -43,7 +43,7 @@ function init() {
     params = {radius:0, width:10,
               center: new Vector(canvas.width/3, 0.2*canvas.height/2)};
 
-    var numParticles = isMacFF || isWinIE ? 500 : 500; // slowwwww browsers
+    var numParticles = isMacFF || isWinIE ? 10000 : 10000; // slowwwww browsers
 
     //var field =  VectorField.read(windData, true);
     //field = VectorField.circle(50,bounds,params);
@@ -51,9 +51,11 @@ function init() {
     console.log("Prepare curves");
     
     var caca = new Vector(1242,494);
-    var jjj = VectorField.gridFromImages(
-        {x0:0,y0:0,x1:1920,y1:1200}, 
-        ["imgs/domeToHall_stroke.png"], 
+    var jjj = VectorField.gridFromNormals(
+        {x0:400,y0:300,x1:1500,y1:800}, 
+        //["imgs/domeToHall_stroke.png"], 
+        ["../imgs/map_now_normal.png"],
+        //["../imgs/map_torbellinos.png"],
         {width:1920, height:1200}, 
         caca, -1, function(f){
                 var color = [1,1,1];

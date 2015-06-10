@@ -1,3 +1,41 @@
+///////////////////////////
+/*
+var Room = (function(){
+        var timeslots = 0, rooms=[], acc_rooms=[];
+        function idx(){
+            
+        }
+        room.timeslots = function(x){
+          if (!arguments.length) return timeslots;
+          timeslots = x;
+          return room;            
+        };
+        room.rooms = function(x){
+          if (!arguments.length) return rooms;
+          if (arguments.length==1) return rooms[x]; //rooms at a given time
+          //timeslots = x;
+          return room;            
+        };
+        
+                    ins_timeslots: 0,
+                    ins_rooms: [],
+                    acc_rooms: [],
+                    idx: function(time, room){
+                        return this.acc_rooms[time]+room;},
+                    rooms: function(){return this.ins_rooms;}
+                    timeslots: function()
+                }
+            }
+             )();
+
+
+        "time_end": "2015-05-28 20:02:34",
+        "time_start": "2015-05-28 19:56:58",
+
+
+*/
+///////////////
+
 GraphParameters = {
     "graphWidth": 4000,
     "svgHeight": 500,
@@ -8,12 +46,51 @@ GraphParameters = {
     "curvature": 0.5
 }
 
+var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S");
+
+function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
+
+analysis = {links:null, nodes:null};
+
+var DATESTART=parseDate.parse("2015-05-28 20:00:00");
+var TOTALTIMESLOTS=14;
+var TIMEWINDOW = 15;
+var timeWindows = [];
+startdate = DATESTART;
+for (var n=0;n<TOTALTIMESLOTS;n++){
+    enddate = addMinutes(startdate, TIMEWINDOW);
+    timeWindows.push({start:startdate,end:enddate,toprocess:[]});
+    startdate=enddate;
+}
+
 queue()
-    .defer(d3.json, "analysis.json") //"../DATA/prob_separated.json")
+    .defer(d3.json, "graph.json") //"../DATA/prob_separated.json")
 .await(ready);
 
 function ready(error, data) {
-    analysis = data;
+    var timeslots = data.graph.length;
+    //Collect all slots that correspond to the same time window
+    data.graph.forEach(function(slot) {
+        var slotstart = parseDate(slot["time_start"]);
+        var slotend = slot["time_end"];
+        for (var n=0;n<TOTALTIMESLOTS;n++){
+            if ( (timeWindows[n].start<=slotstart && slotend<=timeWindows[n].end) || // Clear case inside the period
+               (timeWindows[n].start<=slotstart && timeWindows[n].end<= slotend) ) // Straddle the break between periods, arbitrary choice
+              { timeWindows[n].toprocess.push(slot); }
+        }
+    });
+    //Now we compress each timeWindow into a single layer of the sankey
+    timeWindows.forEach(function(window){
+        window.toprocess.sort(function(a,b){return a.time_start>=b.time_start ? true | false});
+        window.nodes = [];
+        window.links = []; 
+        for (var n=0;n<window.toprocess.length;n++){
+            
+        }
+    });
+    //analysis = data; // HERE GOES THE ANALYSIS OF THE DATA
     draw();
 }
 

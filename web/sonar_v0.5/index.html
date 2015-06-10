@@ -1,0 +1,32 @@
+<html>
+
+<link rel="stylesheet" type="text/css" href="../bootstrap.css">
+<link rel="stylesheet" type="text/css" href="sonar_style.css">
+
+<head>
+    <script src="../js/jquery-1.11.2.min.js"></script>
+    <script src="../js/d3.v3.min.js"></script>
+    <script src="../js/queue.v1.min.js"></script>
+    <script src="../js/crossfilter.v1.min.js"></script>
+    <script type="text/javascript" src="../js/dat.gui.min.js"></script>
+    <script src="sankeyStream.js"></script>
+</head>
+
+<body>
+    <div id="svg"></div>
+    <script>
+        window.onload = function () {
+            var gui = new dat.GUI();
+            gui.remember(GraphParameters);
+            gui.add(GraphParameters, 'graphWidth', 100, 6000).onFinishChange(draw);
+            gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'svgHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'nodeWidth', 0, 1).onFinishChange(draw);
+            gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
+            gui.add(GraphParameters, 'curvature', 0.0, 1.0).onFinishChange(draw);
+            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);          
+        };
+    </script>
+    <script src="sonarSankey.js"></script>
+
+</body>
