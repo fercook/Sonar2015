@@ -199,10 +199,11 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
             context.drawImage(image, 0, 0 );
             var data = context.getImageData(0,0,image.width,image.height);
             var i = 0;
+            var vel_intensity = 5.0;
             //console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
             for (var y = 0; y < h; y++) {
                     for (var x = 0; x < w; x++) {
-                        var v = new Vector(-5*(data.data[i]-128)*1.0/(128*masks.length),5*(data.data[i+1]-128)*1.0/(128*masks.length));
+                        var v = new Vector(-vel_intensity*(data.data[i]-128)*1.0/(128*masks.length),vel_intensity*(data.data[i+1]-128)*1.0/(128*masks.length));
                         i+=4;
                     field[x][y] = field[x][y].plus(v);
                 }
