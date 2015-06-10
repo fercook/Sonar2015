@@ -104,7 +104,7 @@ MotionDisplay.prototype.animate = function(animator) {
         g.globalAlpha=1.0;
         this.first = false;
     } else {
-        g.globalAlpha=0.1;
+        g.globalAlpha=0.02;
     }
     g.drawImage(this.backgroundImage,0,0,w,h);
     g.globalAlpha=1.0;
@@ -114,7 +114,7 @@ MotionDisplay.prototype.animate = function(animator) {
 }
 
 
-mierda=0;
+//mierda=0;
 MotionDisplay.prototype.moveThings = function(animator) {
     var speed = .01 * this.speedScale ; /// animator.scale;
     var vel = new Vector(0,0),pos=new Vector(0,0);
@@ -132,8 +132,8 @@ MotionDisplay.prototype.moveThings = function(animator) {
             this.particles[i] = this.makeParticle(animator);
         }
     }
-    mierda++;
-    if (mierda>1000) {ghghga();}
+    //mierda++;
+    //if (mierda>1000) {ghghga();}
 };
 
 

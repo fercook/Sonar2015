@@ -38,6 +38,7 @@ var VectorField = function(field, x0, y0, x1, y1,maxLen) {
     this.y0 = y0;
     this.y1 = y1;
     this.field = field;
+    this.fields = [];
     this.w = field.length;
     this.h = field[0].length;
     if (maxLen) {
@@ -173,7 +174,7 @@ VectorField.gridFromMask = function(bounds, masks, gridSize, center, sign, callb
 };
 
 
-VectorField.gridFromNormals = function(bounds, masks, gridSize, center, sign, callback) {
+VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 
     var field = [];
     var w = gridSize.width;
@@ -201,14 +202,8 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, center, sign, ca
             //console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
             for (var y = 0; y < h; y++) {
                     for (var x = 0; x < w; x++) {
-                    //var v = new Vector(sign*(x-center.x), sign*(y-center.y));
-                    //if(data.data[i+=4]*1.0/(255*masks.length)>0.8 && y>1000) { console.log("Exito "+i+", x:"+x+", y:"+y+", v:"+(data.data[i+=4]*1.0/(255*masks.length)));}
-                    //v.setLength(data.data[i+=4]*1.0/(255*masks.length)); // We get 4 bytes but we only look at R color...
-                        var v = new Vector(5*(data.data[i]-125)*1.0/(128*masks.length),-5*(data.data[i+1]-131)*1.0/(128*masks.length));
+                        var v = new Vector(-5*(data.data[i]-128)*1.0/(128*masks.length),5*(data.data[i+1]-128)*1.0/(128*masks.length));
                         i+=4;
-                    //var vx = data.data[i++];
-                    //var vy = data.data[i++];
-                    //var v = new Vector(vx, vy);
                     field[x][y] = field[x][y].plus(v);
                 }
             }
