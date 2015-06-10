@@ -10,12 +10,8 @@
 
     <!--Thumbnails-->
     <meta name="description" content="A simple and beautiful JavaScript touch carousel">
-    <link rel="image_src" href="http://itemslide.github.io/website-src/img/image.jpg" />
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="ItemSlide.js - JavaScript touch carousel" />
-    <meta property="og:image" content="http://itemslide.github.io/website-src/img/image.jpg" />
-    <meta property="og:url" content="http://itemslide.github.io/" />
-    <meta property="og:description" content="A simple and beautiful JavaScript touch carousel" />
+
+  
 
     <meta name="twitter:image:src" content="http://itemslide.github.io/website-src/img/image.jpg" />
     <meta name="twitter:description" content="A simple and beautiful JavaScript touch carousel">
@@ -32,6 +28,8 @@
     <link href="css/sliding.css" rel="stylesheet" />
     <link href="css/goo_style.css" rel="stylesheet" />
     <link href="css/main_style.css" rel="stylesheet" />
+    <link href="css/flowstyle.css" rel="stylesheet" />
+    <link href="css/gooey.min.css" rel="stylesheet" />
 
 
     <!--Dependencies-->
@@ -50,10 +48,153 @@
     <!--Website JS-->
     <script src="js/recommend_sliding.js"></script>
 
+    <!--Website JS-->
+    
+    <!--script src="js/jquery-2.1.3.min.js"></script-->
+    <script src="js/gooey.min.js"></script>
+    
+    
+    <script type="text/javascript">
+        
+$(function($) {
+            $("#gooey-upper").gooeymenu({
+                bgColor: "#ff6666",
+                contentColor: "white",
+                style: "circle",
+                horizontal: {
+                    menuItemPosition: "glue"
+                },
+                vertical: {
+                    menuItemPosition: "spaced",
+                    direction: "up"
+                },
+                circle: {
+                    radius: 80
+                },
+                margin: "small",
+                size: 90,
+                bounce: true,
+                bounceLength: "small",
+                transitionStep: 100,
+                hover: "#e55b5b"
+            });
+$("#gooey-h").gooeymenu({
+                bgColor: "#68d099",
+                contentColor: "white",
+                style: "horizontal",
+                horizontal: {
+                    menuItemPosition: "glue"
+                },
+                vertical: {
+                    menuItemPosition: "spaced",
+                    direction: "up"
+                },
+                circle: {
+                    radius: 90
+                },
+                margin: "small",
+                size: 80,
+                bounce: true,
+                bounceLength: "small",
+                transitionStep: 100,
+                hover: "#5dbb89"
+            });
+$("#gooey-round").gooeymenu({
+                bgColor: "#68d099",
+                contentColor: "white",
+                style: "circle",
+                horizontal: {
+                    menuItemPosition: "spaced"
+                },
+                vertical: {
+                    menuItemPosition: "spaced",
+                    direction: "up"
+                },
+                circle: {
+                    radius: 85
+                },
+                margin: "small",
+                size: 80,
+                bounce: true,
+                bounceLength: "small",
+                transitionStep: 100,
+                hover: "#5dbb89"
+            });
+   $("#gooey-API").gooeymenu({
+                bgColor: "#68d099",
+                contentColor: "white",
+                style: "circle",
+                circle: {
+                    radius: 85
+                },
+                margin: "small",
+                size: 70,
+                bounce: true,
+                bounceLength: "small",
+                transitionStep: 100,
+                hover: "#5dbb89",
+                open: function() {
+                    $(this).find(".gooey-menu-item").css("background-color", "steelblue");
+                    $(this).find(".open-button").css("background-color", "steelblue");
+                },
+                close: function() {
+                    $(this).find(".gooey-menu-item").css("background-color", "#ffdf00");
+                    $(this).find(".open-button").css("background-color", "#ffdf00");
+                }
+            });
+ $("#gooey-v").gooeymenu({
+                bgColor: "#68d099",
+                contentColor: "white",
+                style: "vertical",
+                horizontal: {
+                    menuItemPosition: "glue"
+                },
+                vertical: {
+                    menuItemPosition: "spaced",
+                    direction: "up"
+                },
+                circle: {
+                    radius: 90
+                },
+                margin: "small",
+                size: 70,
+                bounce: true,
+                bounceLength: "small",
+                transitionStep: 100,
+                hover: "#68d099"
+            });
+
+        });
+
+$(function($) {
+         $(".fa-angle-double-up").on("click",function(event){
+             var body = $("html, body");
+             body.animate({scrollTop:0}, '500', 'swing', function() { 
+         });
+     });
+     window.location.hash="";
+     window.onhashchange=function() {
+         if (document.location.hash === "#docs") {
+             $("#docs").css("display","block");
+             $("#page1").css("display","none");
+         }
+         else if (document.location.hash !== "#docs" ) {
+             $("#docs").css("display", "none");
+             $("#page1").css("display","block");
+             document.location.hash=window.location.hash;
+         }
+     };
+     
+     
+     });
+
+
+</script>
 
 </head>
 
 <body>
+    
     <header>
 
         <!--a style="color:#FFF;text-decoration:none;" href="http://www.bsc.es">
@@ -77,7 +218,7 @@
 
 
         <!--END OF BUTTONS MENU-->
-<nav class="menu">
+<!--nav class="menu">
   <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
   <label class="menu-open-button" for="menu-open">
     <span class="hamburger hamburger-1"></span>
@@ -92,7 +233,32 @@
   <a href="#" class="menu-item"> <i class="fa fa-facebook"></i> </a>
   <a href="#" class="menu-item"> <i class="fa fa-twitter"></i> </a>
 
+</nav-->
+
+        
+        
+<div id="h-spaced-menu" class="section-cont">        
+<nav id="gooey-h" class="navimenu" style="filter: url('#goo-shadow1');">
+
+    <input id="menu-open2" class="menu-open" type="checkbox" name="menu-open2"></input>
+
+        <label class="open-button" for="menu-open2" style="width: 80px; height: 80px; background-color: rgb(104, 208, 153); line-height: 80px;"></label>
+        <a class="gooey-menu-item" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 100ms;"></a>
+        <a class="gooey-menu-item" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 200ms;"></a>
+        <a class="gooey-menu-item" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 300ms;"></a>
+        <a class="gooey-menu-item" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 400ms;"></a>
+
+    <svg id="gooeySVG1" class="gooeySVG">
+        <defs id="defs1">
+            <filter id="goo-shadow1" overflow="hidden"></filter>
+            <filter id="goo1"></filter>
+        </defs>
+    </svg>
+
 </nav>
+</div>
+        
+        
 
         <span id="downloadarea">
         <!--a href="website-src/download.html" id="download">DOWNLOAD</a--> 
@@ -100,7 +266,7 @@
         </span>
 
     </header>
-
+<div class="overlay">
     <div id="welcome">
         <span class="content">
         <!--img id="main-img" src="website-src/img/hero.svg"/-->
@@ -159,6 +325,6 @@
 
 
    
-
-</body>
+</div>
+<!--/body-->
 </html>

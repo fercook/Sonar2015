@@ -15,11 +15,12 @@
    <link rel="stylesheet" type="text/css" href="css/landing.css">
    <link rel="stylesheet" type="text/css" href="css/goo_style.css">
    <link rel="stylesheet" type="text/css" href="css/goo_normalize.css">
+   <link href="css/flowstyle.css" rel="stylesheet" />
     
 </head>
 
 <body>
-    
+ 
 <nav class="menu">
   <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
   <label class="menu-open-button" for="menu-open">
@@ -28,16 +29,19 @@
     <span class="hamburger hamburger-3"></span>
   </label>
 
-  <a href="#" class="menu-item"> <i class="fa fa-bar-chart"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-plus"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-heart"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-envelope"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-cog"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-ellipsis-h"></i> </a>
+
+  <a href="index.html" class="menu-item"> <i class="fa fa-home" ></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-bolt"></i> </a>
+  <a href="sankey.html" class="menu-item"> <i class="fa fa-bar-chart"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-bullseye"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-facebook"></i> </a>
+  <a href="#" class="menu-item"> <i class="fa fa-twitter"></i> </a>
+  
 
 </nav>
     
     <div id="svg"></div>
+    <div class="overlay" style="z-index:-10000000000">   
     <script>
         window.onload = function () {
             var gui = new dat.GUI();
@@ -53,8 +57,10 @@
     </script>
     <script src="js/sankey.js"></script>
     
+
+    
 <div id="fotter" align="center">
     Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
 </div>
-
+<div class="overlay">
 </body>
