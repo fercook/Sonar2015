@@ -1,8 +1,8 @@
 body {
-/*  font: 14px Verdana;*/
+  /*font: 14px Verdana;*/
   color: rgb(148, 148, 148);
     background-color: #000;
-    background-image: url(../../imgs/back_tile.jpg)
+    background-image: url(../imgs/back_tile.jpg);
 
 }
 
@@ -21,7 +21,7 @@ body {
   position: absolute;
   right: 0;
   top: 0;
-  z-index: 10;
+  z-index: auto;
 }
 
 a {
