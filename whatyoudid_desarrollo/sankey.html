@@ -1,6 +1,5 @@
 <html>
 
-<!--link rel="stylesheet" type="text/css" href="../bootstrap.css"-->
 <link rel="stylesheet" type="text/css" href="css/sankey_style.css">
 
 <head>
@@ -13,15 +12,27 @@
     
    <link rel="stylesheet" type="text/css" href="css/main_style.css">
    <link rel="stylesheet" type="text/css" href="css/landing.css">
-   <link rel="stylesheet" type="text/css" href="css/goo_style.css">
-   <link rel="stylesheet" type="text/css" href="css/goo_normalize.css">
    <link href="css/flowstyle.css" rel="stylesheet" />
+   <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
+    
+   <script src="js/mainmenu_prefixfree.min.js"></script>
     
 </head>
 
 <body>
- 
-<nav class="menu">
+
+<a href="#menu" id="toggle"><span></span></a>
+<div id="menu">
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">Now</a></li>
+    <li><a href="#contact">You</a></li>
+    <li><a href="#contact">Flow</a></li>
+  </ul>
+</div>
+    
+
+<!--nav class="menu">
   <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
   <label class="menu-open-button" for="menu-open">
     <span class="hamburger hamburger-1"></span>
@@ -38,7 +49,7 @@
   <a href="#" class="menu-item"> <i class="fa fa-twitter"></i> </a>
   
 
-</nav>
+</nav-->
     
     <div id="svg"></div>
     <div class="overlay" style="z-index:-10000000000">   
@@ -57,7 +68,8 @@
     </script>
     <script src="js/sankey.js"></script>
     
-
+<!-- menu style -->
+<script src='js/mainmenu_index.js'></script>
     
 <div id="fotter" align="center">
     Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
