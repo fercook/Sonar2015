@@ -24,7 +24,7 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, color_mul
     this.numParticles = numParticles;
     this.first = true;
     this.maxLength = field.maxLength;
-    this.speedScale = 0.2;
+    this.speedScale = 0.05;
     this.renderState = 'normal';
     this.backgroundImage = imageCanvas;
     this.imageCanvas = imageCanvas;
@@ -116,7 +116,7 @@ MotionDisplay.prototype.animate = function(animator) {
 
 //mierda=0;
 MotionDisplay.prototype.moveThings = function(animator) {
-    var speed = .01 * this.speedScale ; /// animator.scale;
+    var speed = .005 * this.speedScale ; /// animator.scale;
     var vel = new Vector(0,0),pos=new Vector(0,0);
     for (var i = 0; i < this.particles.length; i++) {
         var p = this.particles[i];
@@ -159,7 +159,7 @@ MotionDisplay.prototype.draw = function(animator) {
         }
         if (p.oldX != -1) { // TODO Optimize away this if
             var wind = this.field.getValue(p.u, p.v);
-            var s = wind.length() / this.maxLength;
+            var s = wind.length() / this.field.maxLength;
             var c = 90 + Math.round(350 * s); // was 400
             if (c > 255) {
                 c = 255;
