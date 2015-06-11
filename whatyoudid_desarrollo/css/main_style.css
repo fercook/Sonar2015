@@ -31,7 +31,7 @@ header {
   -webkit-flex-wrap: wrap;
       -ms-flex-wrap: wrap;
           flex-wrap: wrap;
-  padding: 1em;
+  padding: 5.5em;
 }
 header h1 {
   color: #ecf0f1;
