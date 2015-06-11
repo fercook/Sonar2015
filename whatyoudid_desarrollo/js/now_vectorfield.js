@@ -216,7 +216,7 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
                     v.setLength(1.0);
                     field[x][y] = v; }
                 else {
-                    fi.push(Math.max(0.000001,data.data[i+3]/255.0)); /// There is some problem that the plot crashes if it finds a zero?
+                    fi.push(Math.max(data.data[i+3]/255.0)); /// There is some problem that the plot crashes if it finds a zero?
                 }
                 i+=4;
             }
@@ -240,16 +240,19 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 };
 
 
-VectorField.prototype.aggregateSpeeds = function() {
-
+VectorField.prototype.aggregateSpeeds = function(magnitudes) {
+    console.log(magnitudes);
     for (var y = 0; y < this.h; y++) {
         for (var x = 0; x < this.w; x++) {
-            var L = (1*this.fields[0][y*this.w+x]
-            +1*this.fields[1][y*this.w+x]
-            +1*this.fields[2][y*this.w+x]
-            +1*this.fields[3][y*this.w+x])*5;
+            var L= 0;
+            for (var n=0;n<magnitudes.length-1;n++) { //First number is magnitude of baseline field?
+                L += magnitudes[n+1]*this.fields[n][y*this.w+x];
+            };
+//            var L = (1*this.fields[0][y*this.w+x]+1*this.fields[1][y*this.w+x]
             //if (L>0) console.log(L);
-            this.field[x][y] = this.field[x][y].plus(this.field[x][y].mult(L)); // this.field[x][y].mult(L);//
+            var v = this.field[x][y];
+            this.field[x][y] = new Vector( (magnitudes[0]+L) * v.x, (magnitudes[0]+L) * v.y  );
+                //this.field[x][y].plus(this.field[x][y].mult(L)); // this.field[x][y].mult(L);//
         }
     }
     return;
