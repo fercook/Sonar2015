@@ -160,7 +160,7 @@ MotionDisplay.prototype.draw = function(animator) {
         if (p.oldX != -1) { // TODO Optimize away this if
             var wind = this.field.getValue(p.u, p.v);
             var s = wind.length() / this.field.maxLength;
-            var c = 90 + Math.round(350 * s); // was 400
+            var c = 10 + Math.round(350 * s); // was 400
             if (c > 255) {
                 c = 255;
             }

@@ -65,7 +65,6 @@ var getMACByRoom = function(name,date) {
     return mac;
 };
 
-
 var getMACDict = function(date) {
     var dict = {"entry": "Entry", "exit": "Exit"};
     RoomRecords.forEach(function(d) {
