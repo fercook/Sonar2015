@@ -1,0 +1,59 @@
+body {
+  font: 14px Verdana;
+  color: rgb(148, 148, 148);
+    background-color: #000;
+    background-image: url(../imgs/back_tile.jpg)
+
+}
+
+.overlay {
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  -webkit-transition: 0.25s opacity;
+  -moz-box-align: center;
+  -moz-box-pack: center;
+  -moz-transition: 0.25s opacity;
+
+  background: -webkit-radial-gradient(rgba(255, 255, 255, 0.2),
+                                      rgba(127, 127, 127, 0.5) 5%,
+                                      rgba(12, 18, 16, 0.95));
+  background: -moz-radial-gradient(rgba(255, 255, 255, 0.2),
+                                      rgba(127, 127, 127, 0.5) 5%,
+                                      rgba(12, 18, 16, 0.95));
+  bottom: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  left: 0;
+  padding: 0px;
+  padding-bottom: 0px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 10;
+    width: 100%;
+    height: 100%;
+}
+
+a {
+    color: #000
+}
+
+
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+.clipped {
+clip-path: url(#theClip);
+  clip-path: url(#theClip);
+  -webkit-clip-path: url(#theClip);
+  -ms-clip-path: url(#theClip);
+  -moz-clip-path: url(#theClip);
+}
+
+
+
