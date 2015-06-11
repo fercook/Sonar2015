@@ -134,46 +134,74 @@ function init() {
     var currentGraph = {links: [], rooms: []};
     var currentTimeInterval;
 
-/*  $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=process_graph",
-        {dataType:"jsonp", crossDomain: true});
-/*        .done(function( data ) {
-            ...blablabla...
-            }
-        });
-*/
     velocityImages = ["imgs/normal_clipped.png"];
-    velocityArray = [1.0];
     velocityIdx = {rooms: {}, to: {}, from: {}};
-    var i = 1;
     Rooms.forEach(function(roomName) {
-        // Inside a room
-        velocityImages.push("imgs/now/stroke_"+roomName.name+".png");
-        velocityIdx.rooms[roomName.name] = i; i++; velocityArray.push(0.0);
-        //Out from Village to room
-        velocityImages.push("imgs/now/strokeOut_"+roomName.name+".png");  velocityArray.push(0.0);
-        velocityIdx.to[roomName.name] = i; i++;
-        //in from Village to room
-        velocityImages.push("imgs/now/strokeIn_"+roomName.name+".png"); velocityArray.push(0.0);
-        velocityIdx.from[roomName.name] = i; i++;
+        if (roomName != "Entry" && roomName != "Exit") {
+            // Inside a room
+            velocityImages.push("imgs/now/stroke_"+roomName+".png");
+            velocityIdx.rooms[roomName] = velocityImages.length-1;
+            if (roomName != "Village") {
+                //Out from Village to room
+                velocityImages.push("imgs/now/strokeOut_"+roomName+".png");
+                velocityIdx.to[roomName] = velocityImages.length-1;
+                //in from Village to room
+                velocityImages.push("imgs/now/strokeIn_"+roomName+".png");
+                velocityIdx.from[roomName] = velocityImages.length-1;
+            }
+        }
     });
 
     process_graph = function(inputGraph) {
-        velocityArray = [1.0];
+        // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
+        var velocityArray = [];
+        for (var n=0;n<velocityImages.length;n++) velocityArray.push(n==0? 1.0 : 0.0);
         //currentTimeInterval = [new Date(inputGraph.time_start), new Date(inputGraph.time_end)];
         dict = getMACDict(new Date(inputGraph.time_start));
         var maxRoom = 0, maxLink = 0;
         inputGraph.rooms.forEach(function(room){
-
-            velocityArray[ velocityIdx.rooms[dict[room.name]] ]
-            var a = {};
-            a[dict[room.name]] = +room.devices;
-//            currentGraph.rooms.push({dict[room.name]: });
-            maxRoom = Math.max(+room.devices, maxRoom);
-
-
+            velocityArray[ velocityIdx.rooms[dict[room.name]] ] += +room.devices;
         });
+        inputGraph.links.forEach(function(link){
+            var endRoom = dict[link.end_room], startRoom = dict[link.start_room];
+            if (endRoom != startRoom) { // Need to deal with the people that stay in the same room
+                if ( endRoom!= "Village" && // This is people going into a room
+                    endRoom != "Exit" &&    // We don't count people going out or in
+                    endRoom != "Entry" ) {
+                        velocityArray[ velocityIdx.to[endRoom]]  += +link.value;
+                }
+                else if (startRoom != "Village" ) { // This is people going from this room to anywhere else
+                                                    // We aggregate them into the center Village
+                        velocityArray[ velocityIdx.from[startRoom] ] += +link.value;
+                }
+            }
+        });
+        return velocityArray;
     };
 
+
+
+/*  $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?",
+        {dataType:"jsonp", crossDomain: true});
+/*        .done(function( json ) {
+            velocities = process_graph(json);
+
+var jjj = VectorField.gridFromNormals(
+        {x0:400,y0:300,x1:1500,y1:800},
+        velocityImages,
+        {width:819, height:837},
+        function(f){
+                f.aggregateSpeeds(velocities);
+                var color = [1,1,1];
+                var display = new MotionDisplay(canvas, bak_image, f, numParticles, color);
+                mapAnimator.add(display);
+                mapAnimator.start(40);
+        } );
+
+
+            }
+        });
+*/
     var jjj = VectorField.gridFromNormals(
         {x0:400,y0:300,x1:1500,y1:800},
         ["imgs/normal_clipped.png","imgs/now/strokeOut_Dome.png","imgs/now/strokeOut_Hall.png",
