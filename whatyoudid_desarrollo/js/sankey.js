@@ -67,9 +67,6 @@ function draw() {
     path = sankey.link();
 
     colors = d3.scale.category10();
-    colors = d3.scale.ordinal()
-    .domain("caca","pipi","culo")
-    .range("#fff","#fbf","#ffa")
 
     sankey
         .nodes(analysis.nodes)

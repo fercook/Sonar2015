@@ -196,8 +196,8 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
         imgs.push(img);
         img.onload = function(){ imagesOK++; imagesAllLoaded(); };
         img.src = masks[i];
-    }          
-    
+    }
+
     function myGetImageData(img,vector) {
         var fakecanvas = document.createElement('canvas');
         fakecanvas.width = img.width;
@@ -212,23 +212,24 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
             for (var x = 0; x < w; x++) {
                 if (vector) {
                     var v = new Vector(-(data.data[i]-128)*1.0/(128),
-                                       (data.data[i+1]-128)*1.0/(128));
-                    i+=4;
+                                        (data.data[i+1]-128)*1.0/(128));
+                    v.setLength(1.0);
                     field[x][y] = v; }
                 else {
-                    fi.push(data.data[i]/255.0);
+                    fi.push(Math.max(0.000001,data.data[i+3]/255.0)); /// There is some problem that the plot crashes if it finds a zero?
                 }
+                i+=4;
             }
         }
         return fi;
     }
-            
+
     var imagesAllLoaded = function() {
       if (imagesOK==masks.length ) {
           // all images are fully loaded and ready to use
           // The first one holds the velocity patterns, it loads in the global field variable
           myGetImageData(imgs[0],true);
-          var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1, 0.2);
+          var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1, 6);
           for (var k=1;k<masks.length;k++) {
               result.fields.push(myGetImageData(imgs[k]));
           }
@@ -239,12 +240,23 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 };
 
 
-VectorField.prototype.aggregateSpeeds = function(intensityGraph) {
-    
+VectorField.prototype.aggregateSpeeds = function() {
+
+    for (var y = 0; y < this.h; y++) {
+        for (var x = 0; x < this.w; x++) {
+            var L = (1*this.fields[0][y*this.w+x]
+            +1*this.fields[1][y*this.w+x]
+            +1*this.fields[2][y*this.w+x]
+            +1*this.fields[3][y*this.w+x])*5;
+            //if (L>0) console.log(L);
+            this.field[x][y] = this.field[x][y].plus(this.field[x][y].mult(L)); // this.field[x][y].mult(L);//
+        }
+    }
+    return;
 }
 
-    
-    
+
+
 VectorField.prototype.inBounds = function(u, v) {
   //return x >= this.x0 && x < this.x1 && y >= this.y0 && y < this.y1;
     return u >= 0.0 && u <= 1.0 && v >= 0.0 && v <= 1.0;

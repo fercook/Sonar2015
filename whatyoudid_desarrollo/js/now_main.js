@@ -130,21 +130,57 @@ function init() {
     mapAnimator = new Animator(null, isAnimating);
 
 
-$.ajax("http://visualization-case.bsc.es/getJson.jsp?box_mac="+BOX_MAC+"&callback=?",
-        {dataType:"jsonp", crossDomain: true})
-        .done(function( data ) {
+    // Get graph and process data
+    var currentGraph = {links: [], rooms: []};
+    var currentTimeInterval;
+
+/*  $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=process_graph",
+        {dataType:"jsonp", crossDomain: true});
+/*        .done(function( data ) {
             ...blablabla...
             }
         });
+*/
+    velocityImages = ["imgs/normal_clipped.png"];
+    velocityArray = [1.0];
+    velocityIdx = {rooms: {}, to: {}, from: {}};
+    var i = 1;
+    Rooms.forEach(function(roomName) {
+        // Inside a room
+        velocityImages.push("imgs/now/stroke_"+roomName.name+".png");
+        velocityIdx.rooms[roomName.name] = i; i++; velocityArray.push(0.0);
+        //Out from Village to room
+        velocityImages.push("imgs/now/strokeOut_"+roomName.name+".png");  velocityArray.push(0.0);
+        velocityIdx.to[roomName.name] = i; i++;
+        //in from Village to room
+        velocityImages.push("imgs/now/strokeIn_"+roomName.name+".png"); velocityArray.push(0.0);
+        velocityIdx.from[roomName.name] = i; i++;
+    });
+
+    process_graph = function(inputGraph) {
+        velocityArray = [1.0];
+        //currentTimeInterval = [new Date(inputGraph.time_start), new Date(inputGraph.time_end)];
+        dict = getMACDict(new Date(inputGraph.time_start));
+        var maxRoom = 0, maxLink = 0;
+        inputGraph.rooms.forEach(function(room){
+
+            velocityArray[ velocityIdx.rooms[dict[room.name]] ]
+            var a = {};
+            a[dict[room.name]] = +room.devices;
+//            currentGraph.rooms.push({dict[room.name]: });
+            maxRoom = Math.max(+room.devices, maxRoom);
+
+
+        });
+    };
 
     var jjj = VectorField.gridFromNormals(
         {x0:400,y0:300,x1:1500,y1:800},
-        //["imgs/domeToHall_stroke.png"],
-        ["imgs/normal_clipped.png"],
-        //["../imgs/map_torbellinos.png"],
+        ["imgs/normal_clipped.png","imgs/now/strokeOut_Dome.png","imgs/now/strokeOut_Hall.png",
+        "imgs/now/strokeOut_Planta.png","imgs/now/strokeOut_PlusD.png","imgs/now/strokeOut_Complex.png"],
         {width:819, height:837},
         function(f){
-                //f.aggregateSpeeds(intensityGraph);
+                f.aggregateSpeeds(); //intensityGraph);
                 var color = [1,1,1];
                 var display = new MotionDisplay(canvas, bak_image, f, numParticles, color);
                 mapAnimator.add(display);
@@ -153,6 +189,7 @@ $.ajax("http://visualization-case.bsc.es/getJson.jsp?box_mac="+BOX_MAC+"&callbac
 
 
 }
+
 
     /*
     fields = createCurves(bounds);
