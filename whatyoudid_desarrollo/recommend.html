@@ -24,12 +24,17 @@
 
     <!--Styles-->
     
-    <link href="css/layout.css" rel="stylesheet" />
+    
+    <link rel="stylesheet" type="text/css" href="css/main_style.css">
+    <link rel="stylesheet" type="text/css" href="css/landing.css">
+    <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
+    
     <link href="css/sliding.css" rel="stylesheet" />
-    <link href="css/goo_style.css" rel="stylesheet" />
-    <link href="css/main_style.css" rel="stylesheet" />
+    <link href="css/layout.css" rel="stylesheet" />
     <link href="css/flowstyle.css" rel="stylesheet" />
-    <link href="css/gooey.min.css" rel="stylesheet" />
+    
+    <script src="js/mainmenu_prefixfree.min.js"></script>
+    
 
 
     <!--Dependencies-->
@@ -61,77 +66,18 @@
 
 <body>
     
-    <header>
-
-        <!--a style="color:#FFF;text-decoration:none;" href="http://www.bsc.es">
-            <div id="headertext">We <span style="font-size:4.3vh;">know what you did...</span>
-            </div>
-          </a-->
-            <!--table id="buttons-menu">
-                <tr>
-                    <td>
-                        <a id="docs" href="docs/index.html">
-                            Docs
-                        </a>
-                    </td>
-                    <td>
-                        <a id="github" href="https://github.com/itemslide/itemslide.github.io">
-                            Github
-                        </a>
-                    </td>
-                </tr>
-            </table-->
-
-
-        <!--END OF BUTTONS MENU-->
-<!--nav class="menu">
-  <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
-  <label class="menu-open-button" for="menu-open">
-    <span class="hamburger hamburger-1"></span>
-    <span class="hamburger hamburger-2"></span>
-    <span class="hamburger hamburger-3"></span>
-  </label>
-
-  <a href="index.html" class="menu-item"> <i class="fa fa-home"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-bolt"></i> </a>
-  <a href="sankey.html" class="menu-item"> <i class="fa fa-bar-chart"></i></a>
-  <a href="#" class="menu-item"> <i class="fa fa-bullseye"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-facebook"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-twitter"></i> </a>
-
-</nav-->
-
-        
-        
-<div id="h-spaced-menu" class="section-cont">        
-<nav id="gooey-h" class="navimenu" style="filter: url('#goo-shadow1');">
-
-    <input id="menu-open2" class="menu-open" type="checkbox" name="menu-open2"></input>
-
-        <label class="open-button fa fa-bars" for="menu-open2" style="width: 80px; height: 80px; background-color: rgb(104, 208, 153); line-height: 80px;"></label>
-        <a class="gooey-menu-item fa fa-home" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 100ms;"></a>
-        <a class="gooey-menu-item fa fa-bolt" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 200ms;"></a>
-        <a class="gooey-menu-item fa fa-bar-chart" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 300ms;"></a>
-        <a class="gooey-menu-item fa fa-bullseye" href="#" style="width: 80px; height: 80px; color: white; background-color: r…orm: translate3d(0px, 0px, 0px); transition-duration: 400ms;"></a>
-
-    <svg id="gooeySVG1" class="gooeySVG">
-        <defs id="defs1">
-            <filter id="goo-shadow1" overflow="hidden"></filter>
-            <filter id="goo1"></filter>
-        </defs>
-    </svg>
-
-</nav>
+<a href="#menu" id="toggle"><span></span></a>
+<div id="menu">
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#about">Now</a></li>
+    <li><a href="#contact">You</a></li>
+    <li><a href="#contact">Flow</a></li>
+  </ul>
 </div>
-        
-        
+    
 
-        <span id="downloadarea">
-        <!--a href="website-src/download.html" id="download">DOWNLOAD</a--> 
-        <!-- Add here social icons -->    
-        </span>
-
-    </header>
+  
 <div class="overlay">
     <div id="welcome">
         <span class="content">
@@ -170,7 +116,10 @@
     </div>
     <!--//-->
 
-
+<!-- menu style -->
+<script src='js/mainmenu_index.js'></script>
+    
+    
     <!--Fotter from here-->
     <div id="fotter" align="center">
 
