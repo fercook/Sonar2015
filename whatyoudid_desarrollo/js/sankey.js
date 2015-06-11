@@ -50,9 +50,9 @@ function draw() {
     svg.append("rect")
         .attr("class", "sea")
         .attr("width", GraphParameters.graphWidth)
-        .attr("height", height);
-        /*.style("fill", "white"); fondo svg */
-    //    .on("click", click);
+        .attr("height", height)
+        .style("fill", 0,0,0,0)
+        .style("opacity",0);//    .on("click", click);
 
     var maing = svg.append("g");
 
