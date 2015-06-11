@@ -20,11 +20,12 @@ GraphParameters = {
 
 
 queue()
-    .defer(d3.json, "../../sonar/whatyoudid/data/sankey_analysis.json") //"../DATA/prob_separated.json")
+    //TODO Read actual data format
+    .defer(d3.json, "data/sankey_analysis.json") //"../DATA/prob_separated.json")
 .await(ready);
 
 function ready(error, data) {
-    analysis = data;
+    analysis = data; // TODO Process real data format
     draw();
 }
 
@@ -66,17 +67,20 @@ function draw() {
     path = sankey.link();
 
     colors = d3.scale.category10();
+    colors = d3.scale.ordinal()
+    .domain("caca","pipi","culo")
+    .range("#fff","#fbf","#ffa")
 
     sankey
         .nodes(analysis.nodes)
         .links(analysis.links)
         .layout();
-    
+
     mainplot = drawComponents(analysis);
 }
 
 function drawComponents(graph){
-    
+
     var link = svg.append("g").selectAll(".link")
         .data(graph.links).enter();
 //    console.log("Links");
@@ -127,8 +131,9 @@ function drawComponents(graph){
         .style("fill", function (d) {
             return d.color = colors(d.room);
         })
-        .on("mouseover", function (d) {       
+        .on("mouseover", function (d) {
             highlight = drawHighlight(d);
+        view_artist_data(d,this);
         })
         .on("mouseout", function (d) {
             d3.selectAll(".highlightLink").remove();
@@ -144,7 +149,7 @@ function drawHighlight(highlightNode){
 //    console.log("highlight:");
 //    console.log(graph.links);
     //graph.nodes = [highlightNode];
-    
+
         //console.log(graph.links.filter(function(d){return d.value > 0;}));
     var link = svg.append("g").selectAll(".highlightLink")
         .data(graph.links).enter();
@@ -181,4 +186,23 @@ function drawHighlight(highlightNode){
         });
 */
     return link;
+}
+
+
+sponsors = { "SonarVillage by ESTRELLA DAMM": "Village",
+            "SonarDome by Red BULL Music Academy": "Dome",
+            "SonarHall": "Hall",
+            "Hall+D": "Sonar+D",
+            "SonarComplex": "Complex"
+           }
+
+
+function view_artist_data(userselection, rect) {
+    d3.csv("data/artists_by_room.csv", function(data) {
+        var filteredData = data.filter(function(d,i) {
+            if (d["DIA"] == 18 && sponsors[d["SALA"]]=="Village" && d["HORA"] == "16:15")    //userselection["day"] userselection["room"]
+            {return d;}
+        });
+        console.log(filteredData);
+    });
 }
