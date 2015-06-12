@@ -19,6 +19,25 @@ function format(x) {
     return a1 + '.' + a2;
 }
 
+d3max = function(array, f) {
+    var i = -1, n = array.length, a, b;
+    if (arguments.length === 1) {
+      while (++i < n) if ((b = array[i]) != null && b >= b) {
+        a = b;
+        break;
+      }
+      while (++i < n) if ((b = array[i]) != null && b > a) a = b;
+    } else {
+      while (++i < n) if ((b = f.call(array, array[i], i)) != null && b >= b) {
+        a = b;
+        break;
+      }
+      while (++i < n) if ((b = f.call(array, array[i], i)) != null && b > a) a = b;
+    }
+    return a;
+  };
+
+
 function init() {
 
     //var imageCanvas = document.getElementById('image-canvas');
@@ -188,7 +207,7 @@ function init() {
         to: {},
         from: {}
     };
-    
+
     Rooms.forEach(function (roomName) {
         if (roomName != "Entry" && roomName != "Exit") {
             // Inside a room
@@ -229,9 +248,9 @@ function init() {
             }
         });
         Rooms.forEach(function(startRoomName) {
-            console.log("Room "+startRoomName+" has occupancy "+flowArray[flowIdx.rooms[startRoomName]]);
-            console.log(flowArray[flowIdx.to[startRoomName]]+" have gone into  "+startRoomName);
-            console.log(flowArray[flowIdx.from[startRoomName]]+" have gone out of  "+startRoomName);
+            console.log("Room "+startRoomName+" has occupancy "+flowArray[flowIdx.rooms[startRoomName]]
+                       +", "+flowArray[flowIdx.to[startRoomName]]+" have gone in, and "+
+                        flowArray[flowIdx.from[startRoomName]]+" have gone out");
         });
         return flowArray;
     };
@@ -242,10 +261,39 @@ function init() {
         crossDomain: true
         })
         .done(function (json) {
-            var flows = process_graph(json);
-            // Do some normalization?
-            maxVel = Math.max(function(d,i){return i==0? d:d/maxVel});            
+            var rawFlows = process_graph(json);
+            var flows = rawFlows.slice(0,flowImages.length);
 
+            ///////// TESTING POPULATIONS
+            console.log("initial flows: ")
+                console.log(flows);
+            Rooms.forEach(function(startRoomName) {
+                console.log("Room "+startRoomName+" occupancy : "+flowIdx.rooms[startRoomName]
+                           +", inflow: "+flowIdx.to[startRoomName]
+                           +", outflow: "+flowIdx.from[startRoomName]);
+            });
+            // Dome inside, in, out,
+            flows = [4000, 780, 620,
+            // Hall inside, in, out,
+                     7500, 1500, 210,
+            // Planta inside, in, out,
+                     230, 15, 50,
+            // PlusD inside, in, out,
+                     3500, 1500, 2100,
+            // Complex inside, in, out,
+                     1000, 1000, 20,
+            // Village inside
+                     17500 ];
+            console.log("Temp flows: ")
+            console.log(flows);
+            ///////// TESTING POPULATIONS
+
+            // Do some normalization?
+            var maxFlow = d3max(flows);
+            console.log(maxFlow);
+            flows = flows.map(function(d){return 5*d/maxFlow});
+            console.log(maxFlow);
+        console.log(flows);
             var jjj = VectorField.gridFromNormals(
                 {
                     x0: 400,
