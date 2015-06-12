@@ -67,6 +67,7 @@
   /* just for this demo */
   opacity: 0; 
   transition: opacity .4s;
+  z-index: 1;
 }
 #menu:after {
   position: absolute;
