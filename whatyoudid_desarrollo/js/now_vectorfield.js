@@ -180,22 +180,12 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
     var field = [];
     var w = gridSize.width;
     var h = gridSize.height;
-    var n = 2 * w * h;
 
     for (var x = 0; x < w; x++) {
         field[x] = [];
         for (var y = 0; y < h; y++) {
             field[x][y] = new Vector(0, 0);
         }
-    }
-
-    var imgs=[];
-    imagesOK=0;
-    for (var i = 0; i < masks.length; i++) {
-        var img = new Image();
-        imgs.push(img);
-        img.onload = function(){ imagesOK++; imagesAllLoaded(); };
-        img.src = masks[i];
     }
 
     function myGetImageData(img,vector) {
@@ -236,22 +226,36 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
           callback(result);
         }
       }
+
+    var imgs=[];
+    var imagesOK=0;
+    for (var i = 0; i < masks.length; i++) {
+        var img = new Image();
+        imgs.push(img);
+        img.onload = function(){ imagesOK++; imagesAllLoaded(); };
+        img.src = masks[i];
+    }
+
     return true;
 };
 
 
 VectorField.prototype.aggregateSpeeds = function(magnitudes) {
-    console.log(magnitudes);
+    for (var n=0;n<magnitudes.length;n++) {
+        console.log(" reading field "+n+":"+this.fields[n][20000]);
+    }
     for (var y = 0; y < this.h; y++) {
         for (var x = 0; x < this.w; x++) {
             var L= 0;
-            for (var n=0;n<magnitudes.length-1;n++) { //First number is magnitude of baseline field?
-                L += magnitudes[n+1]*this.fields[n][y*this.w+x];
+            for (var n=0;n<magnitudes.length;n++) { //First number is magnitude of baseline field?
+                var m = magnitudes[n];
+                var f = this.fields[n][y*this.w+x];
+                L += m*f;
             };
 //            var L = (1*this.fields[0][y*this.w+x]+1*this.fields[1][y*this.w+x]
             //if (L>0) console.log(L);
             var v = this.field[x][y];
-            this.field[x][y] = new Vector( (magnitudes[0]+L) * v.x, (magnitudes[0]+L) * v.y  );
+            this.field[x][y] = new Vector( (L) * v.x, (L) * v.y  );
                 //this.field[x][y].plus(this.field[x][y].mult(L)); // this.field[x][y].mult(L);//
         }
     }

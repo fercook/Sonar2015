@@ -34,13 +34,17 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, color_mul
     this.y1 = this.field.y1;
     this.makeNewParticles(null, true);
     this.colors = [];
-    this.rgb = '100, 0, 0';
+    this.rgb = '0, 0, 0';
     this.background = 'rgb(' + this.rgb + ')';
     this.backgroundAlpha = 'rgba(' + this.rgb + ', 0.02)';
     this.outsideColor = '#fff';
     for (var i = 0; i < 256; i++) {
-        this.colors[i] = 'rgb(' + Math.floor(i*color_mult[0]) + ',' + Math.floor(i*color_mult[1]) + ',' + Math.floor(i*color_mult[2]) +')';
+        this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
     }
+   // for (var i = 64; i < 256; i++) {
+//        this.colors[i] = 'rgba(' + Math.floor(i*color_mult[0]) + ',' + Math.floor(i*color_mult[1]) + ',' + Math.floor(i*color_mult[2]) + ',' + Math.floor((256-i)) +')';
+    //}
+
     if (this.projection) {
       this.startOffsetX = this.projection.offsetX;
       this.startOffsetY = this.projection.offsetY;
@@ -160,10 +164,11 @@ MotionDisplay.prototype.draw = function(animator) {
         if (p.oldX != -1) { // TODO Optimize away this if
             var wind = this.field.getValue(p.u, p.v);
             var s = wind.length() / this.field.maxLength;
-            var c = 10 + Math.round(350 * s); // was 400
+            var c = 90 + Math.round(350 * s); // was 400  Math.round(255*s*1.4-10);
             if (c > 255) {
                 c = 255;
             }
+            if (c < 0) c=0;
             g.strokeStyle = this.colors[c];
             g.beginPath();
             g.moveTo(p.x, p.y);
