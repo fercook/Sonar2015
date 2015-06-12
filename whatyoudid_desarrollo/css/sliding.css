@@ -12,7 +12,7 @@
 
 }
 
-ul {
+ul#slide {
 
     /*Add if you want to disable the option of selecting the text while sliding*/
     -webkit-user-select: none;
@@ -43,11 +43,11 @@ ul {
 
 }
 
-li img{
+li#slides img{
     height: 60%;
     
 }
-li {
+li#slides {
 
     font-size:4vmin;/*cool*/
     float: left;
@@ -73,7 +73,7 @@ li {
 
 }
 
-li span
+li#slides span
 {
      font-size:2vmin;/*cool*/
 }
