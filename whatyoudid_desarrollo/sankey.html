@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <link rel="stylesheet" type="text/css" href="css/sankey_style.css">
 
@@ -15,12 +16,79 @@
     <link href="css/flowstyle.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
     
+    <!-- Estilos tooltipster -->
+    <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+    <link rel="stylesheet" type="text/css" href="css/themes/tooltipster-light.css" />
+    
+    
+    
+    
    <script src="js/mainmenu_prefixfree.min.js"></script>
+   <script src="http://d3js.org/d3.v3.min.js"></script>
+    
+   <!-- scripts tooltipster -->
+    <script type="text/javascript" src="js/jquery-1.7.0.min.js"></script>
+	<script type="text/javascript" src="js/jquery.tooltipster.js"></script>
+    
+    <script type="text/javascript">
+		$(document).ready(function() {
+            //$('.tooltip').tooltipster();
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-light',
+                interactive: true
+            });
+		});
+    </script>
+    
+   <!-- Legend -->
+    
+    <style type="text/css">
+    
+        
+    #rcorners1 {
+    border-radius: 25px;
+    background: #545958;
+    opacity: 80%;
+    padding: 20px 60px; 
+    width: 200px;
+    height: 150px; 
+    text-align:top;
+    color:#cb863a; 
+    z-index: 60000000;
+}
+        
+#rcorners1 a #name{
+    color:red;
+    text-decoration-color: red;
+}
+        
+        
+#rcorners1 a #link{
+    color:blue;
+}
+
+    
+    </style>
+  
     
 </head>
 
 <body>
+    
 
+<br/> <br/> <br/>
+<section class="themes">
+            <div class="themes">
+				<span class="tooltipster-default-preview tooltip" title="The default theme" target="_blank">Default</span>
+				<span class="tooltipster-light-preview tooltip" title="Light and frisky!" target="_blank">Light</span>
+				<span class="tooltipster-punk-preview tooltip" title="I will not conform to your old fart ways!" target="_blank">Punk</span>
+				<span class="tooltipster-noir-preview tooltip" title="Hipsterific!" target="_blank">Noir</span>
+				<span class="tooltipster-shadow-preview" title="Check out my shadow" target="_blank">Shadow</span>
+			</div>
+</section>
+<!-- Div artistas tooltipster-->
+
+<!-- Menú desplegable -->
 <a href="#menu" id="toggle"><span></span></a>
 <div id="menu">
   <ul>
@@ -31,11 +99,24 @@
   </ul>
 </div>
     
-
-
+<!-- Div auxiliar -->
+<div id="rcorners1">
+    <img src="imgs/artist/adda.png" style="height:100px;" /> <a href="" id="name">Raphael</a>
+    <br>
+    <a href="" id="link">Raphael</a>
     
-    <div id="svg"></div>
-    <div class="overlay" style="z-index:-10000000000">   
+</div>
+    
+<!-- Div leyendas salas -->
+    <div id='legend'></div>  
+  
+<!-- DIV PRINCIPAL GRAFO -->
+<div id="svg"></div>
+    
+
+<!-- DIV EGECTO DEGRADADO -->
+    
+    <!--div class="overlay" style="z-index:200000000000"-->
     <script>
         window.onload = function () {
             var gui = new dat.GUI();
@@ -53,9 +134,10 @@
     
 <!-- menu style -->
 <script src='js/mainmenu_index.js'></script>
+<script src="js/legend.js"></script>
     
 <div id="fotter" align="center">
     Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
 </div>
-<div class="overlay">
+
 </body>

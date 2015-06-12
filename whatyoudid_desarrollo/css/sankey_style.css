@@ -1,5 +1,7 @@
+@import url(http://fonts.googleapis.com/css?family=Glegoo|Oswald:400,700);
 body{
-    font-family: 'Source Sans Pro', sans-serif;
+    /*font-family: 'Source Sans Pro', sans-serif;*/
+    font-family:Oswald;
     text-align:center;
     /*background-image: url(../imgs/BG_Scary.jpg);*/
     /*background: #000;*/
@@ -33,3 +35,11 @@ rect.sea {
     .link:hover {
         stroke-opacity: 1.0;
     }
+
+#legend {
+  width: 50%;
+  height: 60%;
+  top: 105%;
+  left: 30%;
+  position: absolute;
+}
