@@ -20,22 +20,79 @@ function format(x) {
 }
 
 d3max = function(array, f) {
-    var i = -1, n = array.length, a, b;
+    var i = -1,
+        n = array.length,
+        a, b;
     if (arguments.length === 1) {
-      while (++i < n) if ((b = array[i]) != null && b >= b) {
-        a = b;
-        break;
-      }
-      while (++i < n) if ((b = array[i]) != null && b > a) a = b;
+        while (++i < n)
+            if ((b = array[i]) != null && b >= b) {
+                a = b;
+                break;
+            }
+        while (++i < n)
+            if ((b = array[i]) != null && b > a) a = b;
     } else {
-      while (++i < n) if ((b = f.call(array, array[i], i)) != null && b >= b) {
-        a = b;
-        break;
-      }
-      while (++i < n) if ((b = f.call(array, array[i], i)) != null && b > a) a = b;
+        while (++i < n)
+            if ((b = f.call(array, array[i], i)) != null && b >= b) {
+                a = b;
+                break;
+            }
+        while (++i < n)
+            if ((b = f.call(array, array[i], i)) != null && b > a) a = b;
     }
     return a;
-  };
+};
+
+var roomPos = [{
+    cx: 387,
+    cy: 359,
+    r: 205,
+    id: "Village"
+}, {
+    cx: 138,
+    cy: 145,
+    r: 127.5,
+    id: "Dome"
+}, {
+    cx: 642,
+    cy: 155,
+    r: 123.5,
+    id: "Hall"
+}, {
+    cx: 693,
+    cy: 436,
+    r: 113,
+    id: "Planta"
+}, {
+    cx: 509,
+    cy: 679,
+    r: 140.5,
+    id: "PlusD"
+}, {
+    cx: 148,
+    cy: 576,
+    r: 119.5,
+    id: "Complex"
+}];
+
+d3.select("#marking").selectAll("circles")
+    .data(roomPos).enter()
+    .append("circle")
+    .attr("cx", function(d) {
+        return d.cx + "px"
+    })
+    .attr("cy", function(d) {
+        return d.cy + "px"
+    })
+    .attr("r", function(d) {
+        return d.r + "px"
+    })
+    .style("stroke", "none")
+    .style("fill", "steelblue")
+    .style("opacity", 0)
+    .on("mouseover", function(d) {
+
+    });
 
 
 function init() {
@@ -104,45 +161,6 @@ function init() {
             return [first, second];
         }
 
-        var roomPos = [
-            {
-                cx: 387,
-                cy: 359,
-                r: 205,
-                id: "Village"
-            },
-            {
-                cx: 138,
-                cy: 145,
-                r: 127.5,
-                id: "Dome"
-            },
-            {
-                cx: 642,
-                cy: 155,
-                r: 123.5,
-                id: "Hall"
-            },
-            {
-                cx: 693,
-                cy: 436,
-                r: 113,
-                id: "Planta"
-            },
-            {
-                cx: 509,
-                cy: 679,
-                r: 140.5,
-                id: "PlusD"
-            },
-            {
-                cx: 148,
-                cy: 576,
-                r: 119.5,
-                id: "Complex"
-            }
-          ];
-
         contxt.beginPath();
         // Find the crossings of the first room
         var entryPoints = findEntryPoints(roomPos[0], roomPos[1]);
@@ -201,39 +219,39 @@ function init() {
     };
     var currentTimeInterval;
 
-    flowImages = ["imgs/normal_clipped.png"];
+    flowImages = ["imgs/now/normal_clipped.png"];
     flowIdx = {
         rooms: {},
         to: {},
         from: {}
     };
 
-    Rooms.forEach(function (roomName) {
+    Rooms.forEach(function(roomName) {
         if (roomName != "Entry" && roomName != "Exit") {
             // Inside a room
-            flowImages.push("imgs/now/Fill_" + roomName + ".png");
             flowIdx.rooms[roomName] = flowImages.length - 1;
+            flowImages.push("imgs/now/Fill_" + roomName + ".png");
             if (roomName != "Village") {
                 //Out from Village to room
-                flowImages.push("imgs/now/strokeOut_" + roomName + ".png");
                 flowIdx.to[roomName] = flowImages.length - 1;
+                flowImages.push("imgs/now/StrokeOut_" + roomName + ".png");
                 //in from Village to room
-                flowImages.push("imgs/now/strokeIn_" + roomName + ".png");
                 flowIdx.from[roomName] = flowImages.length - 1;
+                flowImages.push("imgs/now/StrokeIn_" + roomName + ".png");
             }
         }
     });
 
-    process_graph = function (inputGraph) {
+    process_graph = function(inputGraph) {
         // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
         var flowArray = [];
-        for (var n = 0; n < flowImages.length; n++) flowArray.push(n == 0 ? 1.0 : 0.0);
+        for (var n = 0; n < flowImages.length-1; n++) flowArray.push(0.0);
         //currentTimeInterval = [new Date(inputGraph.time_start), new Date(inputGraph.time_end)];
         dict = getMACDict(new Date(inputGraph.time_start));
-        inputGraph.rooms.forEach(function (room) {
+        inputGraph.rooms.forEach(function(room) {
             flowArray[flowIdx.rooms[dict[room.name]]] += +room.devices;
         });
-        inputGraph.links.forEach(function (link) {
+        inputGraph.links.forEach(function(link) {
             var endRoom = dict[link.end_room],
                 startRoom = dict[link.start_room];
             if (endRoom != startRoom) { // Need to deal with the people that stay in the same room
@@ -248,9 +266,8 @@ function init() {
             }
         });
         Rooms.forEach(function(startRoomName) {
-            console.log("Room "+startRoomName+" has occupancy "+flowArray[flowIdx.rooms[startRoomName]]
-                       +", "+flowArray[flowIdx.to[startRoomName]]+" have gone in, and "+
-                        flowArray[flowIdx.from[startRoomName]]+" have gone out");
+            console.log("Room " + startRoomName + " has occupancy " + flowArray[flowIdx.rooms[startRoomName]] + ", " + flowArray[flowIdx.to[startRoomName]] + " have gone in, and " +
+                flowArray[flowIdx.from[startRoomName]] + " have gone out");
         });
         return flowArray;
     };
@@ -259,43 +276,47 @@ function init() {
     $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
         dataType: "jsonp",
         crossDomain: true
-        })
-        .done(function (json) {
+    })
+        .done(function(json) {
+           console.log(json);
             var rawFlows = process_graph(json);
-            var flows = rawFlows.slice(0,flowImages.length);
-
-            ///////// TESTING POPULATIONS
-            console.log("initial flows: ")
-                console.log(flows);
-            Rooms.forEach(function(startRoomName) {
-                console.log("Room "+startRoomName+" occupancy : "+flowIdx.rooms[startRoomName]
-                           +", inflow: "+flowIdx.to[startRoomName]
-                           +", outflow: "+flowIdx.from[startRoomName]);
+                console.log(rawFlows);
+            var flows = rawFlows.slice(0, flowImages.length);
+Rooms.forEach(function(startRoomName) {
+                console.log("Room " + startRoomName + " indices: Occupancy : " + flowIdx.rooms[startRoomName] + ", inflow: " + flowIdx.to[startRoomName] + ", outflow: " + flowIdx.from[startRoomName]);
             });
+            ///////// TESTING POPULATIONS
+        /*
+
+            console.log("initial flows: ")
+            console.log(flows);
+
+            var Z = 0;
             // Dome inside, in, out,
-            flows = [4000, 780, 620,
-            // Hall inside, in, out,
-                     7500, 1500, 210,
-            // Planta inside, in, out,
-                     230, 15, 50,
-            // PlusD inside, in, out,
-                     3500, 1500, 2100,
-            // Complex inside, in, out,
-                     1000, 1000, 20,
-            // Village inside
-                     17500 ];
+            flows = [4000, Z * 780,  Z * 620,
+                    // Hall inside, in, out,
+                    7500,  Z * 1500, Z * 210,
+                    // Planta inside, in, out,
+                    230,   Z * 15,   Z * 50,
+                    // PlusD inside, in, out,
+                    3500,  Z * 1500, Z * 2100,
+                    // Complex inside, in, out,
+                    1000,  Z * 1000, Z * 20,
+                    // Village inside
+                    10500
+            ];
             console.log("Temp flows: ")
             console.log(flows);
-            ///////// TESTING POPULATIONS
-
+           ///////// TESTING POPULATIONS   */
             // Do some normalization?
+        //flows[16]=1000;
             var maxFlow = d3max(flows);
+            flows = flows.map(function(d) {
+                return 2 * d / maxFlow
+            });
             console.log(maxFlow);
-            flows = flows.map(function(d){return 5*d/maxFlow});
-            console.log(maxFlow);
-        console.log(flows);
-            var jjj = VectorField.gridFromNormals(
-                {
+            console.log(flows);
+            var jjj = VectorField.gridFromNormals({
                     x0: 400,
                     y0: 300,
                     x1: 1500,
@@ -305,9 +326,11 @@ function init() {
                     width: 819,
                     height: 837
                 },
-                function (f) {
+                function(f) {
+                    console.log(f);
+                    console.log(flows);
                     f.aggregateSpeeds(flows);
-                    var color = [1, 1, 1];
+                    var color = [1.0, 0.4, 0.1];
                     var display = new MotionDisplay(canvas, bak_image, f, numParticles, color);
                     mapAnimator.add(display);
                     mapAnimator.start(40);
@@ -316,7 +339,7 @@ function init() {
 }
 
 
-    /*
+/*
 
     var vels = [];
         for (var n=0;n<flowImages.length;n++) vels.push(n==0? 0.1 : 1.0);
