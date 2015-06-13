@@ -27,23 +27,25 @@
 </head>
 <body onload="init()">
 
+
+
 <!-- MAP AND TITLE -->
 <div class="overlay">
 
-<!--
-  <div id="legend">
-    <canvas id="legend1" width=80 height=20></canvas> 1 mph<br><br>
-    <canvas id="legend2" width=80 height=20></canvas> 3 mph<br><br>
-    <canvas id="legend3" width=80 height=20></canvas> 5 mph<br><br>
-    <canvas id="legend4" width=80 height=20></canvas> 10 mph<br><br>
-    <canvas id="legend5" width=80 height=20></canvas> 15 mph<br><br>
-    <canvas id="legend6" width=80 height=20></canvas> 30 mph<br><br>
 
-  </div>
--->
+
   <canvas id="display" width=819 height=837 unselectable="on" class="unselectable clipped">    If the image is missing, we recommend the latest
     <a href="http://www.google.com/chrome">Chrome</a> browser.
 </canvas>
+
+  <div id="legend" class="legend">
+    <canvas id="legend0" width=80 height=20></canvas> people <br><br>
+    <canvas id="legend1" width=80 height=20></canvas> people <br><br>
+    <canvas id="legend2" width=80 height=20></canvas> people <br><br>
+    <canvas id="legend3" width=80 height=20></canvas> people <br><br>
+    <canvas id="legend4" width=80 height=20></canvas> people <br><br>
+    <canvas id="legend5" width=80 height=20></canvas> people <br><br>
+  </div>
 
 <!--    <div id="mask-holder">
     <img alt="mask" id="mask" src="../imgs/outlines_clipped_alpha.png" unselectable="on" class="unselectable">
@@ -53,6 +55,7 @@
 <input style="visibility:hidden" id="animating" type="checkbox" checked></input><br><br>
 
 </div>
+
 
 <div class="markings">
     <svg id="marking" width=819 height=837 ></svg>
@@ -75,7 +78,7 @@
 <script type="application/javascript">
 
 var loading = true;
-/*
+
 var step = 0;
 function showLoading() {
     var canvas = document.getElementById('display');
@@ -83,14 +86,14 @@ function showLoading() {
       var g = canvas.getContext('2d');
       var w = canvas.width;
       var h = canvas.height;
-      g.fillStyle = 'rgb(0,0,0)';
+      g.fillStyle = 'rgba(0,0,0,0)';
       g.fillRect(0, 0, w, h);
       step++;
-        var alpha = 0.0; //.3 + (1 + Math.sin(step * .3)) / 3;
+        var alpha = 0.5; //.3 + (1 + Math.sin(step * .3)) / 3;
         g.fillStyle = 'rgba(255, 255, 255, '  + alpha + ')';
         g.textAlign = 'center';
         g.font = '14pt Verdana';
-        g.fillText('LOADING', 550, 550);
+        g.fillText('Loading', w/2, h/2);
   }
     if (loading) {
         setTimeout('showLoading()', 50);
@@ -98,7 +101,6 @@ function showLoading() {
 }
 
 showLoading();
-*/
 
 </script>
 

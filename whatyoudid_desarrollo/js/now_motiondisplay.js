@@ -24,22 +24,23 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, color_mul
     this.numParticles = numParticles;
     this.first = true;
     this.maxLength = field.maxLength;
-    this.speedScale = 0.05;
+    this.speedScale = 1;
     this.renderState = 'normal';
     this.backgroundImage = imageCanvas;
-    this.imageCanvas = imageCanvas;
     this.x0 = this.field.x0;
     this.x1 = this.field.x1;
     this.y0 = this.field.y0;
     this.y1 = this.field.y1;
     this.makeNewParticles(null, true);
     this.colors = [];
-    this.rgb = '0, 0, 0';
+    this.rgb = '100, 60, 250';
     this.background = 'rgb(' + this.rgb + ')';
-    this.backgroundAlpha = 'rgba(' + this.rgb + ', 0.02)';
+    //this.backgroundAlpha = 'rgba(' + this.rgb + ', 0.02)';
+    this.backgroundAlpha = 'rgba(150,20,100, 20)';
     this.outsideColor = '#fff';
     for (var i = 0; i < 256; i++) {
-        this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
+       // this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
+         this.colors[i] = 'rgb(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) +')';
     }
    // for (var i = 64; i < 256; i++) {
 //        this.colors[i] = 'rgba(' + Math.floor(i*color_mult[0]) + ',' + Math.floor(i*color_mult[1]) + ',' + Math.floor(i*color_mult[2]) + ',' + Math.floor((256-i)) +')';
@@ -104,15 +105,26 @@ MotionDisplay.prototype.animate = function(animator) {
     var h = this.canvas.height;
     //g.globalCompositeOperation = "xor";
     if (this.first) {
-        g.drawImage(this.backgroundImage,0,0,w,h);
-        g.globalAlpha=1.0;
+        if (this.backgroundImage)  {
+            g.drawImage(this.backgroundImage,0,0,w,h);
+            g.globalAlpha=1.0;
+        }
+        else {
+            g.fillStyle = this.background;
+            g.fillRect(0,0,w,h);
+        }
         this.first = false;
     } else {
-        g.globalAlpha=0.02;
+        if (this.backgroundImage)  {
+            g.globalAlpha=0.02;
+            g.drawImage(this.backgroundImage,0,0,w,h);
+            g.globalAlpha=1.0;
+        }
+        else {
+            g.fillStyle = this.backgroundAlpha;
+            g.fillRect(0,0,w,h);
+        }
     }
-    g.drawImage(this.backgroundImage,0,0,w,h);
-    g.globalAlpha=1.0;
-    //this.imageCanvas.getContext('2d').drawImage(this.canvas, 0, 0);
     this.moveThings(animator);
     this.draw(animator);
 }
@@ -145,8 +157,6 @@ MotionDisplay.prototype.draw = function(animator) {
     var g = this.canvas.getContext('2d');
     var w = this.canvas.width;
     var h = this.canvas.height;
-    var dx = animator.dx;
-    var dy = animator.dy;
     var scale = 1; //animator.scale;
 
     //g.fillRect(dx, dy, w * scale,h * scale);
@@ -185,7 +195,7 @@ MotionDisplay.prototype.draw = function(animator) {
 
 MotionDisplay.prototype.startMove = function(animator) {
     // Save screen.
-    this.imageCanvas.getContext('2d').drawImage(this.canvas, 0, 0);
+//    this.imageCanvas.getContext('2d').drawImage(this.canvas, 0, 0);
 };
 
 
@@ -251,5 +261,5 @@ MotionDisplay.prototype.move = function(animator) {
     var z = animator.relativeZoom();
     var dx = animator.dx - z * animator.dxStart;
     var dy = animator.dy - z * animator.dyStart;
-    g.drawImage(this.imageCanvas, dx, dy, z * w, z * h);
+    //g.drawImage(this.imageCanvas, dx, dy, z * w, z * h);
 };

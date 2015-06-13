@@ -195,15 +195,25 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
         var context = fakecanvas.getContext('2d');
         context.drawImage(img, 0, 0 );
         var data = context.getImageData(0,0,img.width,img.height);
+        var maxpixel = 128;
+        if (vector) {
+            maxpixel = 0;
+            for (var xy = 0; xy < h*w; xy+=4) {
+                maxpixel = Math.max(maxpixel,data.data[xy]);
+                maxpixel = Math.max(maxpixel,data.data[xy+1]);
+            }
+            //maxpixel = d3max(data.data, function(d,i){return i%3==0? 0:d;});
+        }
+        console.log("normalizing normals by "+maxpixel);
         var i = 0;
         var fi = [];
         //console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
         for (var y = 0; y < h; y++) {
             for (var x = 0; x < w; x++) {
                 if (vector) {
-                    var v = new Vector(-(data.data[i]-128)*1.0/(128),
-                                        (data.data[i+1]-128)*1.0/(128));
-                    v.setLength(1.0);
+                    var v = new Vector(-(data.data[i]-128)*1.0/(maxpixel),
+                                        (data.data[i+1]-128)*1.0/(maxpixel));
+                    //v.setLength(1.0);
                     field[x][y] = v; }
                 else {
                     fi.push(Math.max(data.data[i+3]/255.0)); /// There is some problem that the plot crashes if it finds a zero?
@@ -219,7 +229,7 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
           // all images are fully loaded and ready to use
           // The first one holds the velocity patterns, it loads in the global field variable
           myGetImageData(imgs[0],true);
-          var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1, 6);
+          var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1); //TODO can i get the maxlen of the field automatically?
           for (var k=1;k<masks.length;k++) {
               result.fields.push(myGetImageData(imgs[k]));
           }
@@ -241,19 +251,15 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 
 
 VectorField.prototype.aggregateSpeeds = function(magnitudes) {
-    for (var n=0;n<magnitudes.length;n++) {
-        console.log(" reading field "+n+":"+this.fields[n][20000]);
-    }
     for (var y = 0; y < this.h; y++) {
         for (var x = 0; x < this.w; x++) {
             var L= 0;
             for (var n=0;n<magnitudes.length;n++) { //First number is magnitude of baseline field?
-                var m = magnitudes[n];
-                var f = this.fields[n][y*this.w+x];
-                L += m*f;
+                L += magnitudes[n]*this.fields[n][y*this.w+x];
             };
 //            var L = (1*this.fields[0][y*this.w+x]+1*this.fields[1][y*this.w+x]
             //if (L>0) console.log(L);
+            //if (L<0.05*this.maxLength) L=L*L; // Attenuate very small numbers
             var v = this.field[x][y];
             this.field[x][y] = new Vector( (L) * v.x, (L) * v.y  );
                 //this.field[x][y].plus(this.field[x][y].mult(L)); // this.field[x][y].mult(L);//
@@ -313,10 +319,13 @@ VectorField.prototype.vectValue = function(vector) {
 };
 
 
-VectorField.constant = function(dx, dy, x0, y0, x1, y1) {
-    var field = new VectorField([[]], x0, y0, x1, y1);
-    field.maxLength = Math.sqrt(dx * dx + dy * dy);
-    field.getValue = function() {
+VectorField.constant = function(dx, dy, x0, y0, x1, y1,maxlen) {
+    var field;
+    if (maxlen) {field = new VectorField([[]], x0, y0, x1, y1, maxlen); }
+    else {field = new VectorField([[]], x0, y0, x1, y1,Math.sqrt(dx * dx + dy * dy));}
+    field.h = y1-y0;
+    field.w = x1-x0;
+    field.getValue = function(u,v,test) {
         return new Vector(dx, dy);
     }
     return field;
