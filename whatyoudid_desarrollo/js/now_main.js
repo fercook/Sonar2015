@@ -6,7 +6,9 @@
  */
 
 
-var mapAnimator;
+var mapAnimator,legendAnimator;
+
+var maxFlow;
 
 function isAnimating() {
     return document.getElementById('animating').checked;
@@ -125,7 +127,7 @@ function init() {
     contxt.lineTo(30,190);
             contxt.clip();
 */
-    // Create a clipping path for freaking Firefox
+    // Create a clipping path for freaking Firefox // TODO !!!
     if (false || isMacFF || isWinFF) {
         function p2(x) {
             return Math.pow(x, 2);
@@ -188,12 +190,11 @@ function init() {
     }
     /**/
 
-
     var bak_image = new Image();
     bak_image.src = "imgs/outlines_clipped.png";
     contxt.drawImage(bak_image, 0, 0, canvas.width, canvas.height);
 
-    bounds = {
+    var bounds = {
         x0: 0,
         y0: 0,
         x1: canvas.width,
@@ -201,15 +202,10 @@ function init() {
     };
 
 
-    var numParticles = isMacFF || isWinIE ? 10000 : 10000; // slowwwww browsers
-
-    //    params = {radius:0, width:10,
-    //              center: new Vector(canvas.width/3, 0.2*canvas.height/2)};
-    //var field =  VectorField.read(windData, true);
-    //field = VectorField.circle(50,bounds,params);
-
+    var numParticles = 10000; // what about other browsers isMacFF || isWinIE ?
 
     mapAnimator = new Animator(null, isAnimating);
+    legendAnimator = new Animator(null, isAnimating);
 
 
     // Get graph and process data
@@ -219,12 +215,13 @@ function init() {
     };
     var currentTimeInterval;
 
-    flowImages = ["imgs/now/normal_clipped.png"];
-    flowIdx = {
+    var flowImages = ["imgs/now/normal_clipped.png"];
+    var flowIdx = {
         rooms: {},
         to: {},
         from: {}
     };
+    var flows
 
     Rooms.forEach(function(roomName) {
         if (roomName != "Entry" && roomName != "Exit") {
@@ -245,7 +242,7 @@ function init() {
     process_graph = function(inputGraph) {
         // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
         var flowArray = [];
-        for (var n = 0; n < flowImages.length-1; n++) flowArray.push(0.0);
+        for (var n = 0; n < flowImages.length - 1; n++) flowArray.push(0.0);
         //currentTimeInterval = [new Date(inputGraph.time_start), new Date(inputGraph.time_end)];
         dict = getMACDict(new Date(inputGraph.time_start));
         inputGraph.rooms.forEach(function(room) {
@@ -266,32 +263,54 @@ function init() {
             }
         });
         Rooms.forEach(function(startRoomName) {
-            console.log("Room " + startRoomName + " has occupancy " + flowArray[flowIdx.rooms[startRoomName]] + ", " + flowArray[flowIdx.to[startRoomName]] + " have gone in, and " +
-                flowArray[flowIdx.from[startRoomName]] + " have gone out");
+            console.log("Room " + startRoomName + " has occupancy " + flowArray[flowIdx.rooms[startRoomName]] + ", " + flowArray[flowIdx.to[startRoomName]] + " have gone in, and " + flowArray[flowIdx.from[startRoomName]] + " have gone out");
         });
         return flowArray;
     };
 
 
+
+    ////////////////
+    var legendNumbers = [];
+    var numberOfLegends = 6;
+    startAnimating = function(f) {
+        f.aggregateSpeeds(flows);
+        var color = [1.0, 0.4, 0.1];
+        var display = new MotionDisplay(canvas, bak_image, f, numParticles, color);
+        mapAnimator.add(display);
+        mapAnimator.start(40);
+        // Scale by numbers from data
+        var maxV = d3max(flows);
+        console.log(legendNumbers+","+maxFlow+","+maxV);
+        for (var i = 1; i < legendNumbers.length; i++) {
+            var c = document.getElementById('legend' + i);
+            var legendField = VectorField.constant(
+                5*maxV*legendNumbers[i]/maxFlow, 0, 0, 0, c.width, c.height,1.0); ///XXX
+            var legend = new MotionDisplay(c, null, legendField, 100);
+            legend.speedScale = 0.05;
+            // normalize so colors correspond to wind map's maximum length!
+            legendAnimator.add(legend);
+        }
+        legendAnimator.start(40);
+
+
+    };
+
+/* AJAX
     $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
         dataType: "jsonp",
         crossDomain: true
     })
         .done(function(json) {
-           console.log(json);
             var rawFlows = process_graph(json);
-                console.log(rawFlows);
-            var flows = rawFlows.slice(0, flowImages.length);
-Rooms.forEach(function(startRoomName) {
-                console.log("Room " + startRoomName + " indices: Occupancy : " + flowIdx.rooms[startRoomName] + ", inflow: " + flowIdx.to[startRoomName] + ", outflow: " + flowIdx.from[startRoomName]);
-            });
-            ///////// TESTING POPULATIONS
-        /*
+            flows = rawFlows.slice(0, flowImages.length);
+
+        ///////// TESTING POPULATIONS /*
 
             console.log("initial flows: ")
             console.log(flows);
-
-            var Z = 0;
+AJAX */ 
+            var Z = 0.5;
             // Dome inside, in, out,
             flows = [4000, Z * 780,  Z * 620,
                     // Hall inside, in, out,
@@ -307,13 +326,18 @@ Rooms.forEach(function(startRoomName) {
             ];
             console.log("Temp flows: ")
             console.log(flows);
+
            ///////// TESTING POPULATIONS   */
-            // Do some normalization?
-        //flows[16]=1000;
-            var maxFlow = d3max(flows);
+
+
+            maxFlow = d3max(flows);
             flows = flows.map(function(d) {
-                return 2 * d / maxFlow
+                return  d / maxFlow
             });
+            legendNumbers = [];
+            for (var k=0;k<numberOfLegends;k++) {
+                legendNumbers.push(k*maxFlow/(numberOfLegends-1));
+            }
             console.log(maxFlow);
             console.log(flows);
             var jjj = VectorField.gridFromNormals({
@@ -325,17 +349,13 @@ Rooms.forEach(function(startRoomName) {
                 flowImages, {
                     width: 819,
                     height: 837
-                },
-                function(f) {
-                    console.log(f);
-                    console.log(flows);
-                    f.aggregateSpeeds(flows);
-                    var color = [1.0, 0.4, 0.1];
-                    var display = new MotionDisplay(canvas, bak_image, f, numParticles, color);
-                    mapAnimator.add(display);
-                    mapAnimator.start(40);
-                });
-        });
+                }, startAnimating);
+  ///AJAX      });
+
+
+
+
+
 }
 
 
@@ -359,6 +379,10 @@ Rooms.forEach(function(startRoomName) {
 
 
 
+//    params = {radius:0, width:10,
+//              center: new Vector(canvas.width/3, 0.2*canvas.height/2)};
+//var field =  VectorField.read(windData, true);
+//field = VectorField.circle(50,bounds,params);
 
 /*
     fields = createCurves(bounds);
@@ -425,3 +449,38 @@ Rooms.forEach(function(startRoomName) {
     }
     legendAnimator.start(40);
     */
+
+
+
+///////// TESTING POPULATIONS
+/*
+
+            Rooms.forEach(function(startRoomName) {
+                console.log("Room " + startRoomName + " indices: Occupancy : " +
+                            flowIdx.rooms[startRoomName] + ", inflow: " +
+                            flowIdx.to[startRoomName] + ", outflow: " +
+                            flowIdx.from[startRoomName]);
+
+
+            console.log("initial flows: ")
+            console.log(flows);
+
+            var Z = 0;
+            // Dome inside, in, out,
+            flows = [4000, Z * 780,  Z * 620,
+                    // Hall inside, in, out,
+                    7500,  Z * 1500, Z * 210,
+                    // Planta inside, in, out,
+                    230,   Z * 15,   Z * 50,
+                    // PlusD inside, in, out,
+                    3500,  Z * 1500, Z * 2100,
+                    // Complex inside, in, out,
+                    1000,  Z * 1000, Z * 20,
+                    // Village inside
+                    10500
+            ];
+            console.log("Temp flows: ")
+            console.log(flows);
+           ///////// TESTING POPULATIONS   */
+// Do some normalization?
+//flows[16]=1000;

@@ -1,9 +1,8 @@
 body {
   font: 14px Verdana;
-  color: rgb(148, 148, 148);
+  color: rgb(109, 109, 109);
     background-color: #000;
     background-image: url(../imgs/back_tile.jpg)
-
 }
 
 .overlay {
@@ -14,10 +13,10 @@ body {
   -moz-box-pack: center;
   -moz-transition: 0.25s opacity;
 
-  background: -webkit-radial-gradient(rgba(255, 255, 255, 0.2),
-                                      rgba(127, 127, 127, 0.5) 5%,
+ background: -webkit-radial-gradient(rgba(255, 255, 255, 0.0),
+                                      rgba(127, 127, 127, 0.2) 50%,
                                       rgba(12, 18, 16, 0.95));
-  background: -moz-radial-gradient(rgba(255, 255, 255, 0.2),
+//  background: -moz-radial-gradient(rgba(255, 255, 255, 0.2),
                                       rgba(127, 127, 127, 0.5) 5%,
                                       rgba(12, 18, 16, 0.95));
   bottom: 0;
@@ -32,6 +31,10 @@ body {
   z-index: 10;
     width: 100%;
     height: 100%;
+}
+
+.legend {
+ z-index: 20;
 }
 
 .markings {
