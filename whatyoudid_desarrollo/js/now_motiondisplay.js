@@ -33,14 +33,14 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, color_mul
     this.y1 = this.field.y1;
     this.makeNewParticles(null, true);
     this.colors = [];
-    this.rgb = '100, 60, 250';
+    this.rgb = '0, 0, 0';
     this.background = 'rgb(' + this.rgb + ')';
     //this.backgroundAlpha = 'rgba(' + this.rgb + ', 0.02)';
-    this.backgroundAlpha = 'rgba(150,20,100, 20)';
+    this.backgroundAlpha = 'rgba(0,0,0, 0.02)';
     this.outsideColor = '#fff';
     for (var i = 0; i < 256; i++) {
-       // this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
-         this.colors[i] = 'rgb(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) +')';
+        //this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
+        this.colors[i] = 'rgb(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i)  +')';
     }
    // for (var i = 64; i < 256; i++) {
 //        this.colors[i] = 'rgba(' + Math.floor(i*color_mult[0]) + ',' + Math.floor(i*color_mult[1]) + ',' + Math.floor(i*color_mult[2]) + ',' + Math.floor((256-i)) +')';

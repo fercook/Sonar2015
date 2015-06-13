@@ -202,7 +202,7 @@ function init() {
     };
 
 
-    var numParticles = 10000; // what about other browsers isMacFF || isWinIE ?
+    var numParticles = 3000; // what about other browsers isMacFF || isWinIE ?
 
     mapAnimator = new Animator(null, isAnimating);
     legendAnimator = new Animator(null, isAnimating);
@@ -280,20 +280,27 @@ function init() {
         mapAnimator.add(display);
         mapAnimator.start(40);
         // Scale by numbers from data
-        var maxV = d3max(flows);
-        console.log(legendNumbers+","+maxFlow+","+maxV);
-        for (var i = 1; i < legendNumbers.length; i++) {
-            var c = document.getElementById('legend' + i);
-            var legendField = VectorField.constant(
-                5*maxV*legendNumbers[i]/maxFlow, 0, 0, 0, c.width, c.height,1.0); ///XXX
-            var legend = new MotionDisplay(c, null, legendField, 100);
-            legend.speedScale = 0.05;
-            // normalize so colors correspond to wind map's maximum length!
-            legendAnimator.add(legend);
+        var maxV = f.maxLength;
+        for (var i = 0; i < legendNumbers.length; i++) {
+            if (i==0) {
+                var c = document.getElementById('legend' + i);
+                var g = c.getContext('2d');
+                g.fillStyle='rgb(0,0,0)';
+                g.fillRect(0, 0, c.width, c.height);
+            }
+            else{
+                var c = document.getElementById('legend' + i);
+                var scale = canvas.width / c.width;
+                var legendField = VectorField.constant(
+                    scale*maxV*legendNumbers[i]/maxFlow, 0, 0, 0, c.width, c.height,scale*maxV); ///XXX
+                var legend = new MotionDisplay(c, null, legendField, 25);
+                //legend.speedScale = 0.05;
+                // normalize so colors correspond to wind map's maximum length!
+                legendAnimator.add(legend);
+            }
         }
         legendAnimator.start(40);
-
-
+        d3.selectAll(".value")[0].forEach(function(d,i) {d.innerText = " "+legendNumbers[i]+" people"});
     };
 
 /* AJAX
@@ -306,11 +313,10 @@ function init() {
             flows = rawFlows.slice(0, flowImages.length);
 
         ///////// TESTING POPULATIONS /*
-
             console.log("initial flows: ")
             console.log(flows);
 AJAX */ 
-            var Z = 0.5;
+            var Z = 1.0;
             // Dome inside, in, out,
             flows = [4000, Z * 780,  Z * 620,
                     // Hall inside, in, out,
@@ -328,8 +334,6 @@ AJAX */
             console.log(flows);
 
            ///////// TESTING POPULATIONS   */
-
-
             maxFlow = d3max(flows);
             flows = flows.map(function(d) {
                 return  d / maxFlow
@@ -337,14 +341,16 @@ AJAX */
             legendNumbers = [];
             for (var k=0;k<numberOfLegends;k++) {
                 legendNumbers.push(k*maxFlow/(numberOfLegends-1));
+//                var lscale = Math.exp(k*Math.log(maxFlow)/(numberOfLegends-1));
+//                legendNumbers.push(lscale);
             }
             console.log(maxFlow);
             console.log(flows);
             var jjj = VectorField.gridFromNormals({
-                    x0: 400,
-                    y0: 300,
-                    x1: 1500,
-                    y1: 800
+                    x0: 0,
+                    y0: 0,
+                    x1: 819,
+                    y1: 837
                 },
                 flowImages, {
                     width: 819,
