@@ -229,7 +229,7 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
           // all images are fully loaded and ready to use
           // The first one holds the velocity patterns, it loads in the global field variable
           myGetImageData(imgs[0],true);
-          var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1); //TODO can i get the maxlen of the field automatically?
+          var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1);
           for (var k=1;k<masks.length;k++) {
               result.fields.push(myGetImageData(imgs[k]));
           }

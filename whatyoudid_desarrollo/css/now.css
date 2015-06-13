@@ -35,6 +35,20 @@ body {
 
 .legend {
  z-index: 20;
+    position:relative;
+    top:50px;
+    left:50px;
+}
+
+.legenditem {
+    overflow: visible;
+}
+
+.value {
+    position: relative;
+    left: 90px;
+    top: -1.5em;
+    padding: 0px;
 }
 
 .markings {
