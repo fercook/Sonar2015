@@ -1,11 +1,19 @@
-
-/**
- * Displays a geographic vector field using moving particles.
- * Positions in the field are drawn onscreen using the Alber
- * "Projection" file.
+/* Color manipulation
+ *
  */
 
-
+function generateScale(color_mult) {
+    var scale = [];
+    var s=1.0/255;
+    console.log(color_mult);
+    for (var i = 0; i < 256; i++) {
+        //this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
+        //this.colors[ik][i] = 'rgb(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i)  +')';
+        //scale[i] = 'rgba('+ Math.floor(i*color_mult[0]*s) + ',' + Math.floor(i*color_mult[1]*s) + ',' + Math.floor(i*color_mult[2]*s) + ',' + (i) +')';
+        scale[i] = 'rgb('+ Math.floor(i*color_mult.r*s) + ',' + Math.floor(i*color_mult.g*s) + ',' + Math.floor(i*color_mult.b*s) +')';
+    };
+    return scale;
+}
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -17,10 +25,10 @@
  * @param {VectorField} field
  * @param {number} numParticles
  */
-var MotionDisplay = function(canvas, imageCanvas, field, numParticles, color_mult, opt_projection) {
+var MotionDisplay = function(canvas, imageCanvas, field, numParticles, colorScales, opt_projection) {
     this.canvas = canvas;
-  this.projection = opt_projection || IDProjection;
-  this.field = field;
+    this.projection = opt_projection || IDProjection;
+    this.field = field;
     this.numParticles = numParticles;
     this.first = true;
     this.maxLength = field.maxLength;
@@ -31,27 +39,70 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, color_mul
     this.x1 = this.field.x1;
     this.y0 = this.field.y0;
     this.y1 = this.field.y1;
-    this.makeNewParticles(null, true);
-    this.colors = [];
     this.rgb = '0, 0, 0';
     this.background = 'rgb(' + this.rgb + ')';
-    //this.backgroundAlpha = 'rgba(' + this.rgb + ', 0.02)';
-    this.backgroundAlpha = 'rgba(0,0,0, 0.02)';
+    this.alpha = 0.02;
+    this.backgroundAlpha = 'rgba(' + this.rgb + ','+this.alpha+')';
     this.outsideColor = '#fff';
-    for (var i = 0; i < 256; i++) {
-        //this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
-        this.colors[i] = 'rgb(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i)  +')';
+    this.currentColorScale = 0;
+    this.colors = [];
+    this.colors[0] = generateScale(d3.rgb("#FFFFFF")); // Default scale
+    if (colorScales) {
+        //colorScales = {positions: roomPos, categories: categories, colors: roomColors};        
+        this.colorScales = colorScales;
+//            this.colors[ik]=generateScale( hextoRGB(color) );
+    } else {
+        this.colorScales = null;
+        this.setColorScale = function(num) {
+            return true;
+        }
     }
-   // for (var i = 64; i < 256; i++) {
-//        this.colors[i] = 'rgba(' + Math.floor(i*color_mult[0]) + ',' + Math.floor(i*color_mult[1]) + ',' + Math.floor(i*color_mult[2]) + ',' + Math.floor((256-i)) +')';
-    //}
-
-    if (this.projection) {
-      this.startOffsetX = this.projection.offsetX;
-      this.startOffsetY = this.projection.offsetY;
-      this.startScale = this.projection.scale;
-  }
+    this.makeNewParticles(null, true);
 };
+
+MotionDisplay.prototype.setColorScale = function(scaleidx) {
+    if (this.colorScales) {
+        if (scaleidx<this.colorScales.colorSets.length){
+            this.colors = [];
+            for (var cidx=0; cidx < this.colorScales.colorSets[scaleidx].length;cidx++) {
+                var color = d3.rgb( this.colorScales.colorSets[scaleidx][cidx] );
+                this.colors[cidx] = generateScale(color);
+            }
+            this.currentColorScale = scaleidx;
+            for (var i = 0; i < this.particles.length; i++) {
+                //reassign all particles to new scales
+                var p = this.particles[i];
+                if (scaleidx>0) { p.scale = this.findScale(p.x,p.y);}
+                else { p.scale = 0; }
+            }
+
+        }
+    }
+}
+
+
+MotionDisplay.prototype.findScale = function(x,y) {
+     // First we must find room information
+    var circle = -1;
+    for (var ridx=0;ridx<this.colorScales.positions.length && circle<0;ridx++){ // First we must find what circle we are in
+        var dx = x-this.colorScales.positions[ridx].cx;
+        var dy = y-this.colorScales.positions[ridx].cy;
+        var r = this.colorScales.positions[ridx].r;
+        if ( dx*dx+dy*dy <= r*r ) { circle = ridx; }                    
+    }
+    if (circle >= 0) {
+        var cat = Math.random(); // Now we randomly select a category inside this circle
+        if (cat <= this.colorScales.categories[this.currentColorScale][circle][0]) {
+        } else {                        
+            for (var catidx=1; catidx<this.colorScales.categories[this.currentColorScale][circle].length; catidx++) {
+                if (cat>=this.colorScales.categories[this.currentColorScale][circle][catidx-1]
+                &&  cat<=this.colorScales.categories[this.currentColorScale][circle][catidx] ) 
+                        { return catidx;}
+            }
+        }
+    }
+    return -1;
+}
 
 
 MotionDisplay.prototype.setAlpha = function(alpha) {
@@ -67,10 +118,8 @@ MotionDisplay.prototype.makeNewParticles = function(animator) {
 
 
 MotionDisplay.prototype.makeParticle = function(animator) {
-    var dx = animator ? animator.dx : 0;
-    var dy = animator ? animator.dy : 0;
-    var scale = animator ? animator.scale : 1;
     var safecount = 0;
+    
     for (;;) {
         var a = Math.random();
         var b = Math.random();
@@ -87,11 +136,15 @@ MotionDisplay.prototype.makeParticle = function(animator) {
         var m = vel.length() / this.field.maxLength;
         // The random factor here is designed to ensure that
         // more particles are placed in slower areas; this makes the
-        // overall distribution appear more even.
+        // overall distribution appear more even. // DONT KNOW IF THIS WORKS REALLY WELL...
         if ((vel.x || vel.y) && (++safecount > 10 || Math.random() > m * .3)) { // HAD TO CHANGE THIS MAGIC NUMBER TO A LOWER THRESHOLD
             //if (++safecount > 10 || !(x < 0 || y < 0 || x > this.canvas.width || y > this.canvas.height)) {
             var p = new Particle(u, v, 1 + 100 * Math.random());
             p.x = p.oldX = pos.x; p.y = p.oldY = pos.y;
+            p.scale = -1;
+            if (this.currentColorScale != 0) { 
+                p.scale = this.findScale(p.x,p.y);
+            } else { p.scale = 0;}            
             return p;
       //}
         }
@@ -116,7 +169,7 @@ MotionDisplay.prototype.animate = function(animator) {
         this.first = false;
     } else {
         if (this.backgroundImage)  {
-            g.globalAlpha=0.02;
+            g.globalAlpha=this.alpha;
             g.drawImage(this.backgroundImage,0,0,w,h);
             g.globalAlpha=1.0;
         }
@@ -157,8 +210,6 @@ MotionDisplay.prototype.draw = function(animator) {
     var g = this.canvas.getContext('2d');
     var w = this.canvas.width;
     var h = this.canvas.height;
-    var scale = 1; //animator.scale;
-
     //g.fillRect(dx, dy, w * scale,h * scale);
 
 //    g.drawImage(this.backgroundImage,0,0);
@@ -179,11 +230,13 @@ MotionDisplay.prototype.draw = function(animator) {
                 c = 255;
             }
             if (c < 0) c=0;
-            g.strokeStyle = this.colors[c];
-            g.beginPath();
-            g.moveTo(p.x, p.y);
-            g.lineTo(p.oldX, p.oldY);
-            g.stroke();
+            if (p.scale>=0) {
+                g.strokeStyle = this.colors[p.scale][c];
+                g.beginPath();
+                g.moveTo(p.x, p.y);
+                g.lineTo(p.oldX, p.oldY);
+                g.stroke();
+            }
       }
         p.oldX = p.x;
         p.oldY = p.y;
