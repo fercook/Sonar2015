@@ -148,7 +148,7 @@ function tooltip(artist_name,img,url){
             $('.tooltip').tooltipster({
                 theme: 'tooltipster-light',
                 interactive: true,
-                content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
+                content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><a href="'+ url +'"><p>'+ artist_name +'</p></a></strong><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
                 //content: $('<div class="tooltip"><img src="'+img+'" class="tooltip" style="width:25%" title="kdjlakjdalksjdlakjdlajda asd asdasd" /><a href="#"> <p>kjdalsdjadaldadald </p></a></div>')
               
                 
@@ -189,9 +189,9 @@ printRoomLegend = function(circles) {
                 .attr("text-anchor", "end")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
-                .attr("font-family", "Nexa Bold")
+                .attr("font-family", "Nexa")
                 .attr("class", "opacitySensible legend")
-                .attr("font-size", ".32em")
+                .attr("font-size", ".25em")
                 .text(function(d) { return d.name });
         legendSvgContainer.selectAll("rect")
             .data(jsonCirclesMap)

@@ -1,14 +1,5 @@
-@font-face {
-    font-family: 'Nexa';
-    font-weight: bold;
-    src: url("../fonts/Nexa_bold.otf") format("opentype");
-}
-@font-face {
-    font-family: 'Nexa';
-    font-weight: light;
-    src: url("../fonts/Nexa_light.otf") format("opentype");
-}
-
+@import url(http://fonts.googleapis.com/css?family=Glegoo|Oswald:400,700);
+@import url(font-awesome.min.css);
 body{
     /*font-family: 'Source Sans Pro', sans-serif;*/
     font-family: 'Nexa';
