@@ -18,6 +18,7 @@ GraphParameters = {
     "curvature": 0.5
 }
 
+
     
 //var color = d3.scale.ordinal()
 //  .domain(["Limbo", "Dome", "Complex" , "Hall", "Planta", "Village" , "Sonar+D"])
@@ -81,6 +82,9 @@ document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement
 
 function draw() {
 
+
+    
+    
     d3.selectAll("svg").remove();
 
     var width = $("#svg").width(),
@@ -165,19 +169,47 @@ function zoomHandler() {
 }
 
 function tooltip(artist_name,img,url){
+    
+    contenido= "<a href='"+url+"'><img src='"+img+"' style='width:30%;' align='left'/></a><strong><a href='"+ url +"'><p>" + artist_name +"</p></a></strong><br/><a href='recommend.html' id='kkk'>Similar artists</a>";
+    /*content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><a href="'+ url +'"><p>'+ artist_name +'</p></a></strong><br/><a href="recommend.html" id="kkk">Similar artists</a> '  */
+    
+    $('.tooltip').tooltipster();    
+    
     $(document).ready(function() {
-			//$('.tooltip').tooltipster();
-            $('.tooltip').tooltipster({
+        //alert("En otro");
+
+           //$('.tooltip').tooltipster({ theme: 'tooltipster-light', interactive: true });
+           $('.tooltip').tooltipster({interactive: true} );
+           $('.tooltip').tooltipster("content","Hola");
+                
+
+		});
+
+}
+
+
+
+function tooltip_general(){
+    $(document).ready(function() {
+         $('.tooltip').tooltipster();    
+         $('.tooltip').tooltipster("content","En general");
+        
+			//alert("En sónar general");
+            /*$('.tooltip').tooltipster({
                 theme: 'tooltipster-light',
                 interactive: true,
-                content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><a href="'+ url +'"><p>'+ artist_name +'</p></a></strong><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
-                //content: $('<div class="tooltip"><img src="'+img+'" class="tooltip" style="width:25%" title="kdjlakjdalksjdlakjdlajda asd asdasd" /><a href="#"> <p>kjdalsdjadaldadald </p></a></div>')
-              
+                content: $('<a href="http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><a href="http://sonar.es/es"><p>Out of Sónar 2015</p></a></strong><br/>')*/
+            
+            //$('.tooltip').tooltipster('content', '<a href="http://sonar.es/en"><img src="imgs/artist/general.png" style="width:30%" align="left"/></a><strong><a href="http://sonar.es/es"><p>Out of Sónar 2015</p></a></strong><br/>' );
                 
-});
-		});
-    
+            //});
+     });
+
 }
+
+
+
+
 function leyenda(){
     
     var legendWidth=400,
@@ -307,13 +339,14 @@ function drawComponents(graph){
             //return d.color = d3.scale.ordinal(d.room);
         })
         .style("opacity", function (d) {
-           if(d.room==1 || d.room==8){
+           if(d.room==1 || d.room==8){   /* Salas marcadas como limbo*/
                return "0.3";
            }
             //return d.color = d3.scale.ordinal(d.room);
         })
         .on("mouseover", function (d) {
             highlight = drawHighlight(d);
+            
             view_artist_data(d,this);
             
         })
@@ -379,15 +412,19 @@ sponsors = { "SonarVillage by ESTRELLA DAMM": "Village",
            }
 
 
-function view_artist_data(userselection, rect) {
+function view_artist_data(userselection, rect, room) {
     d3.csv("data/artists_by_room.csv", function(data) {
         var filteredData = data.filter(function(d,i) {
             if (d["DIA"] == 18 && sponsors[d["SALA"]]=="Village" && d["HORA"] == "16:15")    //userselection["day"] userselection["room"]
-            {return d;}
+            {  return d;}
         });
-        console.log(filteredData);
+        console.log(userselection);
         console.log(filteredData[0].ACTIVIDAD);
         console.log(filteredData[0].FOTO1);
-        tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1,  filteredData[0].URL);
+        if(userselection["room"]==1 || userselection["room"]==8){
+            tooltip_general();
+        }else{
+            tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1,  filteredData[0].URL);
+        }
     });
 }
