@@ -34,7 +34,7 @@ body {
 }
 
 .legend {
- z-index: 20;
+    z-index: 20;
     position:relative;
     top:50px;
     left:50px;
@@ -45,12 +45,15 @@ body {
 }
 
 #roomLegend {
-  width: 50%;
-  height: 60%;
-  top: 80%;
-  left: 0;
-  position: absolute;
+  width: 200px;
+//  height: 60%;
+//  top: 50%;
+  left: 50px;
+  position: relative;
+    overflow: visible;
 }
+
+
 
 .value {
     position: relative;
