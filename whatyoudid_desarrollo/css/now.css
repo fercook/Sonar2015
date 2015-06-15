@@ -4,8 +4,8 @@ body {
     background-color: #000;
     background-image: url(../imgs/back_tile.jpg)
 }
-/*
-svg {
+
+/*svg {
     position: fixed;
     top: 5%;
     left: 0;
