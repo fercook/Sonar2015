@@ -12,6 +12,15 @@
     <script src="js/Rooms.js" type="application/javascript"></script>
 
     <link rel="stylesheet" type="text/css" href="css/now.css">
+    
+    <!-- LCF menu ********  -->
+    <link rel="stylesheet" type="text/css" href="css/main_style.css">
+    <link rel="stylesheet" type="text/css" href="css/landing.css">
+    <link href="css/flowstyle.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
+    
+    
+    <!--    
 
 
      <!--<script src="js/curve_calc.min.js" type="application/javascript"></script>-->
@@ -24,7 +33,17 @@
 <body onload="init()">
 
 
-
+<!-- Menú desplegable -->
+<a href="#menu" id="toggle" style="z-index:9999999999999;"><span></span></a>
+<div id="menu">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="now.html">Now</a></li>
+    <li><a href="#contact">You</a></li>
+    <li><a href="sankey.html">Flow</a></li>
+  </ul>
+</div>  
+    
 <!-- MAP AND TITLE -->
 <div class="overlay">
 
@@ -78,7 +97,7 @@
 </div>
     <!-- Clipping path -->
 
- <svg width="0" height="0">
+ <svg id="clip" width="0" height="0">
     <clipPath id="theClip">
       <circle cx="138" cy="145" r="128.5" id="clip_Dome"/>
       <circle cx="642" cy="155" r="124.5" id="clip_Hall"/>
@@ -120,7 +139,14 @@ showLoading();
 
 </script>
 
+<!-- menu style -->
+<script src='js/mainmenu_index.js'></script>
+    
+    
 <script src="js/now_main.js" type="application/javascript"></script>
-
+<div id="fotter" align="center">
+    Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
+</div>
+    
 </body>
 </html>

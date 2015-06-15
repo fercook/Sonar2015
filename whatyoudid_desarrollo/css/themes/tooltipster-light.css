@@ -1,8 +1,9 @@
 .tooltipster-light {
 	border-radius: 5px; 
-	border: 1px solid #cccccc;
-	background: #ededed;
-	color: #666666;
+	border: 1px solid #575b5a;
+	background: #575b5a;
+	color: #e99634;
+    opacity: 50%
 }
 .tooltipster-light .tooltipster-content {
 	font-family: Arial, sans-serif;
