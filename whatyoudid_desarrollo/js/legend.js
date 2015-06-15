@@ -5,7 +5,7 @@ var LEGEND_H_MARGIN_COLOR = 40;
 var LEGEND_H_MARGIN = 35;
 
  var jsonCirclesMap = [
-    { "titleColor" : "#FFFFFF", "name": "Limbo", "id":"0"},
+    { "titleColor" : "#BBBBBB", "name": "Limbo", "id":"0"},
     { "titleColor": "#DB57D0", "name": "Dome", "id":"1"},
     { "titleColor": "#DDB0BF", "name": "Complex", "id":"2"},
     { "titleColor": "#09AE48", "name": "Hall", "id":"3"},
@@ -26,9 +26,9 @@ printRoomLegend = function(circles) {
                 .attr("text-anchor", "end")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
-                .attr("font-family", "Glegoo")
+                .attr("font-family", "Oswald")
                 .attr("class", "opacitySensible legend")
-                .attr("font-size", ".32em")
+                .attr("font-size", ".24em")
                 .text(function(d) { return d.name });
         legendSvgContainer.selectAll("rect")
             .data(jsonCirclesMap)
@@ -39,6 +39,7 @@ printRoomLegend = function(circles) {
                 })
                 .attr("y", LEGEND_V_MARGIN-4)
                 .attr("width", 4)
+                .attr("font-family", "Oswald")
                 .attr("class", "opacitySensible legend")
                 .attr("data-room", function(d){return d["id"]})
                 .attr("height", 4)
@@ -51,6 +52,7 @@ var legendDiv = d3.select("#legend");
 var legendSvgContainer = legendDiv.append("svg")
     .attr("class", "legend-svg")
     .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight)
-    .attr("preserveAspectRatio", "xMinYMin meet");
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .style("font-family","Oswald");
 
 printRoomLegend(jsonCirclesMap);

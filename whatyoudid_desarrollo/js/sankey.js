@@ -18,6 +18,23 @@ GraphParameters = {
     "curvature": 0.5
 }
 
+    
+//var color = d3.scale.ordinal()
+//  .domain(["Limbo", "Dome", "Complex" , "Hall", "Planta", "Village" , "Sonar+D"])
+//  .range(["#FF0000", "#009933" , "#0000FF", "#FF0000", "#009933" , "#0000FF", "#0000FF"]);
+    
+var color = d3.scale.ordinal()
+  .domain([0, 1, 2, 3 , 4, 5, 6 , 7])
+  .range(["#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2"]);
+
+var jsonCirclesMap = [
+    { "titleColor" : "#BBBBBB", "name": "Limbo", "id":"0"},
+    { "titleColor": "#DB57D0", "name": "Dome", "id":"1"},
+    { "titleColor": "#DDB0BF", "name": "Complex", "id":"2"},
+    { "titleColor": "#09AE48", "name": "Hall", "id":"3"},
+    { "titleColor": "#7ED96D", "name": "Planta", "id":"4"},
+    { "titleColor": "#BF0CB9", "name": "Village", "id":"5"},
+    { "titleColor": "#B9DBA2", "name": "Sonar+D", "id":"7"}];
 
 queue()
     //TODO Read actual data format
@@ -66,7 +83,8 @@ function draw() {
 
     path = sankey.link();
 
-    colors = d3.scale.category10();
+    colors = color; //d3.scale.ordinal(); //category10
+    console.log("cccolors"+d3.scale.ordinal());  //category10
 
     sankey
         .nodes(analysis.nodes)
@@ -83,13 +101,15 @@ function draw() {
     
 }
 
-function tooltip(){
+function tooltip(artist_name,img,url){
     $(document).ready(function() {
 			//$('.tooltip').tooltipster();
             $('.tooltip').tooltipster({
                 theme: 'tooltipster-light',
                 interactive: true,
-                content: $('<img src="imgs/Raphael.png" /> <strong>This text is in bold case !</strong>')
+                content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
+                //content: $('<div class="tooltip"><img src="'+img+'" class="tooltip" style="width:25%" title="kdjlakjdalksjdlakjdlajda asd asdasd" /><a href="#"> <p>kjdalsdjadaldadald </p></a></div>')
+              
                 
 });
 		});
@@ -111,7 +131,10 @@ function leyenda(){
     { "titleColor": "#7ED96D", "name": "Planta", "id":"4"},
     { "titleColor": "#BF0CB9", "name": "Village", "id":"5"},
     { "titleColor": "#B9DBA2", "name": "Sonar+D", "id":"7"}];
+    
 
+    
+    
 printRoomLegend = function(circles) {
 
         legendSvgContainer.selectAll("text")
@@ -172,7 +195,9 @@ function drawComponents(graph){
         })
         .style("stroke", function (d) {
             if (d.source.room == 4 || d.target.room == 4) {
+                //return colors(d.source.room);
                 return colors(d.source.room);
+                
             } else {
                 return "#000"
             }
@@ -211,12 +236,23 @@ function drawComponents(graph){
         .attr("title","xxx")
         .attr("target","_blank")
         .style("fill", function (d) {
+           if(d.room==1 || d.room==8){
+               return d.color = colors(0);
+           }else{
             return d.color = colors(d.room);
+           }
+            //return d.color = d3.scale.ordinal(d.room);
+        })
+        .style("opacity", function (d) {
+           if(d.room==1 || d.room==8){
+               return "0.3";
+           }
+            //return d.color = d3.scale.ordinal(d.room);
         })
         .on("mouseover", function (d) {
             highlight = drawHighlight(d);
             view_artist_data(d,this);
-            tooltip();
+            
         })
         .on("mouseout", function (d) {
             d3.selectAll(".highlightLink").remove();
@@ -287,5 +323,8 @@ function view_artist_data(userselection, rect) {
             {return d;}
         });
         console.log(filteredData);
+        console.log(filteredData[0].ACTIVIDAD);
+        console.log(filteredData[0].FOTO1);
+        tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1,  filteredData[0].URL);
     });
 }
