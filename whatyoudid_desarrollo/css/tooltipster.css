@@ -28,12 +28,6 @@
 }
 
 
-
-
-
-
-
-
 /* This is the base styling required to make all Tooltipsters work */
 .tooltipster-base {
 	padding: 0;
@@ -41,7 +35,7 @@
 	line-height: 0;
 	position: absolute;
 	left: 0;
-	top: 0;
+	top: 10;
 	z-index: 9999999;
 	pointer-events: none;
 	width: auto;
@@ -49,6 +43,30 @@
 }
 .tooltipster-base .tooltipster-content {
 	overflow: hidden;
+}
+
+/* .tooltipster-base .tooltipster-content img{ */
+img{
+	border-width: 3px;
+    border-color: red;
+   
+} 
+
+.tooltipster-base .tooltipster-content #kkk{
+	color:#fff;
+    text-decoration:none; 
+    text-align: right;
+    padding-left: 60%;
+}
+
+.tooltipster-base .tooltipster-content a{
+	
+}
+
+.tooltipster-base .tooltipster-content p{
+	color:#e99634;
+    text-decoration:none; 
+    left:0;
 }
 
 

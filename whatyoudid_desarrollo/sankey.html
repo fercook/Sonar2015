@@ -21,7 +21,7 @@
     <link rel="stylesheet" type="text/css" href="css/themes/tooltipster-light.css" />
     
     
-    
+     <script src="js/sankey.js"></script>
     
    <script src="js/mainmenu_prefixfree.min.js"></script>
    <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -77,7 +77,7 @@
     
 
 <br/> <br/> <br/>
-<section class="themes">
+<!--section class="themes">
             <div class="themes">
 				<span class="tooltipster-default-preview tooltip" title="The default theme" target="_blank">Default</span>
 				<span class="tooltipster-light-preview tooltip" title="Light and frisky!" target="_blank">Light</span>
@@ -85,34 +85,37 @@
 				<span class="tooltipster-noir-preview tooltip" title="Hipsterific!" target="_blank">Noir</span>
 				<span class="tooltipster-shadow-preview" title="Check out my shadow" target="_blank">Shadow</span>
 			</div>
-</section>
+</section-->
 <!-- Div artistas tooltipster-->
 
 <!-- Menú desplegable -->
-<a href="#menu" id="toggle"><span></span></a>
+<a href="#menu" id="toggle" style="z-index:9999999999999;"><span></span></a>
 <div id="menu">
   <ul>
-    <li><a href="http://www.index.html">Home</a></li>
-    <li><a href="#about">Now</a></li>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="now.html">Now</a></li>
     <li><a href="#contact">You</a></li>
-    <li><a href="#contact">Flow</a></li>
+    <li><a href="#">Flow</a></li>
   </ul>
 </div>
     
 <!-- Div auxiliar -->
-<div id="rcorners1">
+<!--div id="rcorners1">
     <img src="imgs/artist/adda.png" style="height:100px;" /> <a href="" id="name">Raphael</a>
     <br>
     <a href="" id="link">Raphael</a>
     
-</div>
-    
+</div-->
+
 <!-- Div leyendas salas -->
-    <div id='legend'></div>  
+<div id='legend'></div> 
+ 
   
 <!-- DIV PRINCIPAL GRAFO -->
 <div id="svg"></div>
-    
+ 
+
+
 
 <!-- DIV EGECTO DEGRADADO -->
     
@@ -122,19 +125,19 @@
             var gui = new dat.GUI();
             gui.remember(GraphParameters);
             gui.add(GraphParameters, 'graphWidth', 100, 6000).onFinishChange(draw);
-            gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
+            /*gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
             gui.add(GraphParameters, 'svgHeight', 100, 2000).onFinishChange(draw);
             gui.add(GraphParameters, 'nodeWidth', 0, 1).onFinishChange(draw);
             gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
             gui.add(GraphParameters, 'curvature', 0.0, 1.0).onFinishChange(draw);
-            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);          
+            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);   */       
         };
     </script>
     <script src="js/sankey.js"></script>
     
 <!-- menu style -->
 <script src='js/mainmenu_index.js'></script>
-<script src="js/legend.js"></script>
+<!--script src="js/legend.js"></script-->
     
 <div id="fotter" align="center">
     Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
