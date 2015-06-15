@@ -56,17 +56,18 @@ img{
 	color:#fff;
     text-decoration:none; 
     text-align: right;
-    padding-left: 60%;
+    padding-left: 55%;
+    font-family: 'Nexa';
 }
+
+
 
 .tooltipster-base .tooltipster-content a{
-	
-}
-
-.tooltipster-base .tooltipster-content p{
 	color:#e99634;
     text-decoration:none; 
     left:0;
+    font-family: 'Nexa';
+    font-size: 16px;
 }
 
 
