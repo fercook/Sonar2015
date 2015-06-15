@@ -45,7 +45,7 @@ d3max = function(array, f) {
     return a;
 };
 
-
+/*
 d3.select("#marking").selectAll("circles")
     .data(roomPos).enter()
     .append("circle")
@@ -64,7 +64,7 @@ d3.select("#marking").selectAll("circles")
     .on("mouseover", function(d) {
 
     });
-
+*/
 d3.selectAll("#origin").on("click", function(d){ mapAnimator.listeners[0].setColorScale(1) ;})
                        .on("mouseout", function(d){ mapAnimator.listeners[0].setColorScale(0) ;});
 
@@ -165,7 +165,7 @@ function init() {
     /**/
 
     var bak_image = new Image();
-    bak_image.src = "imgs/outlines_clipped.png";
+    bak_image.src = "imgs/outlines_clipped_alpha.png";
     contxt.drawImage(bak_image, 0, 0, canvas.width, canvas.height);
 
     var bounds = {
