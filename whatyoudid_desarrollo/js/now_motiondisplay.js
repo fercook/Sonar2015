@@ -182,6 +182,7 @@ MotionDisplay.prototype.animate = function(animator) {
     }
     this.moveThings(animator);
     this.draw(animator);
+    this.filter("overlay");
 }
 
 
@@ -244,6 +245,27 @@ MotionDisplay.prototype.draw = function(animator) {
         p.oldY = p.y;
     }
 };
+
+
+/// Filtering
+
+MotionDisplay.prototype.filter = function(filterName){
+     var g = this.canvas.getContext('2d');
+     var w = this.canvas.width;
+     var h = this.canvas.height;
+
+     var data = g.getImageData(0,0,w,h);
+    
+     for (var xy = 0; xy < h*w; xy++) {
+         var d = data.data[xy]/255.0;
+         if (d>=0.5) {
+             data.data[xy] = Math.floor(255*(1.0-2.0*(1-d)*(1-d)));
+//             (1 - (1-2*(d/128.0-0.5)) * (1-d/128.0))
+         } else {
+             data.data[xy] = Math.floor(255*2*d*d);
+         }
+     }
+}
 
 
 /// Zooming and stuff, still don't need it

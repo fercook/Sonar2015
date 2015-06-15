@@ -4,7 +4,7 @@
     top:70%;
 
     background:#bbb;  /*FF473D*/
-    height:30%;
+    height:25%;
     width:100vw;
 
     overflow: hidden;
@@ -25,7 +25,7 @@ ul#slide {
     padding: 0;
     position: absolute;
 
-    margin-top:4vh; 
+    margin-top:3vh; 
     height:80%;
 
 
@@ -37,7 +37,7 @@ ul#slide {
 	-ms-transform-style: preserve-3d;
 	transform-style: preserve-3d;
 
-
+top:5;
 
 
 
@@ -49,12 +49,13 @@ li#slides img{
 }
 li#slides {
 
-    font-size:4vmin;/*cool*/
-    float: left;
+    font-size:3vmin;/*cool*/
+    float: left ;
     width:25vw;
     min-width: 250px;
     height: 100%;
     color: #000;
+    
     font-weight: 300;
     text-align: center;
     border-radius: 30px;
@@ -71,11 +72,13 @@ li#slides {
 
 
 
+
 }
 
 li#slides span
 {
      font-size:2vmin;/*cool*/
+    
 }
 
 .itemslide-active

@@ -165,7 +165,7 @@ function leyenda(){
     var LEGEND_H_MARGIN = 35;
 
  var jsonCirclesMap = [
-    { "titleColor" : "#FFFFFF", "name": "Limbo", "id":"0"},
+    { "titleColor" : "#575958", "name": "Limbo", "id":"0"},
     { "titleColor": "#DB57D0", "name": "Dome", "id":"1"},
     { "titleColor": "#DDB0BF", "name": "Complex", "id":"2"},
     { "titleColor": "#09AE48", "name": "Hall", "id":"3"},

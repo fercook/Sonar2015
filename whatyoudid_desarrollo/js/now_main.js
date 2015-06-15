@@ -270,7 +270,7 @@ function init() {
                     flowArray[flowIdx.from[startRoom]] += +link.value;
                 }
             }
-            categoryGraph.origin[endRoom][startRoom] += +link.value;
+            categoryGraph.originorigin[endRoom][startRoom] += +link.value;
         });
         Rooms.forEach(function(startRoomName) {
             console.log("Room " + startRoomName + " has occupancy " + flowArray[flowIdx.rooms[startRoomName]] + ", " + flowArray[flowIdx.to[startRoomName]] + " have gone in, and " + flowArray[flowIdx.from[startRoomName]] + " have gone out");
@@ -345,7 +345,7 @@ function init() {
     var LEGEND_H_MARGIN = 35;
 
  var jsonCirclesMap = [
-    { "titleColor": "#FFFFFF", "name": "Limbo", "id":"0"},
+   // { "titleColor": "#FFFFFF", "name": "Limbo", "id":"0"},
     { "titleColor": "#DB57D0", "name": "Dome", "id":"1"},
     { "titleColor": "#DDB0BF", "name": "Complex", "id":"2"},
     { "titleColor": "#09AE48", "name": "Hall", "id":"3"},
@@ -359,9 +359,9 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("text")
-                .attr("x", 30)
+                .attr("x", legendWidth-26)
                 .attr("y", function(d, i) {
-                    return (i+1)*LEGEND_V_MARGIN;
+                    return (i+1)*LEGEND_V_MARGIN+10;
                 })
                 .attr("text-anchor", "end")
                 .attr("fill", "#3e78f3")
@@ -375,9 +375,9 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("rect")
-                .attr("x", 34)
+                .attr("x", legendWidth-22)
                 .attr("y", function(d, i) {
-                    return (i+1)*LEGEND_V_MARGIN-4;
+                    return (i+1)*LEGEND_V_MARGIN;
                 })
                 .attr("width", 12)
                 .attr("class", "opacitySensible legend")
@@ -387,7 +387,7 @@ printRoomLegend = function(circles) {
                 .style("stroke", function(d) { return d.titleColor });
     }
 
-var legendDiv = d3.select("#roomLegend");
+var legendDiv = d3.select("#color_legend");
 
 var legendSvgContainer = legendDiv.append("svg")
     .attr("class", "legend-svg")
@@ -468,6 +468,13 @@ printRoomLegend(jsonCirclesMap);
 
 
 }
+
+
+
+function changeColorScale(num) {
+    mapAnimator.listeners[0].setColorScale(num);
+}
+
 
 
 /*

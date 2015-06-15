@@ -16,8 +16,13 @@
     <!-- LCF menu ********  -->
 
     <link rel="stylesheet" type="text/css" href="css/main_style.css">
+
     <!--link rel="stylesheet" type="text/css" href="css/landing.css"-->
     <!--link href="css/flowstyle.css" rel="stylesheet" /-->
+
+    <!--<link rel="stylesheet" type="text/css" href="css/landing.css">-->
+    <!--<link href="css/flowstyle.css" rel="stylesheet" /> -->
+
     <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
 
 
@@ -51,11 +56,23 @@
 
 
     <div id='roomLegend'>
-        <div class="controlers">
-    <a href="javascript:void(0)" id="origin">Origin</a>
-            <br>
-    <a href="javascript:void(0)" id="signal">Signal strength</a>
-        </div>
+
+     <div id="color_legend"></div>
+
+    <form>
+    Only flows<input type="radio" name="view" value="flows" 
+                     onclick="changeColorScale(3)">
+    <br>
+    Room of origin<input type="radio" name="view" value="room"
+                         onclick="changeColorScale(1)">
+    <br>
+    Signal Strength<input type="radio" name="view" value="signal"
+                          onclick="changeColorScale(2)">
+    <br>
+    Attendees density <input type="radio" name="view" value="density" checked
+                             onclick="changeColorScale(0)">
+    <br>
+        </form>
     </div>
 
   <canvas id="display" width=819 height=837 unselectable="on" class="unselectable clipped">    If the image is missing, we recommend the latest
@@ -94,7 +111,7 @@
 </div>
 
 
-<div class="markings">
+<!--<div class="markings">
     <svg id="marking" width=819 height=837 ></svg>
 </div>
     <!-- Clipping path -->
