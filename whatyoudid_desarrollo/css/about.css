@@ -1,5 +1,14 @@
-@import url(http://fonts.googleapis.com/css?family=Glegoo|Oswald:400,700);
-@import url(font-awesome.min.css);
+@font-face {
+    font-family: 'Nexa';
+    font-weight: bold;
+    src: url("../fonts/Nexa_bold.otf") format("opentype");
+}
+@font-face {
+    font-family: 'Nexa';
+    font-weight: light;
+    src: url("../fonts/Nexa_light.otf") format("opentype");
+
+}
 body{
     /*font-family: 'Source Sans Pro', sans-serif;*/
     font-family: 'Nexa';
@@ -8,14 +17,15 @@ body{
 
     /*margin:0;*/
     margin-left: 0px;
+    height:6000px;
 
 
 }
 
 /*Header*/
 header{
-    width:100vw;
-    /*position:fixed;*/
+    width:100%;
+    position:fixed;
     left:0;
     height: 0px;
     /*background-color: #000000;*/
@@ -117,8 +127,8 @@ table /*overide defaults*/
 {
     position:fixed;
     top:9.5vh;
-    height:48.5vh;
-    width:100vw;
+    
+    width:100%;
     /*background-color:#FF4D4D;*/
 
     font-size:8vh;
@@ -132,13 +142,22 @@ table /*overide defaults*/
     top:-6.5vh;
     right:16vw;
     width:53vh;
-    height:53vh;
+    background-color:#FF4D4D;
+    /*height:53vh;*/
 }
 
 #welcome .content
 {
     position:relative;
     top:8vh;
+
+}
+
+#welcome .content p
+{
+    position:relative;
+    top:8vh;
+    color:white;
 
 }
 
@@ -218,6 +237,12 @@ table /*overide defaults*/
     top:1vmin;
 
 }
+
+#links a{
+    text-decoration: none;
+    color:white;
+}
+
 #twitterwrap {
     position:absolute;
     left:100px;
@@ -225,9 +250,15 @@ table /*overide defaults*/
 }
 
 /* stars button and twitter share */
-@media (max-aspect-ratio: 16/9), (max-width: 1200px), (max-height: 800px) {
+/*@media (max-aspect-ratio: 16/9), (max-width: 1200px), (max-height: 800px) {
     #links {
         display:none;
     }
-}
+}*/
+
+/*@media (max-aspect-ratio: 16/9), (max-width: 1200px) {
+    #links {
+        display:none;
+    }
+}*/
 

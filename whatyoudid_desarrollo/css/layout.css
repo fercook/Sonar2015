@@ -225,6 +225,13 @@ table /*overide defaults*/
     top:1vmin;
 
 }
+
+#links a{
+    text-decoration: none;
+    color:white;
+}
+
+
 #twitterwrap {
     position:absolute;
     left:100px;
