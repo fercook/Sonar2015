@@ -48,7 +48,7 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, colorScal
     this.colors = [];
     this.colors[0] = generateScale(d3.rgb("#FFFFFF")); // Default scale
     if (colorScales) {
-        //colorScales = {positions: roomPos, categories: categories, colors: roomColors};        
+        //colorScales = {positions: roomPos, categories: categories, colors: roomColors};
         this.colorScales = colorScales;
 //            this.colors[ik]=generateScale( hextoRGB(color) );
     } else {
@@ -88,15 +88,15 @@ MotionDisplay.prototype.findScale = function(x,y) {
         var dx = x-this.colorScales.positions[ridx].cx;
         var dy = y-this.colorScales.positions[ridx].cy;
         var r = this.colorScales.positions[ridx].r;
-        if ( dx*dx+dy*dy <= r*r ) { circle = ridx; }                    
+        if ( dx*dx+dy*dy <= r*r ) { circle = ridx; }
     }
     if (circle >= 0) {
         var cat = Math.random(); // Now we randomly select a category inside this circle
         if (cat <= this.colorScales.categories[this.currentColorScale][circle][0]) {
-        } else {                        
+        } else {
             for (var catidx=1; catidx<this.colorScales.categories[this.currentColorScale][circle].length; catidx++) {
                 if (cat>=this.colorScales.categories[this.currentColorScale][circle][catidx-1]
-                &&  cat<=this.colorScales.categories[this.currentColorScale][circle][catidx] ) 
+                &&  cat<=this.colorScales.categories[this.currentColorScale][circle][catidx] )
                         { return catidx;}
             }
         }
@@ -119,7 +119,7 @@ MotionDisplay.prototype.makeNewParticles = function(animator) {
 
 MotionDisplay.prototype.makeParticle = function(animator) {
     var safecount = 0;
-    
+
     for (;;) {
         var a = Math.random();
         var b = Math.random();
@@ -142,9 +142,9 @@ MotionDisplay.prototype.makeParticle = function(animator) {
             var p = new Particle(u, v, 1 + 100 * Math.random());
             p.x = p.oldX = pos.x; p.y = p.oldY = pos.y;
             p.scale = -1;
-            if (this.currentColorScale != 0) { 
+            if (this.currentColorScale != 0) {
                 p.scale = this.findScale(p.x,p.y);
-            } else { p.scale = 0;}            
+            } else { p.scale = 0;}
             return p;
       //}
         }
@@ -169,9 +169,13 @@ MotionDisplay.prototype.animate = function(animator) {
         this.first = false;
     } else {
         if (this.backgroundImage)  {
-            g.globalAlpha=this.alpha;
+
+            g.fillStyle = this.backgroundAlpha;
+            g.fillRect(0,0,w,h);
+
+            //g.globalAlpha=this.alpha;
             g.drawImage(this.backgroundImage,0,0,w,h);
-            g.globalAlpha=1.0;
+            //g.globalAlpha=1.0;
         }
         else {
             g.fillStyle = this.backgroundAlpha;
