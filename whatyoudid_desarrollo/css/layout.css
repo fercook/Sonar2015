@@ -112,8 +112,6 @@ table /*overide defaults*/
 
 #download{
 
-
-
     color:#FFF;
 
     font-weight: 600;
@@ -130,7 +128,7 @@ table /*overide defaults*/
     width:100vw;
     /*background-color:#FF4D4D;*/
 
-    font-size:8vh;
+    font-size:6vh;
     color:#bbb; /* Color artist attended */
 }
 
