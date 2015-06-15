@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<link rel="stylesheet" type="text/css" href="css/sankey_style.css">
+
 
 <head>
     <script src="js/jquery-1.11.2.min.js"></script>
@@ -12,9 +12,10 @@
     <script src="js/sankeyStream.js"></script>
     
     <link rel="stylesheet" type="text/css" href="css/main_style.css">
-    <link rel="stylesheet" type="text/css" href="css/landing.css">
-    <link href="css/flowstyle.css" rel="stylesheet" />
+    <!--link rel="stylesheet" type="text/css" href="css/landing.css"-->
+    <!--link href="css/flowstyle.css" rel="stylesheet" /-->
     <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
+    <link rel="stylesheet" type="text/css" href="css/sankey_style.css">
     
     <!-- Estilos tooltipster -->
     <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
@@ -94,10 +95,13 @@
   <ul>
     <li><a href="index.html">Home</a></li>
     <li><a href="now.html">Now</a></li>
-    <li><a href="#contact">You</a></li>
+    <li><a href="your_activity.html">You</a></li>
     <li><a href="#">Flow</a></li>
+    <li><a href="about.html">About</a></li>
   </ul>
 </div>
+    
+
     
 <!-- Div auxiliar -->
 <!--div id="rcorners1">
@@ -121,17 +125,17 @@
     
     <!--div class="overlay" style="z-index:200000000000"-->
     <script>
-        window.onload = function () {
+       /* window.onload = function () {
             var gui = new dat.GUI();
             gui.remember(GraphParameters);
             gui.add(GraphParameters, 'graphWidth', 100, 6000).onFinishChange(draw);
-            /*gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
+            gui.add(GraphParameters, 'graphHeight', 100, 2000).onFinishChange(draw);
             gui.add(GraphParameters, 'svgHeight', 100, 2000).onFinishChange(draw);
             gui.add(GraphParameters, 'nodeWidth', 0, 1).onFinishChange(draw);
             gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
             gui.add(GraphParameters, 'curvature', 0.0, 1.0).onFinishChange(draw);
-            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);   */       
-        };
+            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);        
+        };*/
     </script>
     <script src="js/sankey.js"></script>
     
@@ -140,7 +144,7 @@
 <!--script src="js/legend.js"></script-->
     
 <div id="fotter" align="center">
-    Created by <a id="hrefs" href="https://bsc.es">BSC</a>.
+    Created by <a id="hrefs" href="http://www.bsc.es/computer-applications/scientific-visualization">BSC</a>.
 </div>
 
 </body>

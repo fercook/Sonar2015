@@ -65,10 +65,17 @@ svg #clip {
 } */
 
 .legend {
+<<<<<<< HEAD
+ z-index: 8888888888;
+    position:relative;
+    top:50px;
+    left:50px;
+=======
     z-index: 2000;
     position: relative;
     top: 50px;
     left: 50px;
+>>>>>>> FETCH_HEAD
 }
 .legenditem {
     overflow: visible;
