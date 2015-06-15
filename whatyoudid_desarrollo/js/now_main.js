@@ -8,7 +8,7 @@
 
 var mapAnimator,legendAnimator;
 
-var maxFlow,colorScales;
+var maxFlow,colorScales, filtering;
 
 function isAnimating() {
     return document.getElementById('animating').checked;
@@ -65,6 +65,11 @@ d3.select("#marking").selectAll("circles")
 
     });
 
+d3.selectAll("#origin").on("click", function(d){ mapAnimator.listeners[0].setColorScale(1) ;})
+                       .on("mouseout", function(d){ mapAnimator.listeners[0].setColorScale(0) ;});
+
+d3.selectAll("#signal").on("mouseover", function(d){ mapAnimator.listeners[0].setColorScale(2) ;})
+                       .on("mouseout", function(d){ mapAnimator.listeners[0].setColorScale(0) ;});
 
 function init() {
 
@@ -234,21 +239,21 @@ function init() {
         for (var n = 0; n < flowImages.length - 1; n++) flowArray.push(0.0);
         var dict = getMACDict(new Date(inputGraph.time_start));
         var categoryGraph = { origin: {}, signal: {}, vendor: {} };
-        Rooms.forEach(function(aname){ 
-            categoryGraph.origin[aname]= {}; 
-            Rooms.forEach(function(bname){ 
-                categoryGraph.origin[aname][bname]= 0; 
+        Rooms.forEach(function(aname){
+            categoryGraph.origin[aname]= {};
+            Rooms.forEach(function(bname){
+                categoryGraph.origin[aname][bname]= 0;
             });
             categoryGraph.signal[aname]= {};
-            Signals.forEach(function(strength){ 
-                categoryGraph.signal[aname][strength]= 0; 
+            Signals.forEach(function(strength){
+                categoryGraph.signal[aname][strength]= 0;
             });
         });
         ///Finally process stuff
         inputGraph.rooms.forEach(function(room) {
             flowArray[flowIdx.rooms[dict[room.name]]] += +room.devices;
-            Signals.forEach(function(strength){ 
-                categoryGraph.signal[dict[room.name]][strength] += room[strength]; 
+            Signals.forEach(function(strength){
+                categoryGraph.signal[dict[room.name]][strength] += room[strength];
             });
 
         });
@@ -285,8 +290,8 @@ function init() {
             var tot = d3.sum(categories[cats][n]);
             if (tot != 0){
                 categories[cats][n][0] = categories[cats][n][0]/tot;
-                for (var m=1;m<categories[cats][n].length;m++) { 
-                    categories[cats][n][m] = categories[cats][n][m]/tot + categories[cats][n][m-1]; 
+                for (var m=1;m<categories[cats][n].length;m++) {
+                    categories[cats][n][m] = categories[cats][n][m]/tot + categories[cats][n][m-1];
                 }
             }
         }
@@ -329,11 +334,11 @@ function init() {
         legendAnimator.start(40);
         d3.selectAll(".value")[0].forEach(function(d,i) {d.innerText = " "+legendNumbers[i]+" people"});
     };
-    
-    
+
+
     /////// Room legends
-    
-    var legendWidth=400,
+
+    var legendWidth=200,
         legendHeight=200;
     var LEGEND_V_MARGIN = 16;
     var LEGEND_H_MARGIN_COLOR = 40;
@@ -349,27 +354,29 @@ function init() {
     { "titleColor": "#B9DBA2", "name": "Sonar+D", "id":"7"}];
 
 printRoomLegend = function(circles) {
+
         legendSvgContainer.selectAll("text")
             .data(jsonCirclesMap)
             .enter()
             .append("text")
                 .attr("x", 30)
-                .attr("y", function(d, i) { 
+                .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN;
                 })
                 .attr("text-anchor", "end")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
-                .attr("font-family", "Nexa Bold")
+                //.attr("font-family", "Nexa Bold")
                 .attr("class", "opacitySensible legend")
-                .attr("font-size", "12pt")
+                //.attr("font-size", "14px")
                 .text(function(d) { return d.name });
+
         legendSvgContainer.selectAll("rect")
             .data(jsonCirclesMap)
             .enter()
             .append("rect")
                 .attr("x", 34)
-                .attr("y", function(d, i) { 
+                .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN-4;
                 })
                 .attr("width", 12)
@@ -384,19 +391,22 @@ var legendDiv = d3.select("#roomLegend");
 
 var legendSvgContainer = legendDiv.append("svg")
     .attr("class", "legend-svg")
-    .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight)
-    .attr("preserveAspectRatio", "xMinYMin meet");
+    .attr("width",legendWidth)
+    .attr("height",legendHeight);
+//    .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight);
+
+//    .attr("preserveAspectRatio", "xMinYMin meet");
 
 printRoomLegend(jsonCirclesMap);
-    
-    
+
+
     /////////
-    
-    
+
+
 
 ///* AJAX
    // $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
-     $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {         
+     $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
         dataType: "jsonp",
         crossDomain: true
     })
@@ -405,11 +415,11 @@ printRoomLegend(jsonCirclesMap);
             var rawFlows = process_graph(json);
             flows = rawFlows.slice(0, flowImages.length);
 
-        ///////// TESTING POPULATIONS 
+        ///////// TESTING POPULATIONS
         /*
             console.log("initial flows: ")
             console.log(flows);
-//AJAX */ 
+//AJAX
             var Z = 1.0;
             // Dome inside, in, out,
             flows = [4000, Z * 780,  Z * 620,
