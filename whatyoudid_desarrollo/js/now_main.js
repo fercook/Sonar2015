@@ -165,7 +165,7 @@ function init() {
     /**/
 
     var bak_image = new Image();
-    bak_image.src = "imgs/outlines_clipped_alpha.png";
+    bak_image.src = "imgs/outlines_clipped.png";
     contxt.drawImage(bak_image, 0, 0, canvas.width, canvas.height);
 
     var bounds = {
@@ -404,7 +404,8 @@ printRoomLegend(jsonCirclesMap);
 
 
 
-///* AJAX
+//
+    /* AJAX
    // $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
      $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
         dataType: "jsonp",
@@ -419,7 +420,7 @@ printRoomLegend(jsonCirclesMap);
         /*
             console.log("initial flows: ")
             console.log(flows);
-//AJAX
+//AJAX */
             var Z = 1.0;
             // Dome inside, in, out,
             flows = [4000, Z * 780,  Z * 620,
@@ -460,8 +461,7 @@ printRoomLegend(jsonCirclesMap);
                     width: 819,
                     height: 837
                 }, startAnimating);
-  ///AJAX
-    });
+  ///AJAX    });
 
 
 

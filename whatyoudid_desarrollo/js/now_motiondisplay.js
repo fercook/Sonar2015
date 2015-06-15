@@ -169,13 +169,11 @@ MotionDisplay.prototype.animate = function(animator) {
         this.first = false;
     } else {
         if (this.backgroundImage)  {
-
-            g.fillStyle = this.backgroundAlpha;
-            g.fillRect(0,0,w,h);
-
-            //g.globalAlpha=this.alpha;
+//            g.fillStyle = this.backgroundAlpha;
+//            g.fillRect(0,0,w,h);
+            g.globalAlpha=this.alpha;
             g.drawImage(this.backgroundImage,0,0,w,h);
-            //g.globalAlpha=1.0;
+            g.globalAlpha=1.0;
         }
         else {
             g.fillStyle = this.backgroundAlpha;
