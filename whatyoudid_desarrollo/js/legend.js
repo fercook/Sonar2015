@@ -26,7 +26,6 @@ printRoomLegend = function(circles) {
                 .attr("text-anchor", "end")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
-                //.attr("font-family", "Oswald")
                 .attr("class", "opacitySensible legend")
                 .attr("font-size", ".24em")
                 .text(function(d) { return d.name });
@@ -39,7 +38,6 @@ printRoomLegend = function(circles) {
                 })
                 .attr("y", LEGEND_V_MARGIN-4)
                 .attr("width", 4)
-                //.attr("font-family", "Oswald")
                 .attr("class", "opacitySensible legend")
                 .attr("data-room", function(d){return d["id"]})
                 .attr("height", 4)
