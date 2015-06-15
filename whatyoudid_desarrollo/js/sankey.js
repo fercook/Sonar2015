@@ -46,6 +46,17 @@ function ready(error, data) {
     draw();
 }
 
+
+/*window.onmousewheel(
+
+document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})
+    
+    GraphParameters.graphWidth += algo;
+    draw();
+);*/
+
+
+
 function draw() {
 
     d3.selectAll("svg").remove();
@@ -64,6 +75,7 @@ function draw() {
         .attr("viewBox", "0 0 " + GraphParameters.graphWidth + " " + height)
         .attr("width", GraphParameters.graphWidth)
         .attr("height", height);
+//        .on("mousewheel", function(e,i){console.log(e);console.log(i);});
 
     svg.append("rect")
         .attr("class", "sea")
@@ -72,8 +84,15 @@ function draw() {
         .style("fill", 0,0,0,0)
         .style("opacity",0);//    .on("click", click);
 
-    var maing = svg.append("g");
+    maing = svg.append("g").call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom)).append("g");// attr("id","maingroup");
 
+    function zoom() {
+        console.log(d3.event.translate);
+        var s = Math.min(Math.max(0.33,d3.event.scale),3)        
+        var dx = Math.min(Math.max(d3.event.translate[0],-s*GraphParameters.graphWidth),s*GraphParameters.graphWidth);
+        maing.attr("transform", "translate(" + dx + ",0)scale(" + s + ",1)");
+    }
+    
     sankey = sankeyStream()
         .nodeWidth(nodeWidth)
         .curvature(curvature)
@@ -98,6 +117,28 @@ function draw() {
     
     //tooltip();
     
+    
+ 
+
+    // create the svg
+    //rootSvg = d3.select("#tree-body").append("svg:svg");
+    /*
+    creating your svg image here
+
+
+// create the zoom listener
+var zoomListener = d3.behavior.zoom()
+.scaleExtent([0.33, 1])
+.on("zoom", zoomHandler);
+    
+// function for handling zoom event
+function zoomHandler() {
+    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+    // apply the zoom behavior to the svg image
+    zoomListener(svg);
+    
+       */
     
 }
 
@@ -183,7 +224,7 @@ printRoomLegend(jsonCirclesMap);
 
 function drawComponents(graph){
 
-    var link = svg.append("g").selectAll(".link")
+    var link = maing.append("g").selectAll(".link")
         .data(graph.links).enter();
 //    console.log("Links");
 //    console.log(graph.links);
@@ -211,7 +252,7 @@ function drawComponents(graph){
         });
         */
 
-    var node = svg.append("g").selectAll(".node")
+    var node = maing.append("g").selectAll(".node")
         .data(graph.nodes)
         .enter().append("g")
         .attr("class", "node")
@@ -270,7 +311,7 @@ function drawHighlight(highlightNode){
     //graph.nodes = [highlightNode];
 
         //console.log(graph.links.filter(function(d){return d.value > 0;}));
-    var link = svg.append("g").selectAll(".highlightLink")
+    var link = maing.append("g").selectAll(".highlightLink")
         .data(graph.links).enter();
 
     link.append("path")
