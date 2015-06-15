@@ -1,20 +1,37 @@
 @import url(http://fonts.googleapis.com/css?family=Glegoo|Oswald:400,700);
-body{
+html,body{
     /*font-family: 'Source Sans Pro', sans-serif;*/
     font-family:Oswald;
     text-align:center;
-    /*background-image: url(../imgs/BG_Scary.jpg);*/
+    background-image: url(../imgs/BG_Scary.jpg);
     /*background: #000;*/
     margin:0;
+    padding:0; 
+    overflow:hidden;
 
 
 }
+
+
+svg  { position:fixed; top:5%; left:0; height:100%; width:100%; z-index: -1000; font-family: Helvetica; font-size: 2rem; }
+
+svg.legend-svg { 
+    position:fixed; 
+    top:90%; 
+    left:20%; 
+    height:80%; 
+    width:80%; 
+    text-align: center;
+    font-family: Helvetica;
+    font-size: 16px;
+}
+
 
 rect.sea {
     opacity: 100%;
 }
 #chart {
-        height: 900px;
+        height: 250px;
     }
     .node rect {
         cursor: move;
@@ -37,9 +54,9 @@ rect.sea {
     }
 
 #legend {
-  width: 50%;
+  width: 100%;
   height: 60%;
-  top: 105%;
+  top: 80%;
   left: 30%;
   position: absolute;
 }
