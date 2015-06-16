@@ -5,16 +5,20 @@ body {
     background-image: url(../imgs/back_tile.jpg)
 }
 
-/*
-svg {
+
+/*svg {
     position: fixed;
-    top: 5%;
-    left: 0;
+ 
     height: 100%;
     width: 100%;
     z-index: -1000;
-    font-size: 2rem;
-}
+    border-width: 3px;
+
+
+}*/
+
+
+/*
 svg.legend-svg {
     position: fixed;
     top: 20%;
