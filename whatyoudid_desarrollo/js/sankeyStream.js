@@ -131,15 +131,10 @@ sankeyStream = function() {
   // Compute the value (size) of each node by summing the associated links.
   function computeNodeValues() {
     nodes.forEach(function(node) {
-        var value = Math.max(
-            d3.sum(node.sourceLinks, value),
-            d3.sum(node.targetLinks, value)
-        );
-        if (node.value) {
-            if (node.value != value) {console.log("Node values do not match");
-                                      console.log("Node"+node.name);}
-        } else { node.value = value; }
-
+      node.value = Math.max(
+        d3.sum(node.sourceLinks, value),
+        d3.sum(node.targetLinks, value)
+      );
     });
   }
 

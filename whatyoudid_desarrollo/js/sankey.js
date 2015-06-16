@@ -15,6 +15,7 @@ GraphParameters = {
     "nodeWidth": 0.4,
     "nodePadding": 50,
     "offset": "Centered",
+    "offset": "Centered",
     "curvature": 0.5
 }
 
@@ -95,9 +96,14 @@ var getColor = function(d){
         return d.color = colors(d.room);
     }
 }
-/*
 
 function process_json(json) {
+    var roomOrder = {"Dome":2,"Hall":3 , "Planta":4 ,
+                     "PlusD": 5, "Village": 6, "Complex": 7,
+                     "Entry": 1,"Exit": 8};
+    var roomNames = ["Limbo","Dome","Hall","Planta",
+                     "PlusD", "Village", "Complex",
+                     "Limbo"];
     // Create empty graph
     analysis = {};
     analysis.links = Array((time_steps-2) * total_rooms * total_rooms + (total_rooms - 1) * total_rooms + total_rooms - 1);
@@ -105,7 +111,7 @@ function process_json(json) {
     // Prepare a couple of temporary useful vars
     for (var t = 0; t < time_steps; t++) {
         for (var s = 1; s <= total_rooms; s++) {
-            analysis.nodes[nodeidx(t, s)] = {"layer": t, "row": s-1, "name": nodeidx(t, s), "room": s};}
+            analysis.nodes[nodeidx(t, s)] = {"layer": t, "row": s-1, "name": nodeidx(t, s), "room": s, fullName: roomNames[s-1]};}
     }
     for (var t = 0; t < time_steps-1; t++) {
         for (var s = 1; s <= total_rooms; s++) {
@@ -169,9 +175,25 @@ function process_json(json) {
     // Convertir times to layers
     // Convert MACs to room names to rows
 
+    for (var t=0;t<time_steps;t++) {
+        if (buckets[t].length) {
+            var dict = getMACDict(new Date(buckets[t][0].time_start));
+            for (var ridx=0; ridx<buckets[t].rooms; ridx++) {
+                var room = buckets[t].rooms[ridx];
+                analysis.nodes[nodeidx(t,  roomOrder[dict[room.name]])].value += room.devices;
+            }
+            for (var lidx=0; lidx<buckets[t].links; lidx++) {
+                var link = buckets[t].links[lidx];
+                var s =  roomOrder[dict[link.start_room]];
+                var e =  roomOrder[dict[link.end_room]];
+                analysis.links[linkidx(t, s, e)].value += link.value;
+            }
+        }
+    }
 
 
-
+// Testear que pasa si desaparecen rooms
+    // Put everything in little boxes and ship
 
 /*
     for (var t = 0; t < time_steps-1; t++) {
@@ -223,23 +245,13 @@ function process_json(json) {
     records_by_time.filterAll();
     var t2 = performance.now();
 */
-    // Testear que pasa si desaparecen rooms
-    // Put everything in little boxes and ship
-//}
 
-/*window.onmousewheel(
 
-document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})
-
-    GraphParameters.graphWidth += algo;
-    draw();
-);*/
+}
 
 
 
 function draw() {
-
-
 
 
     d3.selectAll("svg").remove();
@@ -270,7 +282,7 @@ function draw() {
     maing = svg.append("g").call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom)).append("g");// attr("id","maingroup");
 
     function zoom() {
-        console.log(d3.event.translate);
+        //console.log(d3.event.translate);
         var s = Math.min(Math.max(0.33,d3.event.scale),3)
         var dx = Math.min(Math.max(d3.event.translate[0],-s*GraphParameters.graphWidth),s*GraphParameters.graphWidth);
         maing.attr("transform", "translate(" + dx + ",0)scale(" + s + ",1)");
@@ -286,7 +298,7 @@ function draw() {
     path = sankey.link();
 
     colors = color; //d3.scale.ordinal(); //category10
-    console.log("cccolors"+d3.scale.ordinal());  //category10
+    //console.log("cccolors"+d3.scale.ordinal());  //category10
 
     sankey
         .nodes(analysis.nodes)
@@ -361,7 +373,7 @@ function tooltip_general(){
 
 
 });
-        var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sónar 2015</strong></p><br/>');
+        var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sonar 2015</strong></p><br/>');
 
             $('.tooltip').tooltipster('content',contenido);
         });
@@ -598,3 +610,14 @@ function view_artist_data(userselection, rect, room) {
         }
     });
 }
+
+
+
+
+/*window.onmousewheel(
+
+document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})
+
+    GraphParameters.graphWidth += algo;
+    draw();
+);*/
