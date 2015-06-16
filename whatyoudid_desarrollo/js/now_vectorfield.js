@@ -130,112 +130,69 @@ VectorField.read = function(data, correctForSphere) {
 };
 
 
-VectorField.gridFromMask = function(bounds, masks, gridSize, center, sign, callback) {
-
-    var field = [];
-    var w = gridSize.width;
-    var h = gridSize.height;
-    var n = 2 * w * h;
-
-    for (var x = 0; x < w; x++) {
-        field[x] = [];
-        for (var y = 0; y < h; y++) {
-            field[x][y] = new Vector(0, 0);
-        }
-    }
-
-    for (var k=0;k<masks.length;k++) {
-        var image = new Image();
-        image.src = masks[k];
-        image.onload = function() {
-            var fakecanvas = document.createElement('canvas');
-            fakecanvas.width = image.width;
-            fakecanvas.height = image.height;
-            var context = fakecanvas.getContext('2d');
-            context.drawImage(image, 0, 0 );
-            var data = context.getImageData(0,0,image.width,image.height);
-            var i = 0;
-            console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
-            for (var y = 0; y < h; y++) {
-                    for (var x = 0; x < w; x++) {
-                    var v = new Vector(sign*(x-center.x), sign*(y-center.y));
-                    //if(data.data[i+=4]*1.0/(255*masks.length)>0.8 && y>1000) { console.log("Exito "+i+", x:"+x+", y:"+y+", v:"+(data.data[i+=4]*1.0/(255*masks.length)));}
-                    v.setLength(data.data[i+=4]*1.0/(255*masks.length)); // We get 4 bytes but we only look at R color...
-                    //var vx = data.data[i++];
-                    //var vy = data.data[i++];
-                    //var v = new Vector(vx, vy);
-                    field[x][y] = field[x][y].plus(v);
-                }
-            }
-            var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1,1.0);
-            callback(result);
-        }
-    }
-    return true;
-};
-
 
 VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 
-    var field = [];
+    var field;
     var w = gridSize.width;
     var h = gridSize.height;
 
-    for (var x = 0; x < w; x++) {
-        field[x] = [];
-        for (var y = 0; y < h; y++) {
-            field[x][y] = new Vector(0, 0);
-        }
-    }
-
-    function myGetImageData(img,vector) {
+    function myGetImageData(img) {
+        var ifield = [];
+        for (var x = 0; x < w; x++) {
+            ifield[x] = [];
+            for (var y = 0; y < h; y++) {
+                ifield[x][y] = 0;
+            }
+        }        
         var fakecanvas = document.createElement('canvas');
         fakecanvas.width = img.width;
         fakecanvas.height = img.height;
         var context = fakecanvas.getContext('2d');
         context.drawImage(img, 0, 0 );
         var data = context.getImageData(0,0,img.width,img.height);
-        var maxpixel = 128;
-        if (vector) {
-            maxpixel = 0;
-            for (var xy = 0; xy < h*w; xy+=4) {
-                maxpixel = Math.max(maxpixel,data.data[xy]);
-                maxpixel = Math.max(maxpixel,data.data[xy+1]);
-            }
-            //maxpixel = d3max(data.data, function(d,i){return i%3==0? 0:d;});
+        var maxpixel = 0;
+        for (var xy = 0; xy < h*w; xy+=4) {
+            maxpixel = Math.max(maxpixel,data.data[xy]);
+            maxpixel = Math.max(maxpixel,data.data[xy+1]);
         }
-        console.log("normalizing normals by "+maxpixel);
         var i = 0;
-        var fi = [];
+        var scale = 1.0/128 ;//(maxpixel);
+        var zx = data.data[0];
+        var zy = data.data[1];
+        var sx,sy;
+        // Freaking bug in the normal imgs
+        if (img.src=="http://localhost/whatyoudid/imgs/now/NormalFill_PlusD.png" || 
+            img.src=="http://localhost/whatyoudid/imgs/now/NormalFill_Planta.png") {
+                sx=-1; sy=1;}
+        else { sx=1; sy=-1;}
+        console.log(img.src+":"+data.data[0]+","+data.data[1]);
         //console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
-        for (var y = 0; y < h; y++) {
-            for (var x = 0; x < w; x++) {
-                if (vector) {
-                    var v = new Vector(-(data.data[i]-128)*1.0/(maxpixel),
-                                        (data.data[i+1]-128)*1.0/(maxpixel));
-                    //v.setLength(1.0);
-                    field[x][y] = v; }
-                else {
-                    fi.push(Math.max(data.data[i+3]/255.0)); /// There is some problem that the plot crashes if it finds a zero?
-                }
-                i+=4;
+            for (var y = 0; y < h; y++) {            
+                for (var x = 0; x < w; x++) {
+                    var vx = sx*(data.data[i]-zx)*scale,
+                        vy = sy*(data.data[i+1]-zy)*scale;
+                    if (Math.abs(vx)<=1.0/128) vx=0;
+                    if (Math.abs(vy)<=1.0/128) vy=0;
+                ifield[x][y] = new Vector(vx,vy);
+                i+=4;                
             }
         }
-        return fi;
+        return ifield;
     }
 
     var imagesAllLoaded = function() {
       if (imagesOK==masks.length ) {
           // all images are fully loaded and ready to use
           // The first one holds the velocity patterns, it loads in the global field variable
-          myGetImageData(imgs[0],true);
+          field = myGetImageData(imgs[0]);
           var result = new VectorField(field, bounds.x0, bounds.y0, bounds.x1, bounds.y1);
-          for (var k=1;k<masks.length;k++) {
+          for (var k=0;k<masks.length;k++) {
               result.fields.push(myGetImageData(imgs[k]));
           }
           callback(result);
         }
-      }
+    }
 
     var imgs=[];
     var imagesOK=0;
@@ -251,18 +208,17 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 
 
 VectorField.prototype.aggregateSpeeds = function(magnitudes) {
-    for (var y = 0; y < this.h; y++) {
-        for (var x = 0; x < this.w; x++) {
-            var L= 0;
-            for (var n=0;n<magnitudes.length;n++) { //First number is magnitude of baseline field?
-                L += magnitudes[n]*this.fields[n][y*this.w+x];
+    this.magnitudes = magnitudes;
+    for (var x = 0; x < this.w; x++) {
+        for (var y = 0; y < this.h; y++) {
+            
+            var L=new Vector(0,0);
+            for (var n=0;n<magnitudes.length;n++) { 
+                L = L.plus(this.fields[n][x][y].mult(magnitudes[n]));
             };
-//            var L = (1*this.fields[0][y*this.w+x]+1*this.fields[1][y*this.w+x]
-            //if (L>0) console.log(L);
-            //if (L<0.05*this.maxLength) L=L*L; // Attenuate very small numbers
-            var v = this.field[x][y];
-            this.field[x][y] = new Vector( (L) * v.x, (L) * v.y  );
-                //this.field[x][y].plus(this.field[x][y].mult(L)); // this.field[x][y].mult(L);//
+            this.field[x][y] = L;
+            
+            //this.field[x][y] = this.fields[6][x][y];
         }
     }
     return;
@@ -311,11 +267,6 @@ VectorField.prototype.getPos = function(u, v) {
 
 VectorField.prototype.getVeloc = function(u, v) {
     return this.getValue(u,v);
-};
-
-
-VectorField.prototype.vectValue = function(vector) {
-    return this.getValue(vector.x, vector.y);
 };
 
 

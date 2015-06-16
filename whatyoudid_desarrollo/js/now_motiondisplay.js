@@ -5,7 +5,7 @@
 function generateScale(color_mult) {
     var scale = [];
     var s=1.0/255;
-    console.log(color_mult);
+//    console.log(color_mult);
     for (var i = 0; i < 256; i++) {
         //this.colors[i] = 'rgba(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(255-i) +')';
         //this.colors[ik][i] = 'rgb(' + Math.floor(i) + ',' + Math.floor(i) + ',' + Math.floor(i)  +')';
@@ -32,7 +32,7 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, colorScal
     this.numParticles = numParticles;
     this.first = true;
     this.maxLength = field.maxLength;
-    this.speedScale = 1;
+    this.speedScale = 2;
     this.renderState = 'normal';
     this.backgroundImage = imageCanvas;
     this.x0 = this.field.x0;
@@ -41,7 +41,7 @@ var MotionDisplay = function(canvas, imageCanvas, field, numParticles, colorScal
     this.y1 = this.field.y1;
     this.rgb = '0, 0, 0';
     this.background = 'rgb(' + this.rgb + ')';
-    this.alpha = 0.02;
+    this.alpha = 0.05;
     this.backgroundAlpha = 'rgba(' + this.rgb + ','+this.alpha+')';
     this.outsideColor = '#fff';
     this.currentColorScale = 0;
@@ -78,6 +78,19 @@ MotionDisplay.prototype.setColorScale = function(scaleidx) {
 
         }
     }
+}
+
+MotionDisplay.prototype.showOnlyCommunication = function() {
+    if (this.field.oldMagnitudes) {
+        this.field.magnitudes = this.field.oldMagnitudes;
+        this.field.aggregateSpeeds(this.field.magnitudes);
+        this.field.oldMagnitudes=null;
+    }
+    else {
+        this.field.oldMagnitudes=this.field.magnitudes;
+        this.field.magnitudes = this.field.magnitudes.map(function(num,i){return i%3==0? 0:num;});
+        this.field.aggregateSpeeds(this.field.magnitudes);
+    } 
 }
 
 

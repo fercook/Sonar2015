@@ -60,8 +60,8 @@
      <div id="color_legend"></div>
 
     <form>
-    Only flows<input type="radio" name="view" value="flows" 
-                     onclick="changeColorScale(3)">
+    Only flows<input type="checkbox" name="flows" value="flows" 
+                     onchange="showOnlyCommunication()">
     <br>
     Room of origin<input type="radio" name="view" value="room"
                          onclick="changeColorScale(1)">
