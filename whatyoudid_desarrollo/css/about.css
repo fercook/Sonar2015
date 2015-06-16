@@ -1,5 +1,5 @@
 @font-face {
-    font-family: 'Nexa';
+    font-family: 'xxx';
     font-weight: bold;
     src: url("../fonts/Nexa_bold.otf") format("opentype");
 }
@@ -24,7 +24,7 @@ header{
     position:fixed;
     left:0;
     height: 0px;
-    /*background-color: #000000;*/
+    background-color: #000000;
     opacity: 50%;
 
     color:#FFF;
@@ -157,9 +157,21 @@ header{
 #welcome .content #maintitle
 {
     font-size: 4em;
-    color:white;
+    color:#fff;
     margin-left:1.5vw;
+   
 
+}
+
+
+#welcome .content #maintitle #texto_base
+{
+    font-size: 0.4em;
+    color:#fff;
+    margin-left:1.5vw;
+    float:left;
+    text-align: left;
+  
 }
 /*
 #welcome .menu a
