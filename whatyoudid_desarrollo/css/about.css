@@ -218,8 +218,16 @@ table /*overide defaults*/
     margin-left:1.5vw;
     float:left;
     text-align: left;
+    align-items:stretch;
   
 }
+
+img #media
+{
+   text-align:center;
+  
+}
+
 /*
 #welcome .menu a
 {
