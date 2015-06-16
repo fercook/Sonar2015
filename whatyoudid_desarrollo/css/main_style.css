@@ -15,10 +15,9 @@
 
 html, body {
   height: 100%;
-
   font-family: 'Nexa';
   font-size: 16px;
-  
+
 }
 
 body {
@@ -243,7 +242,7 @@ main article p {
 {
 
     position:fixed;
- 
+
     bottom:0%;
     padding: 0.5vh;
     background-color: #000;

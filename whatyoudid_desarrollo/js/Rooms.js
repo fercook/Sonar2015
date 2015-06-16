@@ -10,16 +10,16 @@ Village, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:00 \
 Village, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:01 \
 Village, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:02 \
 Village, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:06 \
-Dome   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:03 \ 
+Dome   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:03 \
 Dome   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:05 \
 PlusD  , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:04 \
 PlusD  , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:12 \
 PlusD  , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:09 \
 Hall   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:10 \
 Hall   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:07 \
-Hall   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:13 \   
-Planta , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:08 \
-Complex, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:11 \
+Hall   , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:13 \
+        Planta , 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:08 \
+        Complex, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:11 \
 Complex, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:14 "
 
 */
@@ -34,16 +34,16 @@ Complex, 2015-06-07 13:25:01, 2015-06-30 15:55:00, de:de:de:de:de:14 "
       async: false,
       success: function(csv) {
           arraydata = d3.csv.parse(csv, function(row) {
-            return {name: row.room, 
-                    time_start: new Date(row.time_start), 
-                    time_end: new Date(row.time_end), 
+            return {name: row.room,
+                    time_start: new Date(row.time_start),
+                    time_end: new Date(row.time_end),
                     MAC: row.MAC } ;
             });
-          //arraydata = $.csv.toArrays(csv,{separator:'\t'}); 
+          //arraydata = $.csv.toArrays(csv,{separator:'\t'});
       }
       });
 return arraydata
-}        
+}
 var RoomRecords = getdatafromfileSync("data/roommacs.csv");
     //var RoomRecords =  d3.csv("data/roommacs.csv", function(row) {
     //return {name: row.room, time_start: new Date(row.time_start), time_end: new Date(row.time_end), MAC: row.MAC } ;
@@ -52,34 +52,34 @@ var RoomRecords = getdatafromfileSync("data/roommacs.csv");
 
 
 var RoomRecords = d3.csv.parse(roomstext, function(row) {
-            return {name: row.room, 
-                    time_start: new Date(row.time_start), 
-                    time_end: new Date(row.time_end), 
+            return {name: row.room,
+                    time_start: new Date(row.time_start),
+                    time_end: new Date(row.time_end),
                     MAC: row.MAC } ;
             });
 */
 
 Rooms = ["Dome","Hall", "Planta","PlusD", "Complex","Village","Entry","Exit"];
 RoomIdx = {};
-Rooms.forEach(function(name,i){ 
-    RoomIdx[name]= i; 
+Rooms.forEach(function(name,i){
+    RoomIdx[name]= i;
 });
 
 Signals = ["low","medium","high","very_high"];
 SignalsIdx = {};
-Signals.forEach(function(strength,i){ 
-    SignalsIdx[strength]= i; 
+Signals.forEach(function(strength,i){
+    SignalsIdx[strength]= i;
 });
 
 /*
     "#DB57D0", "name": "Dome", "id":"1"},
     "#09AE48", "name": "Hall", "id":"3"},
     "#7ED96D", "name": "Planta", "id":"4"},
-    "#B9DBA2", "name": "PlusD", "id":"7"}];        
+    "#B9DBA2", "name": "PlusD", "id":"7"}];
     "#DDB0BF", "name": "Complex", "id":"2"},
     "#BF0CB9", "name": "Village", "id":"5"},
     "#FFFFFF", "name": "Limbo", "id":"0"},
-*/  
+*/
 
 
 var roomPos = [ {
@@ -113,7 +113,7 @@ var roomPos = [ {
     r: 205,
     id: "Village"
 }];
-    
+
 roomColors = [ "#DB57D0", "#09AE48", "#7ED96D", "#B9DBA2", "#DDB0BF", "#BF0CB9", "#FFFFFF",  "#FFFFFF"];
 
 OSColors = ["#de840a","#b9b909","#0924b9"];
@@ -139,27 +139,21 @@ RoomRecords = [
 ];
 */
 
-          {name: "Village",time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:00"},
-          {name: "Village",time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:01"},
-          {name: "Village",time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:02"},
-          {name: "Village",time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:06"},
-    
-    
-          {name: "Dome",   time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:03"}, 
-          {name: "Dome",   time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:05"},
-
-          {name: "PlusD",  time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:04"},
-          {name: "PlusD",  time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:12"},
-          {name: "PlusD",  time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:09"},
-
-          {name: "Hall",  time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:10"},
-          {name: "Hall",   time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:07"},
-          {name: "Hall",   time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:13"},   
-    
-          {name: "Planta", time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:08"},
-
-          {name: "Complex",time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:11"},
-          {name: "Complex",time_start: new Date("2015-06-07 13:25:01"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:14"}
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:00"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:01"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:02"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:06"},
+          {name: "Dome",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:03"},
+          {name: "Dome",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:05"},
+          {name: "PlusD",  time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:04"},
+          {name: "PlusD",  time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:12"},
+          {name: "PlusD",  time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:09"},
+          {name: "Hall",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:10"},
+          {name: "Hall",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:07"},
+          {name: "Hall",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:13"},
+          {name: "Planta", time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:08"},
+          {name: "Complex",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:11"},
+          {name: "Complex",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:14"}
 ];
 
 

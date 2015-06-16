@@ -57,16 +57,16 @@
 
     <div id='roomLegend'>
 
-    <div id="timeStamp">Last measurement: 
+    <div id="timeStamp">Last measurement:
         <br>
         </div>
-        
-     <div id="color_legend"></div>
 
     <form>
-    Only flows<input type="checkbox" name="flows" value="flows" 
+    Only flows<input type="checkbox" name="flows" value="flows"
                      onchange="showOnlyCommunication()">
     <br>
+        <br>
+
     Room of origin<input type="radio" name="view" value="room"
                          onclick="changeColorScale(1)">
     <br>
@@ -76,7 +76,14 @@
     Attendees density <input type="radio" name="view" value="density" checked
                              onclick="changeColorScale(0)">
     <br>
+                <br>
+                <br>
+
         </form>
+
+             <div id="color_legend"></div>
+
+
     </div>
 
   <canvas id="display" width=819 height=837 unselectable="on" class="unselectable clipped">    If the image is missing, we recommend the latest
