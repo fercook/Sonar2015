@@ -15,16 +15,12 @@ body{
     text-align:center;
     background-image: url(../imgs/BG_Scary.jpg);
 
-    /*margin:0;*/
-    margin-left: 0px;
-    height:6000px;
-
 
 }
 
 /*Header*/
 header{
-    width:100%;
+    width:50%;
     position:fixed;
     left:0;
     height: 0px;
@@ -42,11 +38,11 @@ header{
     margin-top:0.35vh;
     font-size:6.5vh;
     margin-left:1.5vw;
-    font-weight: 300;
+   
 }
 
 
-table /*overide defaults*/
+/*table 
 {
     border-collapse: collapse;
 	border-spacing: 0;
@@ -70,8 +66,7 @@ table /*overide defaults*/
 #buttons-menu td
 {
     font-weight: 300;
-    font-size:3.5vh;/*Buttons font size*/
-
+    font-size:3.5vh;
 
     text-align: center;
     padding-left:2.8vw;
@@ -91,7 +86,7 @@ table /*overide defaults*/
 
 }
 
-@media (max-aspect-ratio: 16/9) {/*cool*/
+@media (max-aspect-ratio: 16/9) {
     #downloadarea {
     display: none;
     }
@@ -129,10 +124,9 @@ table /*overide defaults*/
     top:9.5vh;
     
     width:100%;
-    /*background-color:#FF4D4D;*/
-
+    
     font-size:8vh;
-    color:#bbb; /* Color artist attended */
+    color:#bbb; 
 }
 
 #welcome #main-img
@@ -143,8 +137,7 @@ table /*overide defaults*/
     right:16vw;
     width:53vh;
     background-color:#FF4D4D;
-    /*height:53vh;*/
-}
+    
 
 #welcome .content
 {
@@ -159,13 +152,16 @@ table /*overide defaults*/
     top:8vh;
     color:white;
 
-}
+}*/
 
 #welcome .content #maintitle
 {
-    font-weight: 300;
-}
+    font-size: 4em;
+    color:white;
+    margin-left:1.5vw;
 
+}
+/*
 #welcome .menu a
 {
     position: relative;
@@ -185,13 +181,12 @@ table /*overide defaults*/
     border-width: 2px;
     border-color: #FFF;
 
-    /*border-style: solid;
+    border-style: solid;
     border-width: 4px;
-    border-color: grey;*/
+    border-color: grey;
 
 
-    text-decoration: none;
-    /*padding:2vh;*/
+  
     font-weight: 400;
     color:#FFF;
     font-size:3.1vh;
@@ -203,12 +198,12 @@ table /*overide defaults*/
     background-color: #bbb;
 }
 
-
+*/
 #fotter
 {
 
     position:fixed;
-    /*font-size:16px;*/
+   
     bottom:0%;
     padding: 0.5vh;
     background-color: #000;

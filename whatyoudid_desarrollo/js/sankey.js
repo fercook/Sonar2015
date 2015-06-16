@@ -25,8 +25,8 @@ GraphParameters = {
 //  .range(["#FF0000", "#009933" , "#0000FF", "#FF0000", "#009933" , "#0000FF", "#0000FF"]);
     
 var color = d3.scale.ordinal()
-  .domain([0, 1, 2, 3 , 4, 5, 6 , 7])
-  .range(["#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2"]);
+  .domain([0, 1, 2, 3 , 4, 5, 6 , 7,8])
+  .range(["#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2", "#000","#3366FF"]);
 
 var jsonCirclesMap = [
     { "titleColor" : "#BBBBBB", "name": "Limbo", "id":"0"},
@@ -168,43 +168,45 @@ function zoomHandler() {
     
 }
 
+
+var i=0;
+
 function tooltip(artist_name,img,url){
-    
-    contenido= "<a href='"+url+"'><img src='"+img+"' style='width:30%;' align='left'/></a><strong><a href='"+ url +"'><p>" + artist_name +"</p></a></strong><br/><a href='recommend.html' id='kkk'>Similar artists</a>";
-    /*content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><a href="'+ url +'"><p>'+ artist_name +'</p></a></strong><br/><a href="recommend.html" id="kkk">Similar artists</a> '  */
-    
-    $('.tooltip').tooltipster();    
-    
+    i=i+1;
     $(document).ready(function() {
-        //alert("En otro");
-
-           //$('.tooltip').tooltipster({ theme: 'tooltipster-light', interactive: true });
-           $('.tooltip').tooltipster({interactive: true} );
-           $('.tooltip').tooltipster("content","Hola");
+			//$('.tooltip').tooltipster();
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-light',
+                interactive: true
+                //content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
+                //content: $('<div class="tooltip"><img src="'+img+'" class="tooltip" style="width:25%" title="kdjlakjdalksjdlakjdlajda asd asdasd" /><a href="#"> <p>kjdalsdjadaldadald </p></a></div>')
+              
                 
-
+});
+        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists'+i+'</a>');
+        
+            $('.tooltip').tooltipster('content',contenido);
 		});
-
+    
 }
 
 
-
 function tooltip_general(){
-    $(document).ready(function() {
-         $('.tooltip').tooltipster();    
-         $('.tooltip').tooltipster("content","En general");
-        
-			//alert("En sónar general");
-            /*$('.tooltip').tooltipster({
+    
+     $(document).ready(function() {
+			//$('.tooltip').tooltipster();
+            $('.tooltip').tooltipster({
                 theme: 'tooltipster-light',
-                interactive: true,
-                content: $('<a href="http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><a href="http://sonar.es/es"><p>Out of Sónar 2015</p></a></strong><br/>')*/
-            
-            //$('.tooltip').tooltipster('content', '<a href="http://sonar.es/en"><img src="imgs/artist/general.png" style="width:30%" align="left"/></a><strong><a href="http://sonar.es/es"><p>Out of Sónar 2015</p></a></strong><br/>' );
+                interactive: true
+                //content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
+                //content: $('<div class="tooltip"><img src="'+img+'" class="tooltip" style="width:25%" title="kdjlakjdalksjdlakjdlajda asd asdasd" /><a href="#"> <p>kjdalsdjadaldadald </p></a></div>')
+              
                 
-            //});
-     });
-
+});
+        var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sónar 2015</strong></p><br/>');
+        
+            $('.tooltip').tooltipster('content',contenido);
+		});
 }
 
 
@@ -324,31 +326,44 @@ function drawComponents(graph){
 
     node.append("rect")
         .attr("height", function (d) {
+         if(d.layer>25){
+            return 2; 
+         }else{
             return d.dy;
+         }
         })
         .attr("width", sankey.nodeWidth())
         .attr("class","tooltipster-default-preview tooltip")
-        .attr("title","xxx")
+        //.attr("title","sss")
         .attr("target","_blank")
         .style("fill", function (d) {
+        
+        if(d.layer>25){
+        
+          
+             return d.color = colors(8);
+           
+        }else{
            if(d.room==1 || d.room==8){
                return d.color = colors(0);
            }else{
-            return d.color = colors(d.room);
+             return d.color = colors(d.room);
            }
+        }
+        
             //return d.color = d3.scale.ordinal(d.room);
         })
         .style("opacity", function (d) {
-           if(d.room==1 || d.room==8){   /* Salas marcadas como limbo*/
+           if(d.room==1 || d.room==8 ){   /* Salas marcadas como limbo*/
                return "0.3";
+           }else if(d.layer>25){
+               return "1";
            }
             //return d.color = d3.scale.ordinal(d.room);
         })
         .on("mouseover", function (d) {
             highlight = drawHighlight(d);
-            
-            view_artist_data(d,this);
-            
+                view_artist_data(d,this);
         })
         .on("mouseout", function (d) {
             d3.selectAll(".highlightLink").remove();
