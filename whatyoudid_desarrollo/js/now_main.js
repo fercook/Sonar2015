@@ -91,7 +91,6 @@ function init() {
     }
     /**/
 
-    loading = false;
 
     var canvas = document.getElementById('display');
     var contxt = canvas.getContext('2d');

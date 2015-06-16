@@ -153,7 +153,7 @@ RoomRecords = [
           {name: "Hall",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:13"},
           {name: "Planta", time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:08"},
           {name: "Complex",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:11"},
-          {name: "Complex",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:14"}
+          {name: "Complex",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:14"}
 ];
 
 var getRoomByMAC = function(mac,date) {
@@ -172,10 +172,10 @@ var getRoomByMAC = function(mac,date) {
 
 /**
  * Given a mac and a range of time, returns an array with every room this mac
- * have been representing during this period and the range of time of each 
+ * have been representing during this period and the range of time of each
  * representation.
  *
- * IMPORTANT: This method assumes that RoomRecords are ordered by date and 
+ * IMPORTANT: This method assumes that RoomRecords are ordered by date and
  * consistent with real boxes positions.
  *
  * Dates are in XDate format, provided by the library XDate.js
@@ -190,7 +190,7 @@ var getRoomsByMac = function(mac, initDate, finalDate) {
         if(d.MAC==mac && initDate.diffMinutes(dateEnd) > 0 && finalDate.diffMinutes(dateStart) < 0) {
             stepFinalTime = [finalDate, dateEnd].reduce(function (a, b) { return a.diffMinutes(b) > 0 ? a : b; });
             stepInitTime = [initDate, dateStart].reduce(function (a, b) { return a.diffMinutes(b) < 0 ? a : b; });
-    
+
             rooms.push({"name": d.name, "timeStart": stepInitTime, "timeEnd": stepFinalTime})
             initDate = stepInitTime;
         }
@@ -201,7 +201,7 @@ var getRoomsByMac = function(mac, initDate, finalDate) {
 var getMACByRoomXDate = function(name,date) {
     var mac = [];
     RoomRecords.forEach(function(d) {
-        var time_start = new XDate(d.time_start), 
+        var time_start = new XDate(d.time_start),
             time_end = new XDate(d.time_end);
         if (date) {
             if (d.name==name && date.diffMinutes(time_start) <= 0 && date.diffMinutes(time_end) >= 0)mac.push(d.MAC);

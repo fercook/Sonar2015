@@ -35,7 +35,7 @@ function ready(error, jsonfile) {
     var DAILY_H_MARGIN_CHECK = 20;
     var DAILY_CHECK_SIDE = 20;
     var DAILY_WEIGHT = 15;
-    var dailyWidth=250, 
+    var dailyWidth=250,
         dailyHeight = 400;
     var legendWidth=40,
         legendHeight=100;
@@ -190,7 +190,7 @@ function ready(error, jsonfile) {
             .attr("preserveAspectRatio", "xMinYMin meet")
             .attr("viewBox", "0 0 " + width + " " + height)
             .style("position", "absolute");
-                    
+
         svgContainer.selectAll("text")
                     .data(jsonCirclesMap)
                     .enter()
@@ -200,7 +200,8 @@ function ready(error, jsonfile) {
                         .attr("fill", function(d) { return d.titleColor;})
                         //.attr("dy", ".35em")
                         .attr("dx", function(d) { return d.titleX; })
-                        .attr("font-family", "Nexa Bold")
+                        .attr("font-family", "Nexa")
+                        .attr("font-weight", "Bold")
                         .text(function(d) { return d.name });
 
 
@@ -234,7 +235,7 @@ function ready(error, jsonfile) {
                 }
                 if(i < userSteps.length) currentRoom = userSteps[i].room;
             }
-        }  
+        }
     };
 
 
@@ -244,7 +245,7 @@ function ready(error, jsonfile) {
 
     var calculateMiddlePoints = function(x1, y1, x2, y2) {
         var MARGIN = 50; //10 pixels between one contabiliced point and the next.
-        
+
         margin = (x2-x1)/MARGIN;
         result = [];
         result[0] = [x1, y1]
@@ -320,7 +321,7 @@ function ready(error, jsonfile) {
 
         initAngle = posAngle(initTime);
         finalAngle = posAngle(totalTime + initTime);
-        
+
         var opacity = 0.9;
 
         var arc = d3.svg.arc();
@@ -401,7 +402,7 @@ function ready(error, jsonfile) {
 
         var initAngle = posAngle(initTime);
         var finalAngle = posAngle(totalTime + initTime);
-        
+
         var opacity = 0.9;
 
         var arc = d3.svg.arc();
@@ -546,7 +547,8 @@ function ready(error, jsonfile) {
                 .attr("x", DAILY_H_MARGIN_TEXT)
                 .attr("y", (DAILY_RADIUS+DAILY_WEIGHT/2+(DAILY_RADIUS*2+DAILY_WEIGHT+DAILY_VERTICAL_MARGIN)*i))
                 .attr("dy", ".35em")
-                .attr("font-family", "Nexa Light")
+                .attr("font-family", "Nexa")
+                .attr("font-weight", "Light")
                 .attr("data-day", i-1)
                 .attr("class", "day-text opacitySensible")
                 .style("font-size", 28)
@@ -588,22 +590,22 @@ function ready(error, jsonfile) {
 
     printDailyDayText();
 
-    // svgContainer.append("linearGradient")                
-    //     .attr("id", "line-gradient")            
-    //     .attr("gradientUnits", "userSpaceOnUse")    
-    //     .attr("x1", 0).attr("y1", 0)         
-    //     .attr("x2", 0).attr("y2", 1000)      
-    // .selectAll("stop")                      
-    //     .data([                             
-    //         {offset: "0%", color: "red"},       
-    //         {offset: "40%", color: "red"},  
-    //         {offset: "40%", color: "black"},        
-    //         {offset: "62%", color: "black"},        
-    //         {offset: "62%", color: "lawngreen"},    
-    //         {offset: "100%", color: "lawngreen"}    
-    //     ])                  
-    // .enter().append("stop")         
-    //     .attr("offset", function(d) { return d.offset; })   
+    // svgContainer.append("linearGradient")
+    //     .attr("id", "line-gradient")
+    //     .attr("gradientUnits", "userSpaceOnUse")
+    //     .attr("x1", 0).attr("y1", 0)
+    //     .attr("x2", 0).attr("y2", 1000)
+    // .selectAll("stop")
+    //     .data([
+    //         {offset: "0%", color: "red"},
+    //         {offset: "40%", color: "red"},
+    //         {offset: "40%", color: "black"},
+    //         {offset: "62%", color: "black"},
+    //         {offset: "62%", color: "lawngreen"},
+    //         {offset: "100%", color: "lawngreen"}
+    //     ])
+    // .enter().append("stop")
+    //     .attr("offset", function(d) { return d.offset; })
     //     .attr("stop-color", function(d) { return d.color; });
 
     retrieveEvents = function(initTime, finalTime, room, json) {
@@ -612,8 +614,8 @@ function ready(error, jsonfile) {
         var events = [];
         json = json[room];
         for(i = 0; i < json.length; ++i)
-            if (json[i].initTime < finalTime && 
-                json[i].finalTime > initTime ) 
+            if (json[i].initTime < finalTime &&
+                json[i].finalTime > initTime )
                     events[events.length] = json[i];
             else if(json[i].initTime > finalTime) return events;
         return events;
@@ -652,7 +654,8 @@ function ready(error, jsonfile) {
                 .attr("y", point[1] - ARTIST_RADIUS/2)
                 .attr("text-anchor", "start")
                 .attr("fill", "#3e78f3")
-                .attr("font-family", "Nexa Light")
+                .attr("font-family", "Nexa")
+                .attr("font-weight", "Light")
                 .attr("font-size", "1em")
                 .text(list[i].eventName + " " + list[i].percent);
 
@@ -668,20 +671,20 @@ function ready(error, jsonfile) {
 
     var sort_by = function(field, reverse, primer){
 
-       var key = primer ? 
-           function(x) {return primer(x[field])} : 
+       var key = primer ?
+           function(x) {return primer(x[field])} :
            function(x) {return x[field]};
 
        reverse = !reverse ? 1 : -1;
 
        return function (a, b) {
            return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-         } 
+         }
     }
 
     printArtist = function(steps) {
         d3.json('./DATA/scheduledata.json', function(error, data) {
-            artistList = [] 
+            artistList = []
             for(var i = 0; i < jsonCirclesMap.length; ++i) {
                 artistList[artistList.length] = [];
             }
@@ -714,13 +717,14 @@ function ready(error, jsonfile) {
             .enter()
             .append("text")
                 .attr("x", 30)
-                .attr("y", function(d, i) { 
+                .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN;
                 })
                 .attr("text-anchor", "end")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
-                .attr("font-family", "Nexa Bold")
+                .attr("font-family", "Nexa")
+                .attr("font-weight", "Bold")
                 .attr("class", "opacitySensible legend")
                 .attr("font-size", ".32em")
                 .text(function(d) { return d.name });
@@ -729,7 +733,7 @@ function ready(error, jsonfile) {
             .enter()
             .append("rect")
                 .attr("x", 34)
-                .attr("y", function(d, i) { 
+                .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN-4;
                 })
                 .attr("width", 4)
