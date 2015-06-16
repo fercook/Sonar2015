@@ -27,7 +27,7 @@ var analysis;
 
 var color = d3.scale.ordinal()
   .domain([0, 1, 2, 3 , 4, 5, 6 , 7,8])
-  .range(["#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2", "#000","#3366FF"]);
+  .range(["#bbbbbb", "#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2", "#bbbbbb","#3366FF"]);
 
 var jsonCirclesMap = [
     { "titleColor" : "#BBBBBB", "name": "Limbo", "id":"0"},
@@ -116,7 +116,12 @@ function process_json(json) {
     // Prepare a couple of temporary useful vars
     for (var t = 0; t < time_steps; t++) {
         for (var s = 1; s <= total_rooms; s++) {
-            analysis.nodes[nodeidx(t, s)] = {"layer": t, "row": s-1, "name": nodeidx(t, s), "room": s, fullName: roomNames[s-1]};}
+            analysis.nodes[nodeidx(t, s)] = {"layer": t, 
+                                             "row": s-1, 
+                                             "name": nodeidx(t, s), 
+                                             "room": s, 
+                                             fullName: roomNames[s-1],
+                                            value: 0};}
     }
     for (var t = 0; t < time_steps-1; t++) {
         for (var s = 1; s <= total_rooms; s++) {
@@ -183,12 +188,14 @@ function process_json(json) {
     for (var t=0;t<time_steps;t++) {
         if (buckets[t].length) {
             var dict = getMACDict(new Date(buckets[t][0].time_start));
-            for (var ridx=0; ridx<buckets[t].rooms; ridx++) {
-                var room = buckets[t].rooms[ridx];
-                analysis.nodes[nodeidx(t,  roomOrder[dict[room.name]])].value += room.devices;
+            for (var ridx=0; ridx<buckets[t][0].rooms.length; ridx++) {
+                var room = buckets[t][0].rooms[ridx];
+                if (!dict[room.name]) { console.log("Sensor MAC Address not recognized! "+room.name); }
+                var v = analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value;
+                analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value += room.devices;
             }
-            for (var lidx=0; lidx<buckets[t].links; lidx++) {
-                var link = buckets[t].links[lidx];
+            for (var lidx=0; lidx<buckets[t][0].links.length; lidx++) {
+                var link = buckets[t][0].links[lidx];
                 var s =  roomOrder[dict[link.start_room]];
                 var e =  roomOrder[dict[link.end_room]];
                 analysis.links[linkidx(t, s, e)].value += link.value;
