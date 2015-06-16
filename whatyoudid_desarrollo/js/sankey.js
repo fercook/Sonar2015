@@ -78,14 +78,18 @@ var timeidx = function(time) { // Given a date, compares to latest time in graph
     var hour = time.getHours();
     var day = time.getDate();
     var minutes = time.getMinutes();
-    if (day<18 || day>20
-        || hour<12 || (day==18 && hour>=23) || (day==19 && hour>=22) || (day==20 && hour>=22) )
+    if (//day<18 || day>20 || hour<12 // No Sonar here
+        //|| (day==18 && hour>=23)
+        //|| (day==19 && hour>=22)
+        //|| (day==20 && hour>=22)
+         (day<16 || hour<10) ) // DEBUG REMOVE THIS CONDITION
     { return null; }
     var idx = 0;
     if (day==19) { idx += 11*4; }
     if (day==20) { idx += 11*4+10*4; }
-    idx += (hour-12);
-    idx += Math.floor(minutes/15);
+    //idx += (hour-12); // DEBUG
+    idx += (hour-10)*4; // DEBUG
+    idx += Math.floor(minutes/15.0);
     return idx;
 }
 
@@ -98,6 +102,7 @@ var getColor = function(d){
 }
 
 function process_json(json) {
+    console.log(json);
     var roomOrder = {"Dome":2,"Hall":3 , "Planta":4 ,
                      "PlusD": 5, "Village": 6, "Complex": 7,
                      "Entry": 1,"Exit": 8};
@@ -127,7 +132,7 @@ function process_json(json) {
     // Filter out invalid dates (before Sonar, nights)
     // Adjust 15 minute intervals to our intervals
     var buckets = [];
-    for (var n=0;n<time_steps;n++) buckets[n] = [];
+    for (var n=0;n<time_steps;n++) buckets[n] = []; //DEBUG
     json.graph.forEach( function(message) {
         var time_start = new Date(message.time_start);
         tidx = timeidx(time_start);
@@ -138,13 +143,13 @@ function process_json(json) {
     // Clean buckets
     for (var n=0, len=buckets.length; n<len; n++) {
         if (buckets[n].length == 0) {
-            if (buckets[n+1].length == 2) { // me robo uno
+            if (n<len-1 &&  buckets[n+1].length == 2) { // me robo uno
                 var t0 = new Date (buckets[n+1][0].time_start) ;
                 var t1 = new Date (buckets[n+1][1].time_start) ;
                 if (t0 <= t1) {
-                    buckets[n] = buckets[n+1].shift();
+                    buckets[n].push( buckets[n+1].shift() );
                 } else {
-                    buckets[n] = buckets[n+1].pop();
+                    buckets[n].push(buckets[n+1].pop());
                 }
             } else if ( n>0 && buckets[n-1].length == 1 ) {
                 buckets[n] = buckets[n-1]; // me copio el anterior
@@ -156,9 +161,9 @@ function process_json(json) {
                 var t0 = new Date (buckets[n][0].time_start) ;
                 var t1 = new Date (buckets[n][1].time_start) ;
                 if (t0 <= t1) {
-                    buckets[n+1] = buckets[n].pop();
+                    buckets[n+1].push( buckets[n].pop());
                 } else {
-                    buckets[n+1] = buckets[n].shift();
+                    buckets[n+1].push(buckets[n].shift());
                 }
             } else {
                 ///// Elijo el mas tarde y elimino
