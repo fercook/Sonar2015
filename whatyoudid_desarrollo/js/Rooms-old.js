@@ -139,28 +139,29 @@ RoomRecords = [
 ];
 */
 
-          {name: "Village",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:00"},
-          {name: "Village",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:01"},
-          {name: "Village",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:02"},
-          {name: "Village",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:06"},
-          {name: "Dome",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:03"},
-          {name: "Dome",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:05"},
-          {name: "PlusD",  time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:04"},
-          {name: "PlusD",  time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:12"},
-          {name: "PlusD",  time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:09"},
-          {name: "Hall",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:10"},
-          {name: "Hall",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:07"},
-          {name: "Hall",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:13"},
-          {name: "Planta", time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:08"},
-          {name: "Complex",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:11"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:00"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:01"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:02"},
+          {name: "Village",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:06"},
+          {name: "Dome",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:03"},
+          {name: "Dome",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:05"},
+          {name: "PlusD",  time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:04"},
+          {name: "PlusD",  time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:12"},
+          {name: "PlusD",  time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:09"},
+          {name: "Hall",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:10"},
+          {name: "Hall",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:07"},
+          {name: "Hall",   time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:13"},
+          {name: "Planta", time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:08"},
+          {name: "Complex",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:11"},
           {name: "Complex",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:14"}
 ];
+
 
 var getRoomByMAC = function(mac,date) {
     var room = [];
     RoomRecords.forEach(function(d) {
         if (date) {
-            if (d.MAC==mac && date >= new Date(d.time_start) && date <= new Date(d.time_end)) room.push(d.name);
+            if (d.MAC==mac && date >= d.time_start && date <= d.time_end) room.push(d.name);
         }
         else {
             if (d.MAC==mac) room.push(d.name);
@@ -170,54 +171,11 @@ var getRoomByMAC = function(mac,date) {
 };
 
 
-/**
- * Given a mac and a range of time, returns an array with every room this mac
- * have been representing during this period and the range of time of each 
- * representation.
- *
- * IMPORTANT: This method assumes that RoomRecords are ordered by date and 
- * consistent with real boxes positions.
- *
- * Dates are in XDate format, provided by the library XDate.js
- */
-var getRoomsByMac = function(mac, initDate, finalDate) {
-    var rooms = [];
-    var stepInitTime,
-        stepFinalTime;
-    RoomRecords.forEach(function(d) {
-        var dateStart = new XDate(d.time_start.replace(' ', 'T'));
-            dateEnd = new XDate(d.time_end.replace(' ', 'T'));
-        if(d.MAC==mac && initDate.diffMinutes(dateEnd) > 0 && finalDate.diffMinutes(dateStart) < 0) {
-            stepFinalTime = [finalDate, dateEnd].reduce(function (a, b) { return a.diffMinutes(b) > 0 ? a : b; });
-            stepInitTime = [initDate, dateStart].reduce(function (a, b) { return a.diffMinutes(b) < 0 ? a : b; });
-    
-            rooms.push({"name": d.name, "timeStart": stepInitTime, "timeEnd": stepFinalTime})
-            initDate = stepInitTime;
-        }
-    });
-    return rooms;
-}
-
-var getMACByRoomXDate = function(name,date) {
-    var mac = [];
-    RoomRecords.forEach(function(d) {
-        var time_start = new XDate(d.time_start), 
-            time_end = new XDate(d.time_end);
-        if (date) {
-            if (d.name==name && date.diffMinutes(time_start) <= 0 && date.diffMinutes(time_end) >= 0)mac.push(d.MAC);
-        }
-        else {
-            if (d.name==name) mac.push(d.MAC);
-        }
-    });
-    return mac;
-};
-
 var getMACByRoom = function(name,date) {
     var mac = [];
     RoomRecords.forEach(function(d) {
         if (date) {
-            if (d.name==room && date >= new Date(d.time_start) && date <= new Date(d.time_end)) mac.push(d.MAC);
+            if (d.name==room && date >= d.time_start && date <= d.time_end) mac.push(d.MAC);
         }
         else {
             if (d.name==name) mac.push(d.MAC);
@@ -229,7 +187,7 @@ var getMACByRoom = function(name,date) {
 var getMACDict = function(date) {
     var dict = {"entry": "Entry", "exit": "Exit"};
     RoomRecords.forEach(function(d) {
-        if (date >= new Date(d.time_start) && date <= new Date(d.time_end) )dict[d.MAC]=d.name;
+        if (date >= d.time_start && date <= d.time_end) dict[d.MAC]=d.name;
     });
     return dict;
 };
@@ -237,7 +195,10 @@ var getMACDict = function(date) {
 var getRoomDict = function(date) {
     var dict = {};
     RoomRecords.forEach(function(d) {
-        if (date >= new Date(d.time_start) && date <= new Date(d.time_end)) dict[d.name]=d.MAC;
+        if (date >= d.time_start && date <= d.time_end) dict[d.name]=d.MAC;
     });
     return dict;
 };
+
+
+
