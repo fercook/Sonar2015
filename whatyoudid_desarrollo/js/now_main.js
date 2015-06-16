@@ -10,6 +10,8 @@ var mapAnimator,legendAnimator;
 
 var maxFlow,colorScales, filtering;
 
+var onlyFlows = false, flows;
+
 function isAnimating() {
     return document.getElementById('animating').checked;
 }
@@ -83,86 +85,16 @@ function init() {
     var isLinFF = navigator.platform.indexOf('Lin') != -1 &&
         navigator.userAgent.indexOf('Firefox') != -1;
 
+    // Create a clipping path for freaking Firefox // TODO !!!
+    if (false || isMacFF || isWinFF) {
+        
+    }
+    /**/
+
     loading = false;
 
     var canvas = document.getElementById('display');
     var contxt = canvas.getContext('2d');
-
-    // Canvas image clip does not work
-    //        var clip_image = new Image();
-    //    clip_image.src = "imgs/now_clip.png";
-    //   contxt.drawImage(clip_image,0,0,canvas.width,canvas.height);
-    //    contxt.globalCompositeOperation="source-in";
-
-    /*
-    contxt.moveTo(25,25);
-        contxt.arc(0,0,160,0,Math.PI*2,true);
-    contxt.lineTo(200,200);
-    contxt.lineTo(30,190);
-            contxt.clip();
-*/
-    // Create a clipping path for freaking Firefox // TODO !!!
-    if (false || isMacFF || isWinFF) {
-        function p2(x) {
-            return Math.pow(x, 2);
-        }
-
-        function findEntryPoints(centralCircle, lateralCircle) { // Find the crossing points of two circles
-            var x1 = centralCircle.cx,
-                x2 = lateralCircle.cx;
-            var y1 = centralCircle.cy,
-                y2 = lateralCircle.cy;
-            var r1 = centralCircle.r,
-                r2 = lateralCircle.r;
-            var first, second;
-            var A = -(x1 - x2) / (y1 - y2);
-            var B = (-(p2(r1) - p2(r2)) + (p2(x1) - p2(x2)) + (p2(y1) - p2(y2))) / (2 * (y1 - y2));
-            var a = p2(A) + 1;
-            var b = (2 * A * (B - y1) - 2 * x1);
-            var c = p2(x1) + p2(B - y1) - p2(r1);
-
-            var xp = (-b + Math.sqrt(p2(b) - 4 * a * c)) / (2 * a);
-            var xm = (-b - Math.sqrt(p2(b) - 4 * a * c)) / (2 * a);
-            var yp = xp * A + B;
-            var ym = xm * A + B;
-            // We detect which one goes first by the sign of the cross product
-            var crossp = (xp - x1) * (y2 - y1) - (yp - y1) * (x2 - x1);
-            if (crossp <= 0) {
-                first = [xm, ym];
-                second = [xp, yp];
-            } else {
-                first = [xp, yp];
-                second = [xm, ym];
-            }
-            return [first, second];
-        }
-
-        contxt.beginPath();
-        // Find the crossings of the first room
-        var entryPoints = findEntryPoints(roomPos[0], roomPos[1]);
-        var startingPoint = entryPoints[0];
-        var center = new Vector(roomPos[0].cx, roomPos[0].cy);
-        contxt.moveTo(entryPoints[0][0], entryPoints[0][1]);
-        for (var i = 1; i < -1; i++) {
-            //Find the midpoint of the circle
-            var D = new Vector(roomPos[i].cx - roomPos[0].cx, roomPos[i].cy - roomPos[0].cy);
-            var R = D.setLength(roomPos[i].r);
-            var midPoint = center.plus(D.plus(R));
-            // Draw until the midpoint and then until the other entrypoint
-            contxt.arcTo(entryPoints[0][0], entryPoints[0][1], midPoint.x, midPoint.y, roomPos[i].r);
-            contxt.arcTo(midPoint.x, midPoint.y, entryPoints[1][0], entryPoints[1][1], roomPos[i].r);
-            // Now draw the arc connecting the rooms
-            var iniPoint = entryPoints[1];
-            if (i < 5) {
-                entryPoints = findEntryPoints(roomPos[0], roomPos[i + 1]);
-            } else {
-                entryPoints = [startingPoint];
-            } // We close the figure
-            contxt.arcTo(iniPoint[0], iniPoint[1], entryPoints[0][0], entryPoints[0][1], roomPos[0].r);
-        }
-        contxt.clip();
-    }
-    /**/
 
     var bak_image = new Image();
     bak_image.src = "imgs/outlines_clipped.png";
@@ -176,11 +108,10 @@ function init() {
     };
 
 
-    var numParticles = 3000; // what about other browsers isMacFF || isWinIE ?
+    var numParticles = 5000; // what about other browsers isMacFF || isWinIE ?
 
     mapAnimator = new Animator(null, isAnimating);
     legendAnimator = new Animator(null, isAnimating);
-
 
     // Get graph and process data
     var currentGraph = {
@@ -189,13 +120,13 @@ function init() {
     };
     var currentTimeInterval;
 
-    var flowImages = ["imgs/now/normal_clipped.png"];
+    var flowImages = []; //["imgs/now/normal_clipped.png"];
     var flowIdx = {
         rooms: {},
         to: {},
         from: {}
     };
-    var flows,categories;
+    var categories;
     categories=[];
     categories[0] = []; // Default scale, no categories
     categories[0][0]=[];
@@ -215,28 +146,27 @@ function init() {
         }
     }
 
-
+    console.log(Rooms);
     Rooms.forEach(function(roomName) {
         if (roomName != "Entry" && roomName != "Exit") {
             // Inside a room
-            flowIdx.rooms[roomName] = flowImages.length - 1;
-            flowImages.push("imgs/now/Fill_" + roomName + ".png");
+            flowIdx.rooms[roomName] = flowImages.length ;
+            flowImages.push("imgs/now/NormalFill_" + roomName + ".png");
             if (roomName != "Village") {
                 //Out from Village to room
-                flowIdx.to[roomName] = flowImages.length - 1;
-                flowImages.push("imgs/now/StrokeOut_" + roomName + ".png");
+                flowIdx.to[roomName] = flowImages.length ;
+                flowImages.push("imgs/now/NormalOut_" + roomName + ".png");
                 //in from Village to room
-                flowIdx.from[roomName] = flowImages.length - 1;
-                flowImages.push("imgs/now/StrokeIn_" + roomName + ".png");
+                flowIdx.from[roomName] = flowImages.length ;
+                flowImages.push("imgs/now/NormalIn_" + roomName + ".png");
             }
         }
     });
-
-    process_graph = function(inputGraphBAD) {
+    process_graph = function(inputGraphBAD) { // TODO AJAX PROBLEM UNTIL TONI RESETS THE SERVER
         var inputGraph = inputGraphBAD.graph[125];
         // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
         var flowArray = [];
-        for (var n = 0; n < flowImages.length - 1; n++) flowArray.push(0.0);
+        for (var n = 0; n < flowImages.length; n++) flowArray.push(0.0);
         var dict = getMACDict(new Date(inputGraph.time_start));
         var categoryGraph = { origin: {}, signal: {}, vendor: {} };
         Rooms.forEach(function(aname){
@@ -305,6 +235,7 @@ function init() {
     var legendNumbers = [];
     var numberOfLegends = 6;
     startAnimating = function(f) {
+        flows = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
         f.aggregateSpeeds(flows);
         //Create color scales
         colorScales = {positions: roomPos, categories: categories, colorSets: [["#FFFFFF"],roomColors,signalColors]};
@@ -476,6 +407,10 @@ function changeColorScale(num) {
 }
 
 
+function showOnlyCommunication() {
+    mapAnimator.listeners[0].showOnlyCommunication();
+}
+
 
 /*
 
@@ -602,3 +537,75 @@ function changeColorScale(num) {
            ///////// TESTING POPULATIONS   */
 // Do some normalization?
 //flows[16]=1000;
+
+
+
+
+
+/*
+
+Clipping code for FF
+
+
+
+
+        function p2(x) {
+            return Math.pow(x, 2);
+        }
+
+        function findEntryPoints(centralCircle, lateralCircle) { // Find the crossing points of two circles
+            var x1 = centralCircle.cx,
+                x2 = lateralCircle.cx;
+            var y1 = centralCircle.cy,
+                y2 = lateralCircle.cy;
+            var r1 = centralCircle.r,
+                r2 = lateralCircle.r;
+            var first, second;
+            var A = -(x1 - x2) / (y1 - y2);
+            var B = (-(p2(r1) - p2(r2)) + (p2(x1) - p2(x2)) + (p2(y1) - p2(y2))) / (2 * (y1 - y2));
+            var a = p2(A) + 1;
+            var b = (2 * A * (B - y1) - 2 * x1);
+            var c = p2(x1) + p2(B - y1) - p2(r1);
+
+            var xp = (-b + Math.sqrt(p2(b) - 4 * a * c)) / (2 * a);
+            var xm = (-b - Math.sqrt(p2(b) - 4 * a * c)) / (2 * a);
+            var yp = xp * A + B;
+            var ym = xm * A + B;
+            // We detect which one goes first by the sign of the cross product
+            var crossp = (xp - x1) * (y2 - y1) - (yp - y1) * (x2 - x1);
+            if (crossp <= 0) {
+                first = [xm, ym];
+                second = [xp, yp];
+            } else {
+                first = [xp, yp];
+                second = [xm, ym];
+            }
+            return [first, second];
+        }
+
+        contxt.beginPath();
+        // Find the crossings of the first room
+        var entryPoints = findEntryPoints(roomPos[0], roomPos[1]);
+        var startingPoint = entryPoints[0];
+        var center = new Vector(roomPos[0].cx, roomPos[0].cy);
+        contxt.moveTo(entryPoints[0][0], entryPoints[0][1]);
+        for (var i = 1; i < -1; i++) {
+            //Find the midpoint of the circle
+            var D = new Vector(roomPos[i].cx - roomPos[0].cx, roomPos[i].cy - roomPos[0].cy);
+            var R = D.setLength(roomPos[i].r);
+            var midPoint = center.plus(D.plus(R));
+            // Draw until the midpoint and then until the other entrypoint
+            contxt.arcTo(entryPoints[0][0], entryPoints[0][1], midPoint.x, midPoint.y, roomPos[i].r);
+            contxt.arcTo(midPoint.x, midPoint.y, entryPoints[1][0], entryPoints[1][1], roomPos[i].r);
+            // Now draw the arc connecting the rooms
+            var iniPoint = entryPoints[1];
+            if (i < 5) {
+                entryPoints = findEntryPoints(roomPos[0], roomPos[i + 1]);
+            } else {
+                entryPoints = [startingPoint];
+            } // We close the figure
+            contxt.arcTo(iniPoint[0], iniPoint[1], entryPoints[0][0], entryPoints[0][1], roomPos[0].r);
+        }
+        contxt.clip();
+        
+        */
