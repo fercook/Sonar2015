@@ -183,7 +183,8 @@ function tooltip(artist_name,img,url){
               
                 
 });
-        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists'+i+'</a>');
+        //var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists'+i+'</a>');
+        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><a href="'+url+'"><strong><p>'+ artist_name +'</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
         
             $('.tooltip').tooltipster('content',contenido);
 		});
