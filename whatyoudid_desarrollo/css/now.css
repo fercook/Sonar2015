@@ -1,6 +1,6 @@
 body {
     font: 14px Verdana;
-    color: rgb(109, 109, 109);
+    color: rgb(201, 201, 201);
     background-color: #000;
     background-image: url(../imgs/back_tile.jpg)
 }
@@ -8,7 +8,7 @@ body {
 
 /*svg {
     position: fixed;
- 
+
     height: 100%;
     width: 100%;
     z-index: -1000;
@@ -73,21 +73,32 @@ svg #clip {
 .legend {
  z-index: 8888888888;
     position:relative;
-    top:50px;
+    top:-80px;
     left:50px;
+    font-size: 14px;
+
 }
-.legenditem {
+#legend .legenditem {
+     display: block;
     overflow: visible;
+        margin: 5px;
+    height: 20px;
+    width: 120px;
+}
+
+#color_legend {
+    margin: 5px;
 }
 
 #roomLegend {
     text-align: right;
     width: 200px;
       height: 200px;
-      top: 0px;
+      top: 20px;
     left: -50px;
     position: relative;
     overflow: visible;
+    font-size: 14px;
 }
 
 #timeStamp {

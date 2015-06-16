@@ -25,7 +25,7 @@ sankeyStream = function() {
     nodeWidth = +_;
     return sankeyStream;
   };
-    
+
   sankeyStream.nodePadding = function(_) {
     if (!arguments.length) return nodePadding;
     nodePadding = +_;
@@ -55,7 +55,7 @@ sankeyStream = function() {
     offset = _;
     return sankeyStream;
   };
-    
+
   sankeyStream.layout = function() {
     computeNodeLinks();
     computeNodeValues();
@@ -81,7 +81,7 @@ sankeyStream = function() {
     };
 
   sankeyStream.link = function() {
-      
+
     function link(d) {
       var x0 = d.source.x + d.source.dx,
           x1 = d.target.x,
@@ -98,13 +98,13 @@ sankeyStream = function() {
 
     return link;
   };
-    
+
 //
   function computeInternalVariables(){
       layers = d3.max(nodes, function(d){return d.layer;});
-      nodeWidthpx=nodeWidth*(size[0]/layers);     
+      nodeWidthpx=nodeWidth*(size[0]/layers);
   }
-    
+
   // Populate the sourceLinks and targetLinks for each node.
   // Also, if the source and target are not objects, assume they are indices.
   function computeNodeLinks() {
@@ -131,10 +131,15 @@ sankeyStream = function() {
   // Compute the value (size) of each node by summing the associated links.
   function computeNodeValues() {
     nodes.forEach(function(node) {
-      node.value = Math.max(
-        d3.sum(node.sourceLinks, value),
-        d3.sum(node.targetLinks, value)
-      );
+        var value = Math.max(
+            d3.sum(node.sourceLinks, value),
+            d3.sum(node.targetLinks, value)
+        );
+        if (node.value) {
+            if (node.value != value) {console.log("Node values do not match");
+                                      console.log("Node"+node.name);}
+        } else { node.value = value; }
+
     });
   }
 
@@ -145,13 +150,13 @@ sankeyStream = function() {
             node.dx = nodeWidthpx;
         });
     }
-    
- /*    
+
+ /*
   // Iteratively assign the breadth (x-position) for each node.
   // Nodes are assigned the maximum breadth of incoming neighbors plus one;
   // nodes with no incoming links are assigned breadth zero, while
   // nodes with no outgoing links are assigned the maximum breadth.
- 
+
  function computeNodeBreadths() {
     var remainingNodes = nodes,
         nextNodes,
@@ -160,7 +165,7 @@ sankeyStream = function() {
     while (remainingNodes.length) {
       nextNodes = [];
       remainingNodes.forEach(function(node) {
-          
+
         if (node.xPos)
             node.x = node.xPos;
         else
@@ -187,8 +192,8 @@ sankeyStream = function() {
         .sortKeys(d3.ascending)
         .entries(nodes)
         .map(function(d) { return d.values; });
-      
-    var maxValueSum = d3.max(nodesByBreadth, function(nodesInLayer){ 
+
+    var maxValueSum = d3.max(nodesByBreadth, function(nodesInLayer){
           return d3.sum(nodesInLayer, function(d){return d.value});
       });
       console.log(maxValueSum+" people");
@@ -197,14 +202,14 @@ sankeyStream = function() {
         .domain([0,maxValueSum]);
       console.log(scale(maxValueSum));
     var offsetPx = 0;
-    if (offset == "Top" ) {offsetPx = 0;}      
-      
+    if (offset == "Top" ) {offsetPx = 0;}
+
     nodesByBreadth.forEach(function(nodes) {
         if (offset == "Bottom" ) {
-            offsetPx = Math.floor( size[1]-(scale(d3.sum(nodes, function(d){return d.value}))) ); 
-        }    
+            offsetPx = Math.floor( size[1]-(scale(d3.sum(nodes, function(d){return d.value}))) );
+        }
         if (offset == "Centered" ) {
-            offsetPx = Math.floor( 0.5* (size[1]-scale(d3.sum(nodes, function(d){return d.value}))) ); 
+            offsetPx = Math.floor( 0.5* (size[1]-scale(d3.sum(nodes, function(d){return d.value}))) );
         }
         prevY = offsetPx;
         nodes.forEach(function(node, i) {
@@ -218,7 +223,7 @@ sankeyStream = function() {
       links.forEach(function(link) {
         link.dy = scale(link.value);
       });
-            
+
     }
 
   function computeLinkDepths() {

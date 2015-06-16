@@ -37,8 +37,8 @@
 
 </head>
 <body onload="init()">
-    
-    
+
+
 <header>
 
         <a style="text-decoration:none; top:0.1vh;" href="index.html">
@@ -62,14 +62,11 @@
 
 
         <!--END OF BUTTONS MENU-->
-        
 
-        <span id="downloadarea">
-        What's happening. 
-        <!-- Add here social icons -->    
-        </span>
 
-</header>  
+        <span id="downloadarea"> What's happening. </span>
+
+</header>
 
 
 
@@ -91,16 +88,16 @@
 
     <div id='roomLegend'>
 
-    <div id="timeStamp">Last measurement: 
+    <div id="timeStamp">Last measurement:
         <br>
         </div>
-        
-     <div id="color_legend"></div>
 
     <form>
-    Only flows<input type="checkbox" name="flows" value="flows" 
+    Only flows<input type="checkbox" name="flows" value="flows"
                      onchange="showOnlyCommunication()">
     <br>
+        <br>
+
     Room of origin<input type="radio" name="view" value="room"
                          onclick="changeColorScale(1)">
     <br>
@@ -110,7 +107,13 @@
     Attendees density <input type="radio" name="view" value="density" checked
                              onclick="changeColorScale(0)">
     <br>
+                <br>
+                <br>
+
         </form>
+
+
+
     </div>
 
   <canvas id="display" width=819 height=837 unselectable="on" class="unselectable clipped">    If the image is missing, we recommend the latest
@@ -118,6 +121,8 @@
 </canvas>
 
   <div id="legend" class="legend">
+       <div id="color_legend"></div>
+
       <div class="legenditem">
     <canvas id="legend0" width=80 height=20></canvas> <div class="value">people</div>
           </div>
@@ -202,7 +207,7 @@ showLoading();
 
 <script src="js/now_main.js" type="application/javascript"></script>
 <div id="fotter" align="center">
-    
+
 <span id="links">
     <a href="https://twitter.com/bscviz">twitter</a>&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/pages/BSC-Viz/1805806052977186?sk=info&tab=page_info">facebook</a>
 </span>

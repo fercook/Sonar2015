@@ -87,7 +87,7 @@ function init() {
 
     // Create a clipping path for freaking Firefox // TODO !!!
     if (false || isMacFF || isWinFF) {
-        
+
     }
     /**/
 
@@ -163,12 +163,12 @@ function init() {
         }
     });
     process_graph = function(inputGraphBAD) { // TODO AJAX PROBLEM UNTIL TONI RESETS THE SERVER
-        var inputGraph = inputGraphBAD.graph[125];
+        var inputGraph = inputGraphBAD; //.graph[125];
         // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
         var flowArray = [];
         for (var n = 0; n < flowImages.length; n++) flowArray.push(0.0);
         var date = new Date(inputGraph.time_start);
-        d3.select("#timeStamp")[0][0].innerHTML= "Last measurement: <br>"+  date.toLocaleDateString()+" "+date.toLocaleTimeString()+"unknown";
+        d3.select("#timeStamp")[0][0].innerHTML= "Last measurement: <br>"+  date.toLocaleDateString()+" "+date.toLocaleTimeString();
         var dict = getMACDict(new Date(inputGraph.time_start));
         var categoryGraph = { origin: {}, signal: {}, vendor: {} };
         Rooms.forEach(function(aname){
@@ -202,7 +202,7 @@ function init() {
                     flowArray[flowIdx.from[startRoom]] += +link.value;
                 }
             }
-            categoryGraph.originorigin[endRoom][startRoom] += +link.value;
+            categoryGraph.origin[endRoom][startRoom] += +link.value;
         });
         Rooms.forEach(function(startRoomName) {
             console.log("Room " + startRoomName + " has occupancy " + flowArray[flowIdx.rooms[startRoomName]] + ", " + flowArray[flowIdx.to[startRoomName]] + " have gone in, and " + flowArray[flowIdx.from[startRoomName]] + " have gone out");
@@ -237,7 +237,7 @@ function init() {
     var legendNumbers = [];
     var numberOfLegends = 6;
     startAnimating = function(f) {
-        flows = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+        //flows = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
         f.aggregateSpeeds(flows);
         //Create color scales
         colorScales = {positions: roomPos, categories: categories, colorSets: [["#FFFFFF"],roomColors,signalColors]};
@@ -274,17 +274,20 @@ function init() {
     var legendWidth=200,
         legendHeight=200;
     var LEGEND_V_MARGIN = 16;
-    var LEGEND_H_MARGIN_COLOR = 40;
-    var LEGEND_H_MARGIN = 35;
+    var LEGEND_H_MARGIN = 68;
+    var LEGEND_COLOR_WIDTH = 12;
+    var LEGEND_H_MARGIN_COLOR = LEGEND_H_MARGIN+LEGEND_COLOR_WIDTH;
+
 
  var jsonCirclesMap = [
    // { "titleColor": "#FFFFFF", "name": "Limbo", "id":"0"},
+     { "titleColor": "#BF0CB9", "name": "Village", "id":"5"},
     { "titleColor": "#DB57D0", "name": "Dome", "id":"1"},
     { "titleColor": "#DDB0BF", "name": "Complex", "id":"2"},
-    { "titleColor": "#09AE48", "name": "Hall", "id":"3"},
-    { "titleColor": "#7ED96D", "name": "Planta", "id":"4"},
-    { "titleColor": "#BF0CB9", "name": "Village", "id":"5"},
-    { "titleColor": "#B9DBA2", "name": "Sonar+D", "id":"7"}];
+    { "titleColor": "#B9DBA2", "name": "Sonar+D", "id":"7"},
+     { "titleColor": "#7ED96D", "name": "Planta", "id":"4"},
+     { "titleColor": "#09AE48", "name": "Hall", "id":"3"},
+ ];
 
 printRoomLegend = function(circles) {
 
@@ -292,11 +295,11 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("text")
-                .attr("x", legendWidth-26)
+                .attr("x", LEGEND_H_MARGIN_COLOR+5)
                 .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN+10;
                 })
-                .attr("text-anchor", "end")
+                //.attr("text-anchor", "left")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
                 //.attr("font-family", "Nexa Bold")
@@ -308,17 +311,22 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("rect")
-                .attr("x", legendWidth-22)
+                .attr("x", LEGEND_H_MARGIN)
                 .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN;
                 })
-                .attr("width", 12)
+                .attr("width", LEGEND_COLOR_WIDTH)
                 .attr("class", "opacitySensible legend")
                 .attr("data-room", function(d){return d["id"]})
-                .attr("height", 12)
+                .attr("height", LEGEND_COLOR_WIDTH)
                 .style("fill", function(d) { return d.titleColor })
                 .style("stroke", function(d) { return d.titleColor });
     }
+
+removeColorLegend = function(){
+    legendSvgContainer.selectAll("text").remove();
+    legendSvgContainer.selectAll("rect").remove();
+}
 
 var legendDiv = d3.select("#color_legend");
 
@@ -337,10 +345,9 @@ printRoomLegend(jsonCirclesMap);
 
 
 
-//
-    /* AJAX
-   // $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
-     $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
+///* AJAX
+    $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
+// 15 minute graph     $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
         dataType: "jsonp",
         crossDomain: true
     })
@@ -353,7 +360,8 @@ printRoomLegend(jsonCirclesMap);
         /*
             console.log("initial flows: ")
             console.log(flows);
-//AJAX */
+//AJAX  /*
+/*
             var Z = 1.0;
             // Dome inside, in, out,
             flows = [4000, Z * 780,  Z * 620,
@@ -394,7 +402,8 @@ printRoomLegend(jsonCirclesMap);
                     width: 819,
                     height: 837
                 }, startAnimating);
-  ///AJAX    });
+  ///AJAX
+     });
 
 
 
@@ -609,5 +618,5 @@ Clipping code for FF
             contxt.arcTo(iniPoint[0], iniPoint[1], entryPoints[0][0], entryPoints[0][1], roomPos[0].r);
         }
         contxt.clip();
-        
+
         */
