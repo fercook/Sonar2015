@@ -85,6 +85,13 @@ svg #clip {
     position: relative;
     overflow: visible;
 }
+
+#timeStamp {
+    font-size: 16px;
+    top: -70px;
+    left: -4px;
+    position: relative;
+}
 .value {
     position: relative;
     left: 90px;
