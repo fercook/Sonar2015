@@ -274,8 +274,10 @@ function init() {
     var legendWidth=200,
         legendHeight=200;
     var LEGEND_V_MARGIN = 16;
-    var LEGEND_H_MARGIN_COLOR = 40;
-    var LEGEND_H_MARGIN = 35;
+    var LEGEND_H_MARGIN = 68;
+    var LEGEND_COLOR_WIDTH = 12;
+    var LEGEND_H_MARGIN_COLOR = LEGEND_H_MARGIN+LEGEND_COLOR_WIDTH;
+
 
  var jsonCirclesMap = [
    // { "titleColor": "#FFFFFF", "name": "Limbo", "id":"0"},
@@ -293,11 +295,11 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("text")
-                .attr("x", legendWidth-26)
+                .attr("x", LEGEND_H_MARGIN_COLOR+5)
                 .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN+10;
                 })
-                .attr("text-anchor", "end")
+                //.attr("text-anchor", "left")
                 .attr("fill", "#3e78f3")
                 .attr("data-room", function(d){return d["id"]})
                 //.attr("font-family", "Nexa Bold")
@@ -309,17 +311,22 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("rect")
-                .attr("x", legendWidth-22)
+                .attr("x", LEGEND_H_MARGIN)
                 .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN;
                 })
-                .attr("width", 12)
+                .attr("width", LEGEND_COLOR_WIDTH)
                 .attr("class", "opacitySensible legend")
                 .attr("data-room", function(d){return d["id"]})
-                .attr("height", 12)
+                .attr("height", LEGEND_COLOR_WIDTH)
                 .style("fill", function(d) { return d.titleColor })
                 .style("stroke", function(d) { return d.titleColor });
     }
+
+removeColorLegend = function(){
+    legendSvgContainer.selectAll("text").remove();
+    legendSvgContainer.selectAll("rect").remove();
+}
 
 var legendDiv = d3.select("#color_legend");
 
