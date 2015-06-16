@@ -86,7 +86,7 @@ function init() {
         navigator.userAgent.indexOf('Firefox') != -1;
 
     // Create a clipping path for freaking Firefox // TODO !!!
-    if (false || isMacFF || isWinFF) {
+    if (isWinIE || isMacFF || isWinFF) {
 
     }
     /**/
@@ -168,7 +168,8 @@ function init() {
         var flowArray = [];
         for (var n = 0; n < flowImages.length; n++) flowArray.push(0.0);
         var date = new Date(inputGraph.time_start);
-        d3.select("#timeStamp")[0][0].innerHTML= "Last measurement: <br>"+  date.toLocaleDateString()+" "+date.toLocaleTimeString();
+        document.getElementById("hora").innerHTML = date.toLocaleDateString()+" "+date.toLocaleTimeString();
+//        d3.select("#hora")[0][0].innerHTML= date.toLocaleDateString()+" "+date.toLocaleTimeString();
         var dict = getMACDict(new Date(inputGraph.time_start));
         var categoryGraph = { origin: {}, signal: {}, vendor: {} };
         Rooms.forEach(function(aname){
@@ -295,7 +296,7 @@ printRoomLegend = function(circles) {
             .data(jsonCirclesMap)
             .enter()
             .append("text")
-                .attr("x", LEGEND_H_MARGIN_COLOR+5)
+                .attr("x", LEGEND_H_MARGIN_COLOR+8)
                 .attr("y", function(d, i) {
                     return (i+1)*LEGEND_V_MARGIN+10;
                 })
