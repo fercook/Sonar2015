@@ -1,6 +1,6 @@
 body {
     font: 14px Verdana;
-    color: rgb(109, 109, 109);
+    color: rgb(201, 201, 201);
     background-color: #000;
     background-image: url(../imgs/back_tile.jpg)
 }
@@ -71,6 +71,8 @@ svg #clip {
     position:relative;
     top:50px;
     left:50px;
+        font-size: 14px;
+
 }
 .legenditem {
     overflow: visible;
@@ -84,6 +86,7 @@ svg #clip {
     left: -50px;
     position: relative;
     overflow: visible;
+    font-size: 14px;
 }
 
 #timeStamp {
