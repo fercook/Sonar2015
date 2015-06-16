@@ -18,7 +18,7 @@ GraphParameters = {
     "curvature": 0.5
 }
 
-
+var analysis;
 
 //var color = d3.scale.ordinal()
 //  .domain(["Limbo", "Dome", "Complex" , "Hall", "Planta", "Village" , "Sonar+D"])
@@ -62,24 +62,47 @@ function getDataFromServer() {
 //TIMER: UNCOMMENT FOR PRODUCTION
 //setInterval(function(){ getDataFromServer(); }, 5*60*1000 );
 
+var time_steps = (11+10+10)*4; //TODO: CALCULAR TIEMPOS TOTALES// time_step_group.top(Infinity).length;
+var total_rooms = 8;
+var nodeidx = function (time, room) {
+    // Notation for room starts at 1 NOT ZERO
+    return time * total_rooms + room - 1;
+}
+var linkidx = function (time, startroom, endroom) {
+    // Goes from startroom at time to endroom at time+1
+    // Notation for room starts at 1 NOT ZERO
+    return time * total_rooms * total_rooms + (startroom - 1) * total_rooms + endroom - 1;
+}
+var timeidx = function(time) { // Given a date, compares to latest time in graph and returns the layer idx
+    var hour = time.getHours();
+    var day = time.getDate();
+    var minutes = time.getMinutes();
+    if (day<18 || day>20
+        || hour<12 || (day==18 && hour>=23) || (day==19 && hour>=22) || (day==20 && hour>=22) )
+    { return null; }
+    var idx = 0;
+    if (day==19) { idx += 11*4; }
+    if (day==20) { idx += 11*4+10*4; }
+    idx += (hour-12);
+    idx += Math.floor(minutes/15);
+    return idx;
+}
+
+var getColor = function(d){
+    if(d.room==1 || d.room==8){
+        return d.color = colors(0);
+    }else{
+        return d.color = colors(d.room);
+    }
+}
+/*
+
 function process_json(json) {
-    // Things TODO:
-
-
-    time_steps = TODO: CALCULAR TIEMPOS TOTALES// time_step_group.top(Infinity).length;
-
-    total_rooms = 8;
+    // Create empty graph
     analysis = {};
     analysis.links = Array((time_steps-2) * total_rooms * total_rooms + (total_rooms - 1) * total_rooms + total_rooms - 1);
     analysis.nodes = Array(time_steps * total_rooms);
     // Prepare a couple of temporary useful vars
-    nodeidx = function (time, room) {
-        return time * total_rooms + room - 1;
-    }
-    linkidx = function (time, startroom, endroom) {
-        // Goes from startroom at time to endroom at time+1
-        return time * total_rooms * total_rooms + (startroom - 1) * total_rooms + endroom - 1;
-    }
     for (var t = 0; t < time_steps; t++) {
         for (var s = 1; s <= total_rooms; s++) {
             analysis.nodes[nodeidx(t, s)] = {"layer": t, "row": s-1, "name": nodeidx(t, s), "room": s};}
@@ -95,11 +118,68 @@ function process_json(json) {
             }
         }
     }
-    var t1 = performance.now();
+    // Filter out invalid dates (before Sonar, nights)
+    // Adjust 15 minute intervals to our intervals
+    var buckets = [];
+    for (var n=0;n<time_steps;n++) buckets[n] = [];
+    json.graph.forEach( function(message) {
+        var time_start = new Date(message.time_start);
+        tidx = timeidx(time_start);
+        if (tidx!=null) {
+            buckets[tidx].push(message);
+        }
+    });
+    // Clean buckets
+    for (var n=0, len=buckets.length; n<len; n++) {
+        if (buckets[n].length == 0) {
+            if (buckets[n+1].length == 2) { // me robo uno
+                var t0 = new Date (buckets[n+1][0].time_start) ;
+                var t1 = new Date (buckets[n+1][1].time_start) ;
+                if (t0 <= t1) {
+                    buckets[n] = buckets[n+1].shift();
+                } else {
+                    buckets[n] = buckets[n+1].pop();
+                }
+            } else if ( n>0 && buckets[n-1].length == 1 ) {
+                buckets[n] = buckets[n-1]; // me copio el anterior
+            }
+        }
+        else if (buckets[n].length==2) {
+            if ( n<len-1 && buckets[n+1].length==0 ) {
+                ///// elejir el mas tarde y pasarlo
+                var t0 = new Date (buckets[n][0].time_start) ;
+                var t1 = new Date (buckets[n][1].time_start) ;
+                if (t0 <= t1) {
+                    buckets[n+1] = buckets[n].pop();
+                } else {
+                    buckets[n+1] = buckets[n].shift();
+                }
+            } else {
+                ///// Elijo el mas tarde y elimino
+                var t0 = new Date (buckets[n][0].time_start) ;
+                var t1 = new Date (buckets[n][1].time_start) ;
+                if (t0 <= t1) {
+                    buckets[n].pop();
+                } else {
+                    buckets[n].shift();
+                }
+            }
+        }
+    }
+    // Convertir times to layers
+    // Convert MACs to room names to rows
+
+
+
+
+
+/*
     for (var t = 0; t < time_steps-1; t++) {
-        console.log(t + " of " + time_steps);
+
+
         records_by_time.filterExact(t);
         var ids = records_by_id.group()
+
         ids.top(Infinity).forEach(function (id) {
             records_by_id.filterExact(id.key);
             var start_idx = minindex(records_by_id.top(Infinity), function (d) {
@@ -116,6 +196,8 @@ function process_json(json) {
         });
         records_by_id.filterAll();
     }
+
+
     for (var t = 1; t < time_steps; t++) {
         for (var end_room = 2; end_room < total_rooms ; end_room++) {
             var total_enter = 0;
@@ -140,19 +222,10 @@ function process_json(json) {
     }
     records_by_time.filterAll();
     var t2 = performance.now();
-
-
-
-
-
-
-    // Filter out invalid dates (before Sonar, nights)
-    // Convertir times to layers
-    // Convert MACs to room names to rows
-    // Adjust 15 minute intervals to our intervals
+*/
     // Testear que pasa si desaparecen rooms
     // Put everything in little boxes and ship
-}
+//}
 
 /*window.onmousewheel(
 
@@ -376,13 +449,13 @@ function drawComponents(graph){
             return Math.max(0, d.dy);
         })
         .style("stroke", function (d) {
-            if (d.source.room == 4 || d.target.room == 4) {
+//            if (d.source.room == 4 || d.target.room == 4) {
                 //return colors(d.source.room);
                 return colors(d.source.room);
 
-            } else {
-                return "#000"
-            }
+//            } else {
+//                return "#000"
+//            }
         })
         .sort(function (a, b) {
             return b.dy - a.dy;
@@ -411,7 +484,7 @@ function drawComponents(graph){
 
     node.append("rect")
         .attr("height", function (d) {
-         if(d.layer>25){
+         if(d.layer>25){ /// TODO Arreglar para pillar tiempo actual
             return 2;
          }else{
             return d.dy;
@@ -423,11 +496,8 @@ function drawComponents(graph){
         .attr("target","_blank")
         .style("fill", function (d) {
 
-        if(d.layer>25){
-
-
+        if(d.layer>25){ /// TODO Arreglar para pillar tiempo actual
              return d.color = colors(8);
-
         }else{
            if(d.room==1 || d.room==8){
                return d.color = colors(0);
