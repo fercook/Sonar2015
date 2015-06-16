@@ -47,6 +47,28 @@ function ready(error, data) {
 }
 
 
+function getDataFromServer() {
+    $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
+        dataType: "jsonp",
+        crossDomain: true
+    })
+        .done(function(json) {
+          console.log("Communication ok");
+          process_json(json);
+          draw();
+    });
+}
+//TIMER: UNCOMMENT FOR PRODUCTION
+//setInterval(function(){ getDataFromServer(); }, 5*60*1000 );
+
+function process_json(json) {
+    // Things TODO
+    // Filter out invalid dates (before Sonar, nights)
+    // Convert MACs to rooms
+    // Adjust 15 minute intervals to our intervals
+    // Put everything in little boxes and ship
+}
+
 /*window.onmousewheel(
 
 document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})

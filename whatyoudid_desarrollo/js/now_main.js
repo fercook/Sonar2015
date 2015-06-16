@@ -167,6 +167,8 @@ function init() {
         // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
         var flowArray = [];
         for (var n = 0; n < flowImages.length; n++) flowArray.push(0.0);
+        var date = new Date(inputGraph.time_start);
+        d3.select("#timeStamp")[0][0].innerHTML= "Last measurement: <br>"+  date.toLocaleDateString()+" "+date.toLocaleTimeString()+"unknown";
         var dict = getMACDict(new Date(inputGraph.time_start));
         var categoryGraph = { origin: {}, signal: {}, vendor: {} };
         Rooms.forEach(function(aname){
