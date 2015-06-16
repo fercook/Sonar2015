@@ -21,27 +21,31 @@ body{
 
 }
 
-/*Header*/
+
+
+
+
 header{
     width:100vw;
-    /*position:fixed;*/
+    position:fixed;
     left:0;
     height: 0px;
     /*background-color: #000000;*/
     opacity: 50%;
-
     color:#FFF;
+    top:1vh;
 }
 
 #headertext
 {
     /*position:absolute;*/
     float:left;
-
-    margin-top:0.35vh;
-    font-size:6.5vh;
+    margin-top:1.8vh;
+    font-size:2.5vh;
     margin-left:1.5vw;
-    font-weight: 300;
+    font-weight: 200;
+    top:1vh;
+    color:#3fffcc;
 }
 
 
@@ -80,15 +84,24 @@ table /*overide defaults*/
 
 #downloadarea{
 
-    color:red;
+    color:#fff;
     position:absolute;
-    top:2vh;
+    text-decoration:none;
+    /*top:0.1vh;*/
     right:2vw;
     font-weight: 200;
-    font-size:4.9vh;
+    font-size:2.5vh;
     line-height: 6vh;
 
 }
+
+
+
+
+
+
+
+
 
 @media (max-aspect-ratio: 16/9) {/*cool*/
     #downloadarea {
