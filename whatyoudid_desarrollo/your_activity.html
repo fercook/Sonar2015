@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Your Activity | We know what you did last Sonar</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+<link rel="stylesheet" type="text/css" href="css/your-activity-style.css">
+<link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
+
+<body>
+    <a href="#menu" id="toggle" style="z-index:9999999999999;"><span></span></a>
+    <div id="menu">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="now.html">Now</a></li>
+        <li><a href="#contact">You</a></li>
+        <li><a href="#">Flow</a></li>
+      </ul>
+    </div>
+    <div id="main" class="overlay">
+      <script src="./js/jquery-1.11.2.min.js"></script>
+      <script src="./js/bootstrap.min.js"></script>
+      <script src="./js/d3.v3.min.js"></script>
+      <script src="./js/queue.min.js"></script>
+      <script src="./js/crossfilter.min.js"></script>
+      <script src="./js/xdate.dev.js"></script>
+      <script src="./js/Rooms.js"></script>
+      <script src="js/mainmenu_prefixfree.min.js"></script>
+      <div id='buttons'>
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button id="macButton" class="btn btn-default" type="button">Go!</button>
+          </span>
+          <input id="macInput" type="text" class="form-control" placeholder="Insert your mac...">
+          <button id="randomMac" class="btn btn-default" type="button">Random activity!</button>
+        </div>
+      </div>
+      <div id="errorMessage">
+        <p>We couldn't track your device at Sonar 2015</p>
+      </div>
+      <div id='artists'></div>
+      <div id='fingerprint'></div>
+      <div id='dailyfingerprint'></div>
+      
+      <div id='legend'></div>
+      <script src="./js/your_activity_logic.js"></script>
+      <script src="./js/your_activity_info_parser.js"></script>
+      <script src="./js/your_activity_buttons_manager.js"></script>
+      <!-- menu style -->
+      <script src='./js/mainmenu_index.js'></script>
+    </div>
+</body>
