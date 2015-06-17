@@ -11,68 +11,68 @@
     <!--<script type="text/javascript" src="js/dat.gui.min.js"></script> -->
     <script src="js/sankeyStream.js"></script>
     <script src="js/Rooms.js"></script>
-    
+
     <link rel="stylesheet" type="text/css" href="css/main_style.css">
     <!--link rel="stylesheet" type="text/css" href="css/landing.css"-->
     <!--link href="css/flowstyle.css" rel="stylesheet" /-->
     <link rel="stylesheet" type="text/css" href="css/mainmenu_style.css">
     <link rel="stylesheet" type="text/css" href="css/sankey_style.css">
-    
+
     <!-- Estilos tooltipster -->
     <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
     <link rel="stylesheet" type="text/css" href="css/themes/tooltipster-light.css" />
-    
-    
+
+
      <script src="js/sankey.js"></script>
-    
+
    <script src="js/mainmenu_prefixfree.min.js"></script>
    <script src="http://d3js.org/d3.v3.min.js"></script>
-    
+
    <!-- scripts tooltipster -->
     <script type="text/javascript" src="js/jquery-1.7.0.min.js"></script>
-	<script type="text/javascript" src="js/jquery.tooltipster.js"></script>
-    
+    <script type="text/javascript" src="js/jquery.tooltipster.js"></script>
+
     <script type="text/javascript">
-		$(document).ready(function() {
+        $(document).ready(function() {
             //$('.tooltip').tooltipster();
             $('.tooltip').tooltipster({
                 theme: 'tooltipster-light',
                 interactive: true
             });
-		});
+        });
     </script>
-    
+
    <!-- Legend -->
-    
+
     <style type="text/css">
-    
-        
+
+
     #rcorners1 {
     border-radius: 25px;
     background: #545958;
     opacity: 80%;
-    padding: 20px 60px; 
+    padding: 20px 60px;
     width: 200px;
-    height: 150px; 
+    height: 150px;
     text-align:top;
-    color:#cb863a; 
+    color:#cb863a;
     z-index: 60000000;
 }
-        
+
 #rcorners1 a #name{
     color:red;
     text-decoration-color: red;
 }
-        
-        
+
+
 #rcorners1 a #link{
     color:blue;
 }
 
-    
+
     </style>
-  
-    
+
+
 </head>
 
 <body>
@@ -100,26 +100,26 @@
 
 
         <!--END OF BUTTONS MENU-->
-        
+
 
         <span id="downloadarea">
         What they did
-        <!-- Add here social icons -->    
+        <!-- Add here social icons -->
         </span>
 
-    </header>    
-    
-    
+    </header>
+
+
 
 <br/> <br/> <br/>
 <!--section class="themes">
             <div class="themes">
-				<span class="tooltipster-default-preview tooltip" title="The default theme" target="_blank">Default</span>
-				<span class="tooltipster-light-preview tooltip" title="Light and frisky!" target="_blank">Light</span>
-				<span class="tooltipster-punk-preview tooltip" title="I will not conform to your old fart ways!" target="_blank">Punk</span>
-				<span class="tooltipster-noir-preview tooltip" title="Hipsterific!" target="_blank">Noir</span>
-				<span class="tooltipster-shadow-preview" title="Check out my shadow" target="_blank">Shadow</span>
-			</div>
+                <span class="tooltipster-default-preview tooltip" title="The default theme" target="_blank">Default</span>
+                <span class="tooltipster-light-preview tooltip" title="Light and frisky!" target="_blank">Light</span>
+                <span class="tooltipster-punk-preview tooltip" title="I will not conform to your old fart ways!" target="_blank">Punk</span>
+                <span class="tooltipster-noir-preview tooltip" title="Hipsterific!" target="_blank">Noir</span>
+                <span class="tooltipster-shadow-preview" title="Check out my shadow" target="_blank">Shadow</span>
+            </div>
 </section-->
 <!-- Div artistas tooltipster-->
 
@@ -134,29 +134,29 @@
     <li><a href="about.html">About</a></li>
   </ul>
 </div>
-    
 
-    
+
+
 <!-- Div auxiliar -->
 <!--div id="rcorners1">
     <img src="imgs/artist/adda.png" style="height:100px;" /> <a href="" id="name">Raphael</a>
     <br>
     <a href="" id="link">Raphael</a>
-    
+
 </div-->
 
 <!-- Div leyendas salas -->
-<div id='legend'></div> 
- 
-  
+<div id='legend'></div>
+
+
 <!-- DIV PRINCIPAL GRAFO -->
-<div id="svg"></div>
- 
+<div id="svg_main" class="svg_main"></div>
+
 
 
 
 <!-- DIV EGECTO DEGRADADO -->
-    
+
     <!--div class="overlay" style="z-index:200000000000"-->
     <script>
        /* window.onload = function () {
@@ -168,24 +168,24 @@
             gui.add(GraphParameters, 'nodeWidth', 0, 1).onFinishChange(draw);
             gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
             gui.add(GraphParameters, 'curvature', 0.0, 1.0).onFinishChange(draw);
-            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);        
+            gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);
         };*/
     </script>
     <script src="js/sankey.js"></script>
-    
+
 <!-- menu style -->
 <script src='js/mainmenu_index.js'></script>
 <!--script src="js/legend.js"></script-->
-    
+
 <div id="fotter" align="center">
-    
+
 <span id="links">
     <a href="https://twitter.com/bscviz">twitter</a>&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/pages/BSC-Viz/1805806052977186?sk=info&tab=page_info">facebook</a>
-   
+
 
     </span>
-    
-    
+
+
     Created by <a id="hrefs" href="http://www.bsc.es/computer-applications/scientific-visualization">BSC</a>.
 </div>
 
