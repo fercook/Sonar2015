@@ -183,11 +183,12 @@ function init() {
         });
         ///Finally process stuff
         inputGraph.rooms.forEach(function(room) {
-            flowArray[flowIdx.rooms[dict[room.name]]] += +room.devices;
-            Signals.forEach(function(strength){
-                categoryGraph.signal[dict[room.name]][strength] += room[strength];
-            });
-
+            if (dict[room.name]) {
+                flowArray[flowIdx.rooms[dict[room.name]]] += +room.devices;
+                Signals.forEach(function(strength){
+                    categoryGraph.signal[dict[room.name]][strength] += room[strength];
+                });
+            }
         });
         inputGraph.links.forEach(function(link) {
             var endRoom = dict[link.end_room],
