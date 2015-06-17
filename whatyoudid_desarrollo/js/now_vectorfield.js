@@ -144,7 +144,7 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
             for (var y = 0; y < h; y++) {
                 ifield[x][y] = 0;
             }
-        }        
+        }
         var fakecanvas = document.createElement('canvas');
         fakecanvas.width = img.width;
         fakecanvas.height = img.height;
@@ -162,20 +162,21 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
         var zy = data.data[1];
         var sx,sy;
         // Freaking bug in the normal imgs
-        if (img.src=="http://localhost/whatyoudid/imgs/now/NormalFill_PlusD.png" || 
+        if (img.src=="http://localhost/whatyoudid/imgs/now/NormalFill_PlusD.png" ||
             img.src=="http://localhost/whatyoudid/imgs/now/NormalFill_Planta.png") {
                 sx=-1; sy=1;}
         else { sx=1; sy=-1;}
-        console.log(img.src+":"+data.data[0]+","+data.data[1]);
+        console.log(loading+img.src+":"+data.data[0]+","+data.data[1]);
+        loading--;
         //console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
-            for (var y = 0; y < h; y++) {            
+            for (var y = 0; y < h; y++) {
                 for (var x = 0; x < w; x++) {
                     var vx = sx*(data.data[i]-zx)*scale,
                         vy = sy*(data.data[i+1]-zy)*scale;
                     if (Math.abs(vx)<=1.0/128) vx=0;
                     if (Math.abs(vy)<=1.0/128) vy=0;
                 ifield[x][y] = new Vector(vx,vy);
-                i+=4;                
+                i+=4;
             }
         }
         return ifield;
@@ -211,13 +212,13 @@ VectorField.prototype.aggregateSpeeds = function(magnitudes) {
     this.magnitudes = magnitudes;
     for (var x = 0; x < this.w; x++) {
         for (var y = 0; y < this.h; y++) {
-            
+
             var L=new Vector(0,0);
-            for (var n=0;n<magnitudes.length;n++) { 
+            for (var n=0;n<magnitudes.length;n++) {
                 L = L.plus(this.fields[n][x][y].mult(magnitudes[n]));
             };
             this.field[x][y] = L;
-            
+
             //this.field[x][y] = this.fields[6][x][y];
         }
     }
