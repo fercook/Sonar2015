@@ -2,6 +2,7 @@ var DAYS = ["2015-06-03", "2015-06-04", "2015-06-05"];
 var DAY_INIT_TIME = "07:00:00";
 var DAY_FINAL_TIME = "24:00:00";
 var DAY_MINUTES_DURATION = 720;
+var INITIAL_DAY = 18
 
 var getDateRange = function (day, dateInit, dateFin) {
     eventFin = new XDate(dateFin.replace(' ', 'T'));
@@ -56,6 +57,49 @@ paintAleatoryMac = function(room) {
     );
 }
 
-//paintAleatoryMac("Village");
+eventCsvParser = function(steps) {
+    d3.csv("data/artists_by_room.csv", function(data) {
+        artistList = []
+        for(var i = 0; i < jsonCirclesMap.length; ++i) {
+            artistList[artistList.length] = [];
+        }
+        for(var i = 0; i < steps.length ; ++i) {
+            if(steps[i].room != LIMBO) {
+                var day = Math.floor(steps[i].initTime/720)+INITIAL_DAY;
+                var temporalInitTime = -1;
+                var events = [];
+                for(var j = 0; j < data.length; ++j) {
+                    var d = data[j];
+                    if (d["DIA"] == day && d["SALA"] == jsonCirclesMap[steps[i].room].eventsName) {
+                        if(temporalInitTime == -1) {
+                            var hour = d["HORA"].split(':')
+                            temporalInitTime = (d["DIA"]-INITIAL_DAY)*720 + (hour[0]-12)*60 + parseInt(hour[1]);
+                        }
+                        if (temporalInitTime < steps[i].finalTime) {
+                            if(!data[j+1] || data[j+1]["ACTIVIDAD"] != d["ACTIVIDAD"] || data[j+1]["DAY"] != d["DAY"] || data[j+1]["SALA"] != d["SALA"]) {
+                                var hourNext = d["HORA"].split(':');
+                                var minuteNext = (d["DIA"]-INITIAL_DAY)*720 + (hourNext[0]-12)*60 + parseInt(hourNext[1]);
+                                
+                                if (minuteNext > steps[i].initTime)
+                                    events.push({"eventName": d["ACTIVIDAD"], "initTime": temporalInitTime, "finalTime": minuteNext, "url": d["URL"], "pic": d["FOTO1"]});
+                                temporalInitTime = -1;
+                            }
+                        }
+                    }
+                    else if(d["DIA"] > day) break;
+                }
 
-//getMacInfo(MAC_ADRESS);
+                var eventList = []
+                for(var j = 0; j < events.length; ++j) {
+                    var duration = Math.min(events[j].finalTime, steps[i].finalTime) - Math.max(events[j].initTime, steps[i].initTime);
+                    var percent = duration*100/(events[j].finalTime-events[j].initTime);
+                    //_addToArtistList(artistList[steps[i].room], events[j].eventName, events[j].id, events[j].room, percent)
+                    events[j]["percent"] = percent;
+                    eventList[eventList.length] = {'id': events[j].id, 'eventName': events[j].eventName, 'percent': percent}
+                }
+                //eventList.sort(sort_by('percent', true, parseInt));
+                _printCircleArtist(eventList, steps[i].room, steps[i].generatedId);
+            }
+        }
+    });
+}
