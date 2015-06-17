@@ -1,0 +1,86 @@
+/*Header    */
+header{
+    width:100vw;
+    position:fixed;
+    left:0;
+    height: 0px;
+    /*background-color: #000000;*/
+    opacity: 50%;
+    color:#FFF;
+    top:1vh;
+}
+
+#headertext
+{
+    /*position:absolute;*/
+    float:left;
+    margin-top:1.8vh;
+    font-size:2.5vh;
+    margin-left:1.5vw;
+    font-weight: 200;
+    top:1vh;
+    color:#3fffcc;
+}
+
+#downloadarea{
+
+    color:#fff;
+    position:absolute;
+    text-decoration:none;
+    /*top:0.1vh;*/
+    right:2vw;
+    font-weight: 200;
+    font-size:2.5vh;
+    line-height: 6vh;
+
+}
+
+
+/*Footer    */
+
+
+#fotter
+{
+
+    position:fixed;
+
+    bottom:0%;
+    padding: 0.5vh;
+    background-color: #000;
+    font-weight: 200;
+    color:white;
+    right:0;left:0;
+
+}
+
+#fotter #hrefs {
+    color: #FFF;
+    font-weight: 400;
+    text-decoration: none;
+
+
+    background-image: linear-gradient(to bottom, white, white); /*mimic underline (enables thinner underline)*/
+    background-size: 2px 0.2vmin;
+    background-position: 0 2.86vh; /*considering font size is 2.5*/
+    background-repeat: repeat-x;
+}
+
+/* fotter buttons */
+#links {
+    position: absolute;
+    left:1vw;
+    top:1vmin;
+
+}
+
+#links a{
+    text-decoration: none;
+    color:white;
+}
+
+
+#twitterwrap {
+    position:absolute;
+    left:100px;
+    bottom:0%;
+}
