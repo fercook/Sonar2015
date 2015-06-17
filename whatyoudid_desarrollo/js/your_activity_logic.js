@@ -48,6 +48,7 @@ function ready(error, jsonfile) {
 
     var dayPermission = [true, true, true];
 
+    var lastArcId = -1;
 
     var lineIdGenerator = 0;
     var arcIdGenerator = -1;
@@ -179,8 +180,6 @@ function ready(error, jsonfile) {
                 .attr("cy", function(d){return d["y"]})
                 .attr("r",  function(d){return d["diameter"]/2+10;})
                 .attr("stroke-width", 0)
-                .attr("visibility", "hidden")
-                .attr("opacity", 0)
                 .attr("fill", function(d){return d["titleColor"]});
     };
 
@@ -315,6 +314,24 @@ function ready(error, jsonfile) {
         return (diameter/2)-5-(day-1)*lineWidth;
     }
 
+
+    var applyMouseLeave = function() {
+        if(lastArcId != -1) {
+            d3.selectAll(".shadowColor")
+                .classed("active", false);
+            d3.selectAll(".artist")
+                .attr('visibility', "hidden")
+                .attr('opacity', 0);
+            svgContainer.classed("darken", false)
+            dailySvgContainer.classed("darken", false)
+            legendSvgContainer.classed("darken", false)
+            d3.selectAll(".total-visibility")
+                .classed("highlighted-line", false)
+                .classed("total-visibility", false);
+            lastArcId = -1;
+        }
+    };
+
     var printClock = function(initTime, totalTime, circle, day, isLimbo) {
         ++arcIdGenerator;
         var clockRadius = getClockArcRadius(day, circle.diameter, circle.lineMargin);
@@ -344,8 +361,10 @@ function ready(error, jsonfile) {
             .attr("data-arc-id", arcIdGenerator)
             .attr("data-day", day)
             .on("mouseenter", function() {
+                applyMouseLeave();
                 var roomNum = d3.select(event.target).attr("data-room");
                 var arcId = d3.select(event.target).attr("data-arc-id");
+                if(arcId == lastArcId) lastArcId = -1; //Anulate arc occultation.
                 var day = d3.select(event.target).attr("data-day");
                 d3.select("[data-line-id='"+ (arcId) +"']")
                     .classed("highlighted-line", true)
@@ -355,8 +374,7 @@ function ready(error, jsonfile) {
                     .classed("total-visibility", true);
                 d3.selectAll("[data-arc-id='"+ arcId +"']").classed("total-visibility", true);
                 d3.select(".shadowColor[data-room='"+ roomNum +"']")
-                    .attr('visibility', "visible")
-                    .attr('opacity', 0.1);
+                    .classed("active", true);
                 d3.selectAll(".legend[data-room='"+ roomNum +"']")
                     .classed("total-visibility", true);
                 d3.selectAll(".day-text[data-day='"+ (day-1) +"']")
@@ -370,19 +388,8 @@ function ready(error, jsonfile) {
                 legendSvgContainer.classed("darken", true)
             })
             .on("mouseleave", function() {
-                var roomNum = d3.select(event.target).attr("data-room");
-                d3.selectAll(".shadowColor")
-                    .attr('visibility', "hidden")
-                    .attr('opacity', 0);
-                d3.selectAll(".artist")
-                    .attr('visibility', "hidden")
-                    .attr('opacity', 0);
-                svgContainer.classed("darken", false)
-                dailySvgContainer.classed("darken", false)
-                legendSvgContainer.classed("darken", false)
-                d3.selectAll(".total-visibility")
-                    .classed("highlighted-line", false)
-                    .classed("total-visibility", false);
+                lastArcId = d3.select(event.target).attr("data-arc-id"); 
+                setTimeout(applyMouseLeave, 1000);
             });
 
         return [
@@ -634,33 +641,87 @@ function ready(error, jsonfile) {
         if(!found) artistList[artistList.length] = {'id':id, 'eventName': eventName, 'percent': percent, 'room': room};
     };
 
+    /*
+        x: x-coordinate
+        y: y-coordinate
+        w: width
+        h: height
+        r: corner radius
+        tl: top_left rounded?
+        tr: top_right rounded?
+        bl: bottom_left rounded?
+        br: bottom_right rounded?
+    */
+    function rounded_rect(x, y, w, h, r, tl, tr, bl, br) {
+        var retval;
+        retval  = "M" + (x + r) + "," + y;
+        retval += "h" + (w - 2*r);
+        if (tr) { retval += "a" + r + "," + r + " 0 0 1 " + r + "," + r; }
+        else { retval += "h" + r; retval += "v" + r; }
+        retval += "v" + (h - 2*r);
+        if (br) { retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + r; }
+        else { retval += "v" + r; retval += "h" + -r; }
+        retval += "h" + (2*r - w);
+        if (bl) { retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + -r; }
+        else { retval += "h" + -r; retval += "v" + -r; }
+        retval += "v" + (2*r - h);
+        if (tl) { retval += "a" + r + "," + r + " 0 0 1 " + r + "," + -r; }
+        else { retval += "v" + -r; retval += "h" + r; }
+        retval += "z";
+        return retval;
+    }
+
     _printCircleArtist = function(list, room, arcId) {
         var angle = -Math.PI*1/6;
         for(var i=0; i < Math.min(list.length, MAX_NUM_OF_ARTISTS); ++i) {
-            point = getCirclePoint(angle, jsonCirclesMap[0]["diameter"]*1.4, jsonCirclesMap[0]);
-            var artistDiv = artistSvgContainer.append("g")
-                .attr("class", "artist")
-                .attr("visibility", "hidden")
-                .attr("opacity", 0)
-                .attr("data-arc-id", arcId);
-            artistDiv.append("circle")
-              .attr("class", "room"+room)
-              .attr("cx", point[0])
-              .attr("cy", point[1])
-              .attr("r", ARTIST_RADIUS)
-              .attr("fill", "white");
+            if(list[i].eventName != "No Activity") {
+                point = getCirclePoint(angle, jsonCirclesMap[0]["diameter"]*1.4, jsonCirclesMap[0]);
+                var artistDiv = artistSvgContainer.append("g")
+                    .attr("class", "artist")
+                    .attr("visibility", "hidden")
+                    .attr("opacity", 0)
+                    .attr("data-arc-id", arcId)
+                    .on("mouseenter", function() {
+                        lastArcId = -1;
+                    })
+                    .on("mouseleave", function() {
+                        lastArcId = d3.select(event.target.parentElement).attr("data-arc-id")
+                        setTimeout(applyMouseLeave, 1000);
+                    });
+                artistDiv.append("path")
+                    .attr("d", function(d) {
+                      return rounded_rect(point[0]-ARTIST_RADIUS-10, point[1]-ARTIST_RADIUS-10, 280, ARTIST_RADIUS*2+20, Math.PI*2, true, true, true, true);
+                    })
+                    .attr("fill", "#575b5a")
+                    .attr("opacity", 0.5);
 
-            artistDiv.append("text")
-                .attr("x", point[0] + ARTIST_RADIUS + 5)
-                .attr("y", point[1] - ARTIST_RADIUS/2)
-                .attr("text-anchor", "start")
-                .attr("fill", "#3e78f3")
-                .attr("font-family", "Nexa")
-                .attr("font-weight", "Light")
-                .attr("font-size", "1em")
-                .text(list[i].eventName + " " + list[i].percent);
+                /*artistDiv.append("circle")
+                  .attr("class", "room"+room)
+                  .attr("cx", point[0])
+                  .attr("cy", point[1])
+                  .attr("r", ARTIST_RADIUS)
+                  .attr("fill", "white");*/
+                artistDiv.append("image")
+                    .attr('x', point[0]-ARTIST_RADIUS)
+                    .attr('y', point[1]-ARTIST_RADIUS)
+                    .attr('xlink:href',list[i].pic)
+                    .attr("class", "room"+room)
+                    .attr('height', ARTIST_RADIUS*2)
+                    .attr('width', ARTIST_RADIUS*2);
 
-            angle += Math.PI/15;
+                artistDiv.append("text")
+                    .attr("x", point[0] + ARTIST_RADIUS + 5)
+                    .attr("y", point[1] - ARTIST_RADIUS/2)
+                    .attr("text-anchor", "start")
+                    .attr("fill", "#e99634")
+                    .attr("font-family", "Nexa")
+                    .attr("font-weight", "Bold")
+                    .attr("width", 20)
+                    .attr("font-size", "1em")
+                    .text(list[i].eventName /*+ " " + list[i].percent*/);
+
+                angle += Math.PI/13;
+            }
         }
     }
 
@@ -685,7 +746,7 @@ function ready(error, jsonfile) {
 
     printArtist = function(steps) {
         eventCsvParser(steps);
-        d3.json('./DATA/scheduledata.json', function(error, data) {
+        /*d3.json('./DATA/scheduledata.json', function(error, data) {
             artistList = []
             for(var i = 0; i < jsonCirclesMap.length; ++i) {
                 artistList[artistList.length] = [];
@@ -709,7 +770,7 @@ function ready(error, jsonfile) {
                 artistList[i].sort(sort_by('percent', true, parseInt));
                 _printCircleArtist(artistList[i], i);
             }*/
-        });
+        /*});*/
     };
 
     printRoomLegend = function(circles) {

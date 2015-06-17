@@ -128,9 +128,9 @@
 }
 
 .artist {
-  opacity: 1;
-  -webkit-transition: opacity 0.5s; /* Safari */
-  transition: opacity 0.5s;
+  opacity: 0;
+  -webkit-transition: opacity 0.5s, visibility 1s ease; /* Safari */
+  transition: opacity 0.5s, visibility 1s ease;
 }
 
 .room.active {
@@ -191,4 +191,16 @@ svg * {
 div#artists {
   width: 80%;
   left: 20%;
+}
+
+.shadowColor {
+  -webkit-transition: opacity 1s, visibility 1s ease; /* Safari */
+  transition: opacity 1s, visibility 1s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.shadowColor.active {
+  opacity: 0.1;
+  visibility: visible;
 }
