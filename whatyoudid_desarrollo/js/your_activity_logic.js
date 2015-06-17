@@ -54,6 +54,7 @@ function ready(error, jsonfile, device_mac) {
     var lineIdGenerator = 0;
     var arcIdGenerator = -1;
     var steps = []
+    var arcIdClicked = -1;
 
   var userSteps;
   /*if(localStorage.getItem('datainput')) userSteps = localStorage.getItem('datainput');
@@ -384,6 +385,36 @@ function ready(error, jsonfile, device_mac) {
         }
     }
 
+    var applyMouseTouch = function(target) {
+        applyMouseLeave();
+        var roomNum = d3.select(event.target).attr("data-room");
+        var arcId = d3.select(event.target).attr("data-arc-id");
+        if(arcId == lastArcId) lastArcId = -1; //Anulate arc occultation.
+        var day = d3.select(event.target).attr("data-day");
+        d3.select("[data-line-id='"+ (arcId) +"']")
+            .classed("highlighted-line", true)
+            .classed("total-visibility", true);
+        d3.select("[data-line-id='"+ (parseInt(arcId)+1) +"']")
+            .classed("highlighted-line", true)
+            .classed("total-visibility", true);
+        d3.selectAll("[data-arc-id='"+ arcId +"']").classed("total-visibility", true);
+        d3.select(".shadowColor[data-room='"+ roomNum +"']")
+            .classed("active", true);
+        d3.selectAll(".legend[data-room='"+ roomNum +"']")
+            .classed("total-visibility", true);
+        d3.selectAll(".day-text[data-day='"+ (day-1) +"']")
+            .classed("total-visibility", true);
+        d3.select(".shadowColor[data-arc-id='"+ roomNum +"']");
+        d3.selectAll(".artist[data-arc-id='"+ arcId +"']")
+            .attr('visibility', "visible")
+            .attr('opacity', 1);
+        d3.selectAll(".arcHour[data-arc-id='"+ arcId +"']")
+            .classed("active", true);
+        svgContainer.classed("darken", true)
+        dailySvgContainer.classed("darken", true)
+        legendSvgContainer.classed("darken", true)
+    }
+
     var printClock = function(initTime, totalTime, circle, day, isLimbo) {
         ++arcIdGenerator;
         var clockRadius = getClockArcRadius(day, circle.diameter, circle.lineMargin);
@@ -413,37 +444,28 @@ function ready(error, jsonfile, device_mac) {
             .attr("data-arc-id", arcIdGenerator)
             .attr("data-day", day)
             .on("mouseenter", function() {
-                applyMouseLeave();
-                var roomNum = d3.select(event.target).attr("data-room");
-                var arcId = d3.select(event.target).attr("data-arc-id");
-                if(arcId == lastArcId) lastArcId = -1; //Anulate arc occultation.
-                var day = d3.select(event.target).attr("data-day");
-                d3.select("[data-line-id='"+ (arcId) +"']")
-                    .classed("highlighted-line", true)
-                    .classed("total-visibility", true);
-                d3.select("[data-line-id='"+ (parseInt(arcId)+1) +"']")
-                    .classed("highlighted-line", true)
-                    .classed("total-visibility", true);
-                d3.selectAll("[data-arc-id='"+ arcId +"']").classed("total-visibility", true);
-                d3.select(".shadowColor[data-room='"+ roomNum +"']")
-                    .classed("active", true);
-                d3.selectAll(".legend[data-room='"+ roomNum +"']")
-                    .classed("total-visibility", true);
-                d3.selectAll(".day-text[data-day='"+ (day-1) +"']")
-                    .classed("total-visibility", true);
-                d3.select(".shadowColor[data-arc-id='"+ roomNum +"']");
-                d3.selectAll(".artist[data-arc-id='"+ arcId +"']")
-                    .attr('visibility', "visible")
-                    .attr('opacity', 1);
-                d3.selectAll(".arcHour[data-arc-id='"+ arcId +"']")
-                    .classed("active", true);
-                svgContainer.classed("darken", true)
-                dailySvgContainer.classed("darken", true)
-                legendSvgContainer.classed("darken", true)
+                if(arcIdClicked == -1) {
+                    applyMouseLeave();
+                    applyMouseTouch(event.target);
+                }
             })
             .on("mouseleave", function() {
-                lastArcId = d3.select(event.target).attr("data-arc-id"); 
-                setTimeout(applyMouseLeave, 1000);
+                if(arcIdClicked == -1) {
+                    lastArcId = d3.select(event.target).attr("data-arc-id"); 
+                    applyMouseLeave();
+                }
+            })
+            .on("click", function() {
+                var arcId = d3.select(event.target).attr("data-arc-id");
+                d3.select(".clicked").classed("clicked", false);
+                lastArcId = d3.select(event.target).attr("data-arc-id");
+                applyMouseLeave();
+                if(arcId != arcIdClicked) {
+                    arcIdClicked = arcId;
+                    applyMouseTouch(event.target);
+                    d3.select(event.target).classed("clicked", true);
+                }
+                else arcIdClicked  = -1;
             });
 
             printClockText(svgContainer, initAngle, finalAngle, initTime, initTime+totalTime, circle, arcIdGenerator)
@@ -742,7 +764,9 @@ function ready(error, jsonfile, device_mac) {
                     })
                     .on("mouseleave", function() {
                         lastArcId = d3.select(event.target.parentElement).attr("data-arc-id");
-                        setTimeout(applyMouseLeave, 1000);
+                        if(arcIdClicked == -1) {
+                            applyMouseLeave();
+                        }
                     });
                 artistDiv.append("path")
                     .attr("d", function(d) {

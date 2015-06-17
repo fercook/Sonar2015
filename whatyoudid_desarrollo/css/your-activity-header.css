@@ -84,3 +84,8 @@ header{
     left:100px;
     bottom:0%;
 }
+
+.clicked {
+    stroke-width: 1;
+    stroke: black;
+}
