@@ -153,7 +153,7 @@ RoomRecords = [
           {name: "Hall",   time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:13"},
           {name: "Planta", time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:08"},
           {name: "Complex",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:11"},
-          {name: "Complex",time_start: new Date("2015-06-16 10:56:40"), time_end: new Date("2015-06-30 15:55:00"), MAC:"de:de:de:de:de:14"}
+          {name: "Complex",time_start: "2015-06-16 10:56:40", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:14"}
 ];
 
 var getRoomByMAC = function(mac,date) {

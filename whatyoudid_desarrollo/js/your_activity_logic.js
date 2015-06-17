@@ -3,18 +3,19 @@ queue()
   .await(ready);
 
 var jsonCirclesMap = [
-    { "x": 400, "y": 400, "diameter": 800, "titleAngle" : Math.PI/4, "titleColor" : "#FFFFFF", "lineMargin": 5, "name": "Limbo", "nameId":"Limbo", "id":"0", "angle": Math.PI*3/4, "titleX": "0em" },
-    { "x": 210, "y": 228, "diameter": 160, "titleAngle" : Math.PI, "titleColor": "#DB57D0", "lineMargin": 10, "name": "Dome", "nameId":"Dome", "id":"1", "angle": Math.PI*3/4, "titleX": "-2.5em"},
-    { "x": 222, "y": 546, "diameter": 155, "titleAngle" : Math.PI, "titleColor": "#DDB0BF", "lineMargin": 10, "name": "Complex", "nameId":"Complex", "id":"2", "angle": Math.PI*3/4, "titleX": "-3.7em"},
-    { "x": 590, "y": 234, "diameter": 150, "titleAngle" : 0, "titleColor": "#09AE48", "lineMargin": 10, "name": "Hall", "nameId":"Hall", "id":"3", "angle": Math.PI*3/4, "titleX": "0em"},
-    { "x": 630, "y": 440, "diameter": 140, "titleAngle" : 0, "titleColor": "#7ED96D", "lineMargin": 10, "name": "Planta", "nameId":"Planta", "id":"4", "angle": Math.PI*3/4, "titleX": "0em"},
-    { "x": 400, "y": 378, "diameter": 250, "titleAngle" : Math.PI/2, "titleColor": "#BF0CB9", "lineMargin": 10, "name": "Village", "nameId":"Village", "id":"5", "angle": Math.PI*3/4, "titleX": "-1.5em"},
-    { "x": 500, "y": 618, "diameter": 190, "titleAngle" : 0, "titleColor": "#B9DBA2", "lineMargin": 10, "name": "Sonar+D", "nameId":"PlusD", "id":"7", "angle": Math.PI*3/4, "titleX": "0em"}];
+    { "x": 400, "y": 400, "diameter": 800, "titleAngle" : Math.PI/4, "titleColor": "#FFFFFF", "lineMargin": 5,  "name": "Limbo", "nameId":"Limbo",      "eventsName": "Limbo",                                  "id":"0", "angle": Math.PI*3/4, "titleX": "0em" },
+    { "x": 210, "y": 228, "diameter": 160, "titleAngle" : Math.PI,   "titleColor": "#DB57D0", "lineMargin": 10, "name": "Dome", "nameId":"Dome",        "eventsName": "SonarDome by Red BULL Music Academy",    "id":"1", "angle": Math.PI*3/4, "titleX": "-2.5em"},
+    { "x": 222, "y": 546, "diameter": 155, "titleAngle" : Math.PI,   "titleColor": "#DDB0BF", "lineMargin": 10, "name": "Complex", "nameId":"Complex",  "eventsName": "SonarComplex",                           "id":"2", "angle": Math.PI*3/4, "titleX": "-3.7em"},
+    { "x": 590, "y": 234, "diameter": 150, "titleAngle" : 0,         "titleColor": "#09AE48", "lineMargin": 10, "name": "Hall", "nameId":"Hall",        "eventsName": "SonarHall",                              "id":"3", "angle": Math.PI*3/4, "titleX": "0em"},
+    { "x": 630, "y": 440, "diameter": 140, "titleAngle" : 0,         "titleColor": "#7ED96D", "lineMargin": 10, "name": "Planta", "nameId":"Planta",    "eventsName": "Planta",                                 "id":"4", "angle": Math.PI*3/4, "titleX": "0em"},
+    { "x": 400, "y": 378, "diameter": 250, "titleAngle" : Math.PI/2, "titleColor": "#BF0CB9", "lineMargin": 10, "name": "Village", "nameId":"Village",  "eventsName": "SonarVillage by ESTRELLA DAMM",          "id":"5", "angle": Math.PI*3/4, "titleX": "-1.5em"},
+    { "x": 500, "y": 618, "diameter": 190, "titleAngle" : 0,         "titleColor": "#B9DBA2", "lineMargin": 10, "name": "Sonar+D", "nameId":"PlusD",    "eventsName": "Hall+D",                                 "id":"6", "angle": Math.PI*3/4, "titleX": "0em"}];
+
+var LIMBO = 0;
 
 function ready(error, jsonfile) {
     var dayColors = ["#FFA800", "#FFFFFF", "#00AFFF"]
     var dayTriangleColors = ["#a66d02", "#999999", "#006999"]
-    var LIMBO = 0;
     var SIZE = 2;
     var TICK_RADIUS = 10;
     var HOUR_RADIUS = 5;
@@ -680,6 +681,7 @@ function ready(error, jsonfile) {
     }
 
     printArtist = function(steps) {
+        eventCsvParser(steps);
         d3.json('./DATA/scheduledata.json', function(error, data) {
             artistList = [] 
             for(var i = 0; i < jsonCirclesMap.length; ++i) {
