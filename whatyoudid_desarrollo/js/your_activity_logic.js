@@ -13,7 +13,7 @@ var jsonCirclesMap = [
 
 var LIMBO = 0;
 
-function ready(error, jsonfile) {
+function ready(error, jsonfile, device_mac) {
     var dayColors = ["#FFA800", "#FFFFFF", "#00AFFF"]
     var dayTriangleColors = ["#a66d02", "#999999", "#006999"]
     var SIZE = 2;
@@ -21,7 +21,7 @@ function ready(error, jsonfile) {
     var HOUR_RADIUS = 5;
     var ARTIST_RADIUS = 40;
     var ARTIST_SPACE = 20;
-    var ROOM_NAME_RADIUS = 40;
+    var ROOM_NAME_RADIUS = 50;
     var MAXIMUM_TIME = 20;
     var MAXIMUM_JUMP = 10000;
     var LIMBO_POLY_COLOR = "#30d4fd";
@@ -43,8 +43,9 @@ function ready(error, jsonfile) {
     var LEGEND_V_MARGIN = 8;
     var LEGEND_H_MARGIN_COLOR = 40;
     var MAX_NUM_OF_ARTISTS = 6;
-    var artistWidth = 1200,
-        artistHeight = 1200;
+    var artistWidth = 600,
+        artistHeight = 600;
+    var currentDeviceMac = device_mac;
 
     var dayPermission = [true, true, true];
 
@@ -185,11 +186,18 @@ function ready(error, jsonfile) {
 
     var printScenario = function() {
         d3.selectAll("#fingerprint").selectAll("*").remove();
+
+        /**
+         * GLOBAL VARIABLES.
+         */
         svgContainer = d3.select("#fingerprint").append("svg")
             .attr("class", "general-svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
             .attr("viewBox", "0 0 " + width + " " + height)
             .style("position", "absolute");
+
+        activityContainer = svgContainer.append("g");
+        arcHourContainer = svgContainer.append("g");
 
         svgContainer.selectAll("text")
                     .data(jsonCirclesMap)
@@ -317,6 +325,8 @@ function ready(error, jsonfile) {
 
     var applyMouseLeave = function() {
         if(lastArcId != -1) {
+            d3.selectAll(".arcHour")
+                .classed("active", false);
             d3.selectAll(".shadowColor")
                 .classed("active", false);
             d3.selectAll(".artist")
@@ -331,6 +341,48 @@ function ready(error, jsonfile) {
             lastArcId = -1;
         }
     };
+
+    var printClockText = function(hourContainer, initAngle, finalAngle, initTime, finalTime, circle, arcId) {
+        initAngle -= Math.PI/2;
+        finalAngle -= Math.PI/2;
+
+        initMinutes = Math.floor(initTime%60).toString();
+        if(initMinutes.length == 1) initMinutes = "0".concat(initMinutes);
+        finalMinutes = Math.floor(finalTime%60).toString();
+        if(finalMinutes.length == 1) finalMinutes = "0".concat(finalMinutes);
+
+        initHour = Math.floor(12 + initTime/60) + ":" + initMinutes;
+        finalHour = Math.floor(12 + finalTime/60) + ":" + finalMinutes;
+
+        var initPointText = getCirclePoint(initAngle, circle.diameter+30, circle);
+        var finalPointText = getCirclePoint(finalAngle, circle.diameter+30, circle);
+        var fontSize = circle.diameter/15;
+        fontSize = Math.min(fontSize, 18)
+        fontSize = Math.max(fontSize, 12)
+        hourContainer.append("text")
+            .attr("x", initPointText[0])
+            .attr("y", initPointText[1])
+            .attr("dy", ".35em")
+            .style("font-size", fontSize + "px")
+            .style("fill", "#B2B2B2")
+            .style("text-anchor", "middle")
+            .attr("class", "arcHour")
+            .attr("data-arc-id", arcId)
+            .text(initHour);
+
+        if(Math.abs(initAngle - finalAngle) > Math.PI/8) {
+            hourContainer.append("text")
+                .attr("x", finalPointText[0])
+                .attr("y", finalPointText[1])
+                .attr("dy", ".35em")
+                .style("font-size", fontSize + "px")
+                .style("fill", "#B2B2B2")
+                .style("text-anchor", "middle")
+                .attr("class", "arcHour")
+                .attr("data-arc-id", arcId)
+                .text(finalHour);
+        }
+    }
 
     var printClock = function(initTime, totalTime, circle, day, isLimbo) {
         ++arcIdGenerator;
@@ -383,6 +435,8 @@ function ready(error, jsonfile) {
                 d3.selectAll(".artist[data-arc-id='"+ arcId +"']")
                     .attr('visibility', "visible")
                     .attr('opacity', 1);
+                d3.selectAll(".arcHour[data-arc-id='"+ arcId +"']")
+                    .classed("active", true);
                 svgContainer.classed("darken", true)
                 dailySvgContainer.classed("darken", true)
                 legendSvgContainer.classed("darken", true)
@@ -391,6 +445,8 @@ function ready(error, jsonfile) {
                 lastArcId = d3.select(event.target).attr("data-arc-id"); 
                 setTimeout(applyMouseLeave, 1000);
             });
+
+            printClockText(svgContainer, initAngle, finalAngle, initTime, initTime+totalTime, circle, arcIdGenerator)
 
         return [
             [
@@ -685,7 +741,7 @@ function ready(error, jsonfile) {
                         lastArcId = -1;
                     })
                     .on("mouseleave", function() {
-                        lastArcId = d3.select(event.target.parentElement).attr("data-arc-id")
+                        lastArcId = d3.select(event.target.parentElement).attr("data-arc-id");
                         setTimeout(applyMouseLeave, 1000);
                     });
                 artistDiv.append("path")
@@ -701,7 +757,9 @@ function ready(error, jsonfile) {
                   .attr("cy", point[1])
                   .attr("r", ARTIST_RADIUS)
                   .attr("fill", "white");*/
-                artistDiv.append("image")
+                var aImg = artistDiv.append("a")
+                    .attr("xlink:href", list[i].url);
+                aImg.append("image")
                     .attr('x', point[0]-ARTIST_RADIUS)
                     .attr('y', point[1]-ARTIST_RADIUS)
                     .attr('xlink:href',list[i].pic)
@@ -709,16 +767,55 @@ function ready(error, jsonfile) {
                     .attr('height', ARTIST_RADIUS*2)
                     .attr('width', ARTIST_RADIUS*2);
 
-                artistDiv.append("text")
+                /*artistDiv.append("text")
                     .attr("x", point[0] + ARTIST_RADIUS + 5)
                     .attr("y", point[1] - ARTIST_RADIUS/2)
                     .attr("text-anchor", "start")
                     .attr("fill", "#e99634")
                     .attr("font-family", "Nexa")
                     .attr("font-weight", "Bold")
+                    .attr("width", 22)
+                    .attr("font-size", "1em")
+                    .text(list[i].eventName /*+ " " + list[i].percent*//*);*/
+
+                var textWithBreaks = artistDiv.append("text"); 
+                textWithBreaks = textWithBreaks.append("a")
+                    .attr("xlink:href", list[i].url);
+                var arr = list[i].eventName.split(" ");
+                var LINELIMIT = 25;
+                if (arr != undefined) {
+                    var lineNum = 0;
+                    var currentLine = "";
+                    for (var j = 0; j < arr.length + 1; j++) {
+                        if(!arr[j] || (currentLine + arr[j] + " ").length > LINELIMIT) {
+                            textWithBreaks.append("tspan")
+                                .text(currentLine)
+                                .attr("x", point[0] + ARTIST_RADIUS + 5)
+                                .attr("y", point[1] - ARTIST_RADIUS/2 + lineNum*15)
+                                .attr("text-anchor", "start")
+                                .attr("fill", "#e99634")
+                                .attr("class", "artistName")
+                                .attr("font-family", "Nexa")
+                                .attr("font-weight", "Bold");
+                            ++lineNum;
+                            if(arr[j]) currentLine = arr[j] + " ";
+                        }
+                        else currentLine = currentLine + arr[j] + " ";
+                    }
+                }
+
+                var aText = artistDiv.append("a")
+                    .attr("xlink:href", "./recommend.html?device_mac=" + currentDeviceMac + "&artist=" +  list[i].eventName);
+                aText.append("text")
+                    .attr("x", point[0] + ARTIST_RADIUS + 65)
+                    .attr("y", point[1] + ARTIST_RADIUS-5)
+                    .attr("text-anchor", "start")
+                    .attr("fill", "white")
+                    .attr("font-family", "Nexa")
+                    .attr("font-weight", "Light")
                     .attr("width", 20)
                     .attr("font-size", "1em")
-                    .text(list[i].eventName /*+ " " + list[i].percent*/);
+                    .text("Similar artists");
 
                 angle += Math.PI/13;
             }
@@ -822,7 +919,7 @@ function ready(error, jsonfile) {
 
     var artistSvgContainer = artistDiv.append("svg")
         .attr("class", "legend-svg")
-        .attr("viewBox", "0 0 " + artistWidth + " " + artistHeight)
+        .attr("viewBox", "750 0 " + artistWidth + " " + artistHeight)
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("z-index", "0");
 

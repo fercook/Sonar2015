@@ -42,7 +42,7 @@ paintMacActivity = function(mac_adress) {
                 }
                 result.concat(dailyResult);
             }
-            ready(null, result)
+            ready(null, result, mac_adress)
         }
     );
 };
