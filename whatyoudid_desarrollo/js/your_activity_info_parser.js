@@ -95,7 +95,7 @@ eventCsvParser = function(steps) {
                     var percent = duration*100/(events[j].finalTime-events[j].initTime);
                     //_addToArtistList(artistList[steps[i].room], events[j].eventName, events[j].id, events[j].room, percent)
                     events[j]["percent"] = percent;
-                    eventList[eventList.length] = {'id': events[j].id, 'eventName': events[j].eventName, 'percent': percent}
+                    eventList[eventList.length] = events[j];
                 }
                 //eventList.sort(sort_by('percent', true, parseInt));
                 _printCircleArtist(eventList, steps[i].room, steps[i].generatedId);
