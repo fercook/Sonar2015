@@ -166,8 +166,6 @@ RoomRecords = [
           {name: "Village",time_start: "2015-06-16 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:08"},
           {name: "PlusD",  time_start: "2015-06-16 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"de:de:de:de:de:09"},
 
-
-    
 ];
 
 var getRoomByMAC = function(mac,date) {

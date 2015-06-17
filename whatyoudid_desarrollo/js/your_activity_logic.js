@@ -3,24 +3,25 @@ queue()
   .await(ready);
 
 var jsonCirclesMap = [
-    { "x": 400, "y": 400, "diameter": 800, "titleAngle" : Math.PI/4, "titleColor" : "#FFFFFF", "lineMargin": 5, "name": "Limbo", "nameId":"Limbo", "id":"0", "angle": Math.PI*3/4, "titleX": "0em" },
-    { "x": 210, "y": 228, "diameter": 160, "titleAngle" : Math.PI, "titleColor": "#DB57D0", "lineMargin": 10, "name": "Dome", "nameId":"Dome", "id":"1", "angle": Math.PI*3/4, "titleX": "-2.5em"},
-    { "x": 222, "y": 546, "diameter": 155, "titleAngle" : Math.PI, "titleColor": "#DDB0BF", "lineMargin": 10, "name": "Complex", "nameId":"Complex", "id":"2", "angle": Math.PI*3/4, "titleX": "-3.7em"},
-    { "x": 590, "y": 234, "diameter": 150, "titleAngle" : 0, "titleColor": "#09AE48", "lineMargin": 10, "name": "Hall", "nameId":"Hall", "id":"3", "angle": Math.PI*3/4, "titleX": "0em"},
-    { "x": 630, "y": 440, "diameter": 140, "titleAngle" : 0, "titleColor": "#7ED96D", "lineMargin": 10, "name": "Planta", "nameId":"Planta", "id":"4", "angle": Math.PI*3/4, "titleX": "0em"},
-    { "x": 400, "y": 378, "diameter": 250, "titleAngle" : Math.PI/2, "titleColor": "#BF0CB9", "lineMargin": 10, "name": "Village", "nameId":"Village", "id":"5", "angle": Math.PI*3/4, "titleX": "-1.5em"},
-    { "x": 500, "y": 618, "diameter": 190, "titleAngle" : 0, "titleColor": "#B9DBA2", "lineMargin": 10, "name": "Sonar+D", "nameId":"PlusD", "id":"7", "angle": Math.PI*3/4, "titleX": "0em"}];
+    { "x": 400, "y": 400, "diameter": 800, "titleAngle" : Math.PI/4, "titleColor": "#FFFFFF", "lineMargin": 5,  "name": "Limbo", "nameId":"Limbo",      "eventsName": "Limbo",                                  "id":"0", "angle": Math.PI*3/4, "titleX": "0em" },
+    { "x": 210, "y": 228, "diameter": 160, "titleAngle" : Math.PI,   "titleColor": "#DB57D0", "lineMargin": 10, "name": "Dome", "nameId":"Dome",        "eventsName": "SonarDome by Red BULL Music Academy",    "id":"1", "angle": Math.PI*3/4, "titleX": "-2.5em"},
+    { "x": 222, "y": 546, "diameter": 155, "titleAngle" : Math.PI,   "titleColor": "#DDB0BF", "lineMargin": 10, "name": "Complex", "nameId":"Complex",  "eventsName": "SonarComplex",                           "id":"2", "angle": Math.PI*3/4, "titleX": "-3.7em"},
+    { "x": 590, "y": 234, "diameter": 150, "titleAngle" : 0,         "titleColor": "#09AE48", "lineMargin": 10, "name": "Hall", "nameId":"Hall",        "eventsName": "SonarHall",                              "id":"3", "angle": Math.PI*3/4, "titleX": "0em"},
+    { "x": 630, "y": 440, "diameter": 140, "titleAngle" : 0,         "titleColor": "#7ED96D", "lineMargin": 10, "name": "Planta", "nameId":"Planta",    "eventsName": "Planta",                                 "id":"4", "angle": Math.PI*3/4, "titleX": "0em"},
+    { "x": 400, "y": 378, "diameter": 250, "titleAngle" : Math.PI/2, "titleColor": "#BF0CB9", "lineMargin": 10, "name": "Village", "nameId":"Village",  "eventsName": "SonarVillage by ESTRELLA DAMM",          "id":"5", "angle": Math.PI*3/4, "titleX": "-1.5em"},
+    { "x": 500, "y": 618, "diameter": 190, "titleAngle" : 0,         "titleColor": "#B9DBA2", "lineMargin": 10, "name": "Sonar+D", "nameId":"PlusD",    "eventsName": "Hall+D",                                 "id":"6", "angle": Math.PI*3/4, "titleX": "0em"}];
 
-function ready(error, jsonfile) {
+var LIMBO = 0;
+
+function ready(error, jsonfile, device_mac) {
     var dayColors = ["#FFA800", "#FFFFFF", "#00AFFF"]
     var dayTriangleColors = ["#a66d02", "#999999", "#006999"]
-    var LIMBO = 0;
     var SIZE = 2;
     var TICK_RADIUS = 10;
     var HOUR_RADIUS = 5;
     var ARTIST_RADIUS = 40;
     var ARTIST_SPACE = 20;
-    var ROOM_NAME_RADIUS = 40;
+    var ROOM_NAME_RADIUS = 50;
     var MAXIMUM_TIME = 20;
     var MAXIMUM_JUMP = 10000;
     var LIMBO_POLY_COLOR = "#30d4fd";
@@ -42,15 +43,18 @@ function ready(error, jsonfile) {
     var LEGEND_V_MARGIN = 8;
     var LEGEND_H_MARGIN_COLOR = 40;
     var MAX_NUM_OF_ARTISTS = 6;
-    var artistWidth = 1200,
-        artistHeight = 1200;
+    var artistWidth = 600,
+        artistHeight = 600;
+    var currentDeviceMac = device_mac;
 
     var dayPermission = [true, true, true];
 
+    var lastArcId = -1;
 
     var lineIdGenerator = 0;
     var arcIdGenerator = -1;
     var steps = []
+    var arcIdClicked = -1;
 
   var userSteps;
   /*if(localStorage.getItem('datainput')) userSteps = localStorage.getItem('datainput');
@@ -178,18 +182,23 @@ function ready(error, jsonfile) {
                 .attr("cy", function(d){return d["y"]})
                 .attr("r",  function(d){return d["diameter"]/2+10;})
                 .attr("stroke-width", 0)
-                .attr("visibility", "hidden")
-                .attr("opacity", 0)
                 .attr("fill", function(d){return d["titleColor"]});
     };
 
     var printScenario = function() {
         d3.selectAll("#fingerprint").selectAll("*").remove();
+
+        /**
+         * GLOBAL VARIABLES.
+         */
         svgContainer = d3.select("#fingerprint").append("svg")
             .attr("class", "general-svg")
             .attr("preserveAspectRatio", "xMinYMin meet")
             .attr("viewBox", "0 0 " + width + " " + height)
             .style("position", "absolute");
+
+        activityContainer = svgContainer.append("g");
+        arcHourContainer = svgContainer.append("g");
 
         svgContainer.selectAll("text")
                     .data(jsonCirclesMap)
@@ -314,6 +323,98 @@ function ready(error, jsonfile) {
         return (diameter/2)-5-(day-1)*lineWidth;
     }
 
+
+    var applyMouseLeave = function() {
+        if(lastArcId != -1) {
+            d3.selectAll(".arcHour")
+                .classed("active", false);
+            d3.selectAll(".shadowColor")
+                .classed("active", false);
+            d3.selectAll(".artist")
+                .attr('visibility', "hidden")
+                .attr('opacity', 0);
+            svgContainer.classed("darken", false)
+            dailySvgContainer.classed("darken", false)
+            legendSvgContainer.classed("darken", false)
+            d3.selectAll(".total-visibility")
+                .classed("highlighted-line", false)
+                .classed("total-visibility", false);
+            lastArcId = -1;
+        }
+    };
+
+    var printClockText = function(hourContainer, initAngle, finalAngle, initTime, finalTime, circle, arcId) {
+        initAngle -= Math.PI/2;
+        finalAngle -= Math.PI/2;
+
+        initMinutes = Math.floor(initTime%60).toString();
+        if(initMinutes.length == 1) initMinutes = "0".concat(initMinutes);
+        finalMinutes = Math.floor(finalTime%60).toString();
+        if(finalMinutes.length == 1) finalMinutes = "0".concat(finalMinutes);
+
+        initHour = Math.floor(12 + initTime/60) + ":" + initMinutes;
+        finalHour = Math.floor(12 + finalTime/60) + ":" + finalMinutes;
+
+        var initPointText = getCirclePoint(initAngle, circle.diameter+30, circle);
+        var finalPointText = getCirclePoint(finalAngle, circle.diameter+30, circle);
+        var fontSize = circle.diameter/15;
+        fontSize = Math.min(fontSize, 18)
+        fontSize = Math.max(fontSize, 12)
+        hourContainer.append("text")
+            .attr("x", initPointText[0])
+            .attr("y", initPointText[1])
+            .attr("dy", ".35em")
+            .style("font-size", fontSize + "px")
+            .style("fill", "#B2B2B2")
+            .style("text-anchor", "middle")
+            .attr("class", "arcHour")
+            .attr("data-arc-id", arcId)
+            .text(initHour);
+
+        if(Math.abs(initAngle - finalAngle) > Math.PI/8) {
+            hourContainer.append("text")
+                .attr("x", finalPointText[0])
+                .attr("y", finalPointText[1])
+                .attr("dy", ".35em")
+                .style("font-size", fontSize + "px")
+                .style("fill", "#B2B2B2")
+                .style("text-anchor", "middle")
+                .attr("class", "arcHour")
+                .attr("data-arc-id", arcId)
+                .text(finalHour);
+        }
+    }
+
+    var applyMouseTouch = function(target) {
+        applyMouseLeave();
+        var roomNum = d3.select(event.target).attr("data-room");
+        var arcId = d3.select(event.target).attr("data-arc-id");
+        if(arcId == lastArcId) lastArcId = -1; //Anulate arc occultation.
+        var day = d3.select(event.target).attr("data-day");
+        d3.select("[data-line-id='"+ (arcId) +"']")
+            .classed("highlighted-line", true)
+            .classed("total-visibility", true);
+        d3.select("[data-line-id='"+ (parseInt(arcId)+1) +"']")
+            .classed("highlighted-line", true)
+            .classed("total-visibility", true);
+        d3.selectAll("[data-arc-id='"+ arcId +"']").classed("total-visibility", true);
+        d3.select(".shadowColor[data-room='"+ roomNum +"']")
+            .classed("active", true);
+        d3.selectAll(".legend[data-room='"+ roomNum +"']")
+            .classed("total-visibility", true);
+        d3.selectAll(".day-text[data-day='"+ (day-1) +"']")
+            .classed("total-visibility", true);
+        d3.select(".shadowColor[data-arc-id='"+ roomNum +"']");
+        d3.selectAll(".artist[data-arc-id='"+ arcId +"']")
+            .attr('visibility', "visible")
+            .attr('opacity', 1);
+        d3.selectAll(".arcHour[data-arc-id='"+ arcId +"']")
+            .classed("active", true);
+        svgContainer.classed("darken", true)
+        dailySvgContainer.classed("darken", true)
+        legendSvgContainer.classed("darken", true)
+    }
+
     var printClock = function(initTime, totalTime, circle, day, isLimbo) {
         ++arcIdGenerator;
         var clockRadius = getClockArcRadius(day, circle.diameter, circle.lineMargin);
@@ -343,46 +444,31 @@ function ready(error, jsonfile) {
             .attr("data-arc-id", arcIdGenerator)
             .attr("data-day", day)
             .on("mouseenter", function() {
-                var roomNum = d3.select(event.target).attr("data-room");
-                var arcId = d3.select(event.target).attr("data-arc-id");
-                var day = d3.select(event.target).attr("data-day");
-                d3.select("[data-line-id='"+ (arcId) +"']")
-                    .classed("highlighted-line", true)
-                    .classed("total-visibility", true);
-                d3.select("[data-line-id='"+ (parseInt(arcId)+1) +"']")
-                    .classed("highlighted-line", true)
-                    .classed("total-visibility", true);
-                d3.selectAll("[data-arc-id='"+ arcId +"']").classed("total-visibility", true);
-                d3.select(".shadowColor[data-room='"+ roomNum +"']")
-                    .attr('visibility', "visible")
-                    .attr('opacity', 0.1);
-                d3.selectAll(".legend[data-room='"+ roomNum +"']")
-                    .classed("total-visibility", true);
-                d3.selectAll(".day-text[data-day='"+ (day-1) +"']")
-                    .classed("total-visibility", true);
-                d3.select(".shadowColor[data-arc-id='"+ roomNum +"']");
-                d3.selectAll(".artist[data-arc-id='"+ arcId +"']")
-                    .attr('visibility', "visible")
-                    .attr('opacity', 1);
-                svgContainer.classed("darken", true)
-                dailySvgContainer.classed("darken", true)
-                legendSvgContainer.classed("darken", true)
+                if(arcIdClicked == -1) {
+                    applyMouseLeave();
+                    applyMouseTouch(event.target);
+                }
             })
             .on("mouseleave", function() {
-                var roomNum = d3.select(event.target).attr("data-room");
-                d3.selectAll(".shadowColor")
-                    .attr('visibility', "hidden")
-                    .attr('opacity', 0);
-                d3.selectAll(".artist")
-                    .attr('visibility', "hidden")
-                    .attr('opacity', 0);
-                svgContainer.classed("darken", false)
-                dailySvgContainer.classed("darken", false)
-                legendSvgContainer.classed("darken", false)
-                d3.selectAll(".total-visibility")
-                    .classed("highlighted-line", false)
-                    .classed("total-visibility", false);
+                if(arcIdClicked == -1) {
+                    lastArcId = d3.select(event.target).attr("data-arc-id"); 
+                    applyMouseLeave();
+                }
+            })
+            .on("click", function() {
+                var arcId = d3.select(event.target).attr("data-arc-id");
+                d3.select(".clicked").classed("clicked", false);
+                lastArcId = d3.select(event.target).attr("data-arc-id");
+                applyMouseLeave();
+                if(arcId != arcIdClicked) {
+                    arcIdClicked = arcId;
+                    applyMouseTouch(event.target);
+                    d3.select(event.target).classed("clicked", true);
+                }
+                else arcIdClicked  = -1;
             });
+
+            printClockText(svgContainer, initAngle, finalAngle, initTime, initTime+totalTime, circle, arcIdGenerator)
 
         return [
             [
@@ -633,33 +719,130 @@ function ready(error, jsonfile) {
         if(!found) artistList[artistList.length] = {'id':id, 'eventName': eventName, 'percent': percent, 'room': room};
     };
 
+    /*
+        x: x-coordinate
+        y: y-coordinate
+        w: width
+        h: height
+        r: corner radius
+        tl: top_left rounded?
+        tr: top_right rounded?
+        bl: bottom_left rounded?
+        br: bottom_right rounded?
+    */
+    function rounded_rect(x, y, w, h, r, tl, tr, bl, br) {
+        var retval;
+        retval  = "M" + (x + r) + "," + y;
+        retval += "h" + (w - 2*r);
+        if (tr) { retval += "a" + r + "," + r + " 0 0 1 " + r + "," + r; }
+        else { retval += "h" + r; retval += "v" + r; }
+        retval += "v" + (h - 2*r);
+        if (br) { retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + r; }
+        else { retval += "v" + r; retval += "h" + -r; }
+        retval += "h" + (2*r - w);
+        if (bl) { retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + -r; }
+        else { retval += "h" + -r; retval += "v" + -r; }
+        retval += "v" + (2*r - h);
+        if (tl) { retval += "a" + r + "," + r + " 0 0 1 " + r + "," + -r; }
+        else { retval += "v" + -r; retval += "h" + r; }
+        retval += "z";
+        return retval;
+    }
+
     _printCircleArtist = function(list, room, arcId) {
         var angle = -Math.PI*1/6;
         for(var i=0; i < Math.min(list.length, MAX_NUM_OF_ARTISTS); ++i) {
-            point = getCirclePoint(angle, jsonCirclesMap[0]["diameter"]*1.4, jsonCirclesMap[0]);
-            var artistDiv = artistSvgContainer.append("g")
-                .attr("class", "artist")
-                .attr("visibility", "hidden")
-                .attr("opacity", 0)
-                .attr("data-arc-id", arcId);
-            artistDiv.append("circle")
-              .attr("class", "room"+room)
-              .attr("cx", point[0])
-              .attr("cy", point[1])
-              .attr("r", ARTIST_RADIUS)
-              .attr("fill", "white");
+            if(list[i].eventName != "No Activity") {
+                point = getCirclePoint(angle, jsonCirclesMap[0]["diameter"]*1.4, jsonCirclesMap[0]);
+                var artistDiv = artistSvgContainer.append("g")
+                    .attr("class", "artist")
+                    .attr("visibility", "hidden")
+                    .attr("opacity", 0)
+                    .attr("data-arc-id", arcId)
+                    .on("mouseenter", function() {
+                        lastArcId = -1;
+                    })
+                    .on("mouseleave", function() {
+                        lastArcId = d3.select(event.target.parentElement).attr("data-arc-id");
+                        if(arcIdClicked == -1) {
+                            applyMouseLeave();
+                        }
+                    });
+                artistDiv.append("path")
+                    .attr("d", function(d) {
+                      return rounded_rect(point[0]-ARTIST_RADIUS-10, point[1]-ARTIST_RADIUS-10, 280, ARTIST_RADIUS*2+20, Math.PI*2, true, true, true, true);
+                    })
+                    .attr("fill", "#575b5a")
+                    .attr("opacity", 0.5);
 
-            artistDiv.append("text")
-                .attr("x", point[0] + ARTIST_RADIUS + 5)
-                .attr("y", point[1] - ARTIST_RADIUS/2)
-                .attr("text-anchor", "start")
-                .attr("fill", "#3e78f3")
-                .attr("font-family", "Nexa")
-                .attr("font-weight", "Light")
-                .attr("font-size", "1em")
-                .text(list[i].eventName + " " + list[i].percent);
+                /*artistDiv.append("circle")
+                  .attr("class", "room"+room)
+                  .attr("cx", point[0])
+                  .attr("cy", point[1])
+                  .attr("r", ARTIST_RADIUS)
+                  .attr("fill", "white");*/
+                var aImg = artistDiv.append("a")
+                    .attr("xlink:href", list[i].url);
+                aImg.append("image")
+                    .attr('x', point[0]-ARTIST_RADIUS)
+                    .attr('y', point[1]-ARTIST_RADIUS)
+                    .attr('xlink:href',list[i].pic)
+                    .attr("class", "room"+room)
+                    .attr('height', ARTIST_RADIUS*2)
+                    .attr('width', ARTIST_RADIUS*2);
 
-            angle += Math.PI/15;
+                /*artistDiv.append("text")
+                    .attr("x", point[0] + ARTIST_RADIUS + 5)
+                    .attr("y", point[1] - ARTIST_RADIUS/2)
+                    .attr("text-anchor", "start")
+                    .attr("fill", "#e99634")
+                    .attr("font-family", "Nexa")
+                    .attr("font-weight", "Bold")
+                    .attr("width", 22)
+                    .attr("font-size", "1em")
+                    .text(list[i].eventName /*+ " " + list[i].percent*//*);*/
+
+                var textWithBreaks = artistDiv.append("text"); 
+                textWithBreaks = textWithBreaks.append("a")
+                    .attr("xlink:href", list[i].url);
+                var arr = list[i].eventName.split(" ");
+                var LINELIMIT = 25;
+                if (arr != undefined) {
+                    var lineNum = 0;
+                    var currentLine = "";
+                    for (var j = 0; j < arr.length + 1; j++) {
+                        if(!arr[j] || (currentLine + arr[j] + " ").length > LINELIMIT) {
+                            textWithBreaks.append("tspan")
+                                .text(currentLine)
+                                .attr("x", point[0] + ARTIST_RADIUS + 5)
+                                .attr("y", point[1] - ARTIST_RADIUS/2 + lineNum*15)
+                                .attr("text-anchor", "start")
+                                .attr("fill", "#e99634")
+                                .attr("class", "artistName")
+                                .attr("font-family", "Nexa")
+                                .attr("font-weight", "Bold");
+                            ++lineNum;
+                            if(arr[j]) currentLine = arr[j] + " ";
+                        }
+                        else currentLine = currentLine + arr[j] + " ";
+                    }
+                }
+
+                var aText = artistDiv.append("a")
+                    .attr("xlink:href", "./recommend.html?device_mac=" + currentDeviceMac + "&artist=" +  list[i].eventName);
+                aText.append("text")
+                    .attr("x", point[0] + ARTIST_RADIUS + 65)
+                    .attr("y", point[1] + ARTIST_RADIUS-5)
+                    .attr("text-anchor", "start")
+                    .attr("fill", "white")
+                    .attr("font-family", "Nexa")
+                    .attr("font-weight", "Light")
+                    .attr("width", 20)
+                    .attr("font-size", "1em")
+                    .text("Similar artists");
+
+                angle += Math.PI/13;
+            }
         }
     }
 
@@ -683,7 +866,8 @@ function ready(error, jsonfile) {
     }
 
     printArtist = function(steps) {
-        d3.json('./DATA/scheduledata.json', function(error, data) {
+        eventCsvParser(steps);
+        /*d3.json('./DATA/scheduledata.json', function(error, data) {
             artistList = []
             for(var i = 0; i < jsonCirclesMap.length; ++i) {
                 artistList[artistList.length] = [];
@@ -707,7 +891,7 @@ function ready(error, jsonfile) {
                 artistList[i].sort(sort_by('percent', true, parseInt));
                 _printCircleArtist(artistList[i], i);
             }*/
-        });
+        /*});*/
     };
 
     printRoomLegend = function(circles) {
@@ -759,7 +943,7 @@ function ready(error, jsonfile) {
 
     var artistSvgContainer = artistDiv.append("svg")
         .attr("class", "legend-svg")
-        .attr("viewBox", "0 0 " + artistWidth + " " + artistHeight)
+        .attr("viewBox", "750 0 " + artistWidth + " " + artistHeight)
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("z-index", "0");
 
