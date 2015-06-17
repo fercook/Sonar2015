@@ -107,6 +107,10 @@ svg #clip {
     left: -4px;
     position: relative;
 }
+
+#hora{
+    color: #3e78f3;
+}
 .value {
     position: relative;
     left: 90px;

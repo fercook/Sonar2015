@@ -64,7 +64,7 @@
         <!--END OF BUTTONS MENU-->
 
 
-        <span id="downloadarea"> What's happening. </span>
+        <span id="downloadarea"> What's happening </span>
 
 </header>
 
@@ -89,7 +89,7 @@
     <div id='roomLegend'>
 
     <div id="timeStamp">Last measurement:
-        <br>
+        <br> <div id="hora">time</div>
         </div>
 
     <form>
@@ -174,7 +174,7 @@
 
 <script type="application/javascript">
 
-var loading = true;
+var loading = 17;
 
 var step = 0;
 function showLoading() {
@@ -183,14 +183,15 @@ function showLoading() {
       var g = canvas.getContext('2d');
       var w = canvas.width;
       var h = canvas.height;
-      g.fillStyle = 'rgba(0,0,0,0)';
+      g.fillStyle = 'rgba(0,0,0,0.5)';
       g.fillRect(0, 0, w, h);
       step++;
+        console.log(loading);
         var alpha = 0.5; //.3 + (1 + Math.sin(step * .3)) / 3;
         g.fillStyle = 'rgba(255, 255, 255, '  + alpha + ')';
         g.textAlign = 'center';
         g.font = '14pt Verdana';
-        g.fillText('Loading', w/2, h/2);
+        g.fillText('Loading '+(100*(17.0-loading)/17)+'%', w/2, h/2);
   }
     if (loading) {
         setTimeout('showLoading()', 50);

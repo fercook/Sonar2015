@@ -1,3 +1,16 @@
+@font-face {
+    font-family: 'Nexa';
+    font-weight: Bold;
+    src: url("../fonts/Nexa_bold.otf") format("opentype");
+}
+
+
+@font-face {
+    font-family: 'Nexa';
+    font-weight: Light;
+    src: url("../fonts/Nexa_light.otf") format("opentype");
+}
+
 #menu  {
   /** Solves boostrap styles applied over menu.*/
   -webkit-box-sizing: content-box;
@@ -19,7 +32,8 @@
   right: 0;
   position: absolute;
   color: white;
-  font-family: Nexa Bold;
+  font-family: 'Nexa';
+    font-weight: Bold;
   font-size: 30px;
   text-align: center;
   visibility: hidden;
@@ -43,7 +57,8 @@
   color: white;
   background-color: #565a5b;
   border: 2px solid white;
-  font-family: Nexa Light;
+  font-family: 'Nexa';
+    font-weight: Light;
   width: 50%;
   margin-right: 30px;
 }
@@ -53,13 +68,15 @@
   background-color: #3bbd9b;
   background-image: none;
   border: 1px solid #41ffcf;
-  font-family: Nexa Bold;
+  font-family: 'Nexa';
+  font-weight: Bold;
 }
 
 #randomMac {
   color: white;
   background-image: none;
-  font-family: Nexa Bold;
+  font-family: 'Nexa' ;
+    font-weight:  Bold;
   background-color: #38be9d;
   border: 1px solid #41ffcf;
 }
@@ -122,13 +139,13 @@
 
 
 body {
-  background-image: url("/imgs/back_tile.jpg");
+  background-image: url("../imgs/back_tile.jpg");
   width: 100%;
   height: 100%;
 }
 
 svg.darken .opacitySensible {
-  opacity: 0.2; 
+  opacity: 0.2;
 }
 
 svg * {

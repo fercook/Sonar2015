@@ -15,10 +15,11 @@ GraphParameters = {
     "nodeWidth": 0.4,
     "nodePadding": 50,
     "offset": "Centered",
+    "offset": "Centered",
     "curvature": 0.5
 }
 
-
+var analysis;
 
 //var color = d3.scale.ordinal()
 //  .domain(["Limbo", "Dome", "Complex" , "Hall", "Planta", "Village" , "Sonar+D"])
@@ -26,7 +27,7 @@ GraphParameters = {
 
 var color = d3.scale.ordinal()
   .domain([0, 1, 2, 3 , 4, 5, 6 , 7,8])
-  .range(["#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2", "#000","#3366FF"]);
+  .range(["#bbbbbb", "#bbbbbb", "#DB57D0" , "#DDB0BF", "#09AE48", "#7ED96D" , "#BF0CB9", "#B9DBA2", "#bbbbbb","#3366FF"]);
 
 var jsonCirclesMap = [
     { "titleColor" : "#BBBBBB", "name": "Limbo", "id":"0"},
@@ -62,27 +63,65 @@ function getDataFromServer() {
 //TIMER: UNCOMMENT FOR PRODUCTION
 //setInterval(function(){ getDataFromServer(); }, 5*60*1000 );
 
+var time_steps = (11+10+10)*4; //TODO: CALCULAR TIEMPOS TOTALES// time_step_group.top(Infinity).length;
+var total_rooms = 8;
+var nodeidx = function (time, room) {
+    // Notation for room starts at 1 NOT ZERO
+    return time * total_rooms + room - 1;
+}
+var linkidx = function (time, startroom, endroom) {
+    // Goes from startroom at time to endroom at time+1
+    // Notation for room starts at 1 NOT ZERO
+    return time * total_rooms * total_rooms + (startroom - 1) * total_rooms + endroom - 1;
+}
+var timeidx = function(time) { // Given a date, compares to latest time in graph and returns the layer idx
+    var hour = time.getHours();
+    var day = time.getDate();
+    var minutes = time.getMinutes();
+    if (//day<18 || day>20 || hour<12 // No Sonar here
+        //|| (day==18 && hour>=23)
+        //|| (day==19 && hour>=22)
+        //|| (day==20 && hour>=22)
+         (day<16 || hour<10) ) // DEBUG REMOVE THIS CONDITION
+    { return null; }
+    var idx = 0;
+    if (day==19) { idx += 11*4; }
+    if (day==20) { idx += 11*4+10*4; }
+    //idx += (hour-12); // DEBUG
+    idx += (hour-10)*4; // DEBUG
+    idx += Math.floor(minutes/15.0);
+    return idx;
+}
+
+var getColor = function(d){
+    if(d.room==1 || d.room==8){
+        return d.color = colors(0);
+    }else{
+        return d.color = colors(d.room);
+    }
+}
+
 function process_json(json) {
-    // Things TODO:
-
-
-    time_steps = TODO: CALCULAR TIEMPOS TOTALES// time_step_group.top(Infinity).length;
-
-    total_rooms = 8;
+    console.log(json);
+    var roomOrder = {"Dome":2,"Hall":3 , "Planta":4 ,
+                     "PlusD": 5, "Village": 6, "Complex": 7,
+                     "Entry": 1,"Exit": 8};
+    var roomNames = ["Limbo","Dome","Hall","Planta",
+                     "PlusD", "Village", "Complex",
+                     "Limbo"];
+    // Create empty graph
     analysis = {};
     analysis.links = Array((time_steps-2) * total_rooms * total_rooms + (total_rooms - 1) * total_rooms + total_rooms - 1);
     analysis.nodes = Array(time_steps * total_rooms);
     // Prepare a couple of temporary useful vars
-    nodeidx = function (time, room) {
-        return time * total_rooms + room - 1;
-    }
-    linkidx = function (time, startroom, endroom) {
-        // Goes from startroom at time to endroom at time+1
-        return time * total_rooms * total_rooms + (startroom - 1) * total_rooms + endroom - 1;
-    }
     for (var t = 0; t < time_steps; t++) {
         for (var s = 1; s <= total_rooms; s++) {
-            analysis.nodes[nodeidx(t, s)] = {"layer": t, "row": s-1, "name": nodeidx(t, s), "room": s};}
+            analysis.nodes[nodeidx(t, s)] = {"layer": t, 
+                                             "row": s-1, 
+                                             "name": nodeidx(t, s), 
+                                             "room": s, 
+                                             fullName: roomNames[s-1],
+                                            value: 0};}
     }
     for (var t = 0; t < time_steps-1; t++) {
         for (var s = 1; s <= total_rooms; s++) {
@@ -95,11 +134,86 @@ function process_json(json) {
             }
         }
     }
-    var t1 = performance.now();
+    // Filter out invalid dates (before Sonar, nights)
+    // Adjust 15 minute intervals to our intervals
+    var buckets = [];
+    for (var n=0;n<time_steps;n++) buckets[n] = []; //DEBUG
+    json.graph.forEach( function(message) {
+        var time_start = new Date(message.time_start);
+        tidx = timeidx(time_start);
+        if (tidx!=null) {
+            buckets[tidx].push(message);
+        }
+    });
+    // Clean buckets
+    for (var n=0, len=buckets.length; n<len; n++) {
+        if (buckets[n].length == 0) {
+            if (n<len-1 &&  buckets[n+1].length == 2) { // me robo uno
+                var t0 = new Date (buckets[n+1][0].time_start) ;
+                var t1 = new Date (buckets[n+1][1].time_start) ;
+                if (t0 <= t1) {
+                    buckets[n].push( buckets[n+1].shift() );
+                } else {
+                    buckets[n].push(buckets[n+1].pop());
+                }
+            } else if ( n>0 && buckets[n-1].length == 1 ) {
+                buckets[n] = buckets[n-1]; // me copio el anterior
+            }
+        }
+        else if (buckets[n].length==2) {
+            if ( n<len-1 && buckets[n+1].length==0 ) {
+                ///// elejir el mas tarde y pasarlo
+                var t0 = new Date (buckets[n][0].time_start) ;
+                var t1 = new Date (buckets[n][1].time_start) ;
+                if (t0 <= t1) {
+                    buckets[n+1].push( buckets[n].pop());
+                } else {
+                    buckets[n+1].push(buckets[n].shift());
+                }
+            } else {
+                ///// Elijo el mas tarde y elimino
+                var t0 = new Date (buckets[n][0].time_start) ;
+                var t1 = new Date (buckets[n][1].time_start) ;
+                if (t0 <= t1) {
+                    buckets[n].pop();
+                } else {
+                    buckets[n].shift();
+                }
+            }
+        }
+    }
+    // Convertir times to layers
+    // Convert MACs to room names to rows
+
+    for (var t=0;t<time_steps;t++) {
+        if (buckets[t].length) {
+            var dict = getMACDict(new Date(buckets[t][0].time_start));
+            for (var ridx=0; ridx<buckets[t][0].rooms.length; ridx++) {
+                var room = buckets[t][0].rooms[ridx];
+                if (!dict[room.name]) { console.log("Sensor MAC Address not recognized! "+room.name); }
+                var v = analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value;
+                analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value += room.devices;
+            }
+            for (var lidx=0; lidx<buckets[t][0].links.length; lidx++) {
+                var link = buckets[t][0].links[lidx];
+                var s =  roomOrder[dict[link.start_room]];
+                var e =  roomOrder[dict[link.end_room]];
+                analysis.links[linkidx(t, s, e)].value += link.value;
+            }
+        }
+    }
+
+
+// Testear que pasa si desaparecen rooms
+    // Put everything in little boxes and ship
+
+/*
     for (var t = 0; t < time_steps-1; t++) {
-        console.log(t + " of " + time_steps);
+
+
         records_by_time.filterExact(t);
         var ids = records_by_id.group()
+
         ids.top(Infinity).forEach(function (id) {
             records_by_id.filterExact(id.key);
             var start_idx = minindex(records_by_id.top(Infinity), function (d) {
@@ -116,6 +230,8 @@ function process_json(json) {
         });
         records_by_id.filterAll();
     }
+
+
     for (var t = 1; t < time_steps; t++) {
         for (var end_room = 2; end_room < total_rooms ; end_room++) {
             var total_enter = 0;
@@ -140,33 +256,14 @@ function process_json(json) {
     }
     records_by_time.filterAll();
     var t2 = performance.now();
+*/
 
 
-
-
-
-
-    // Filter out invalid dates (before Sonar, nights)
-    // Convertir times to layers
-    // Convert MACs to room names to rows
-    // Adjust 15 minute intervals to our intervals
-    // Testear que pasa si desaparecen rooms
-    // Put everything in little boxes and ship
 }
-
-/*window.onmousewheel(
-
-document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})
-
-    GraphParameters.graphWidth += algo;
-    draw();
-);*/
 
 
 
 function draw() {
-
-
 
 
     d3.selectAll("svg").remove();
@@ -197,7 +294,7 @@ function draw() {
     maing = svg.append("g").call(d3.behavior.zoom().scaleExtent([1, 8]).on("zoom", zoom)).append("g");// attr("id","maingroup");
 
     function zoom() {
-        console.log(d3.event.translate);
+        //console.log(d3.event.translate);
         var s = Math.min(Math.max(0.33,d3.event.scale),3)
         var dx = Math.min(Math.max(d3.event.translate[0],-s*GraphParameters.graphWidth),s*GraphParameters.graphWidth);
         maing.attr("transform", "translate(" + dx + ",0)scale(" + s + ",1)");
@@ -213,7 +310,7 @@ function draw() {
     path = sankey.link();
 
     colors = color; //d3.scale.ordinal(); //category10
-    console.log("cccolors"+d3.scale.ordinal());  //category10
+    //console.log("cccolors"+d3.scale.ordinal());  //category10
 
     sankey
         .nodes(analysis.nodes)
@@ -288,7 +385,7 @@ function tooltip_general(){
 
 
 });
-        var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sónar 2015</strong></p><br/>');
+        var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sonar 2015</strong></p><br/>');
 
             $('.tooltip').tooltipster('content',contenido);
         });
@@ -376,13 +473,13 @@ function drawComponents(graph){
             return Math.max(0, d.dy);
         })
         .style("stroke", function (d) {
-            if (d.source.room == 4 || d.target.room == 4) {
+//            if (d.source.room == 4 || d.target.room == 4) {
                 //return colors(d.source.room);
                 return colors(d.source.room);
 
-            } else {
-                return "#000"
-            }
+//            } else {
+//                return "#000"
+//            }
         })
         .sort(function (a, b) {
             return b.dy - a.dy;
@@ -411,7 +508,7 @@ function drawComponents(graph){
 
     node.append("rect")
         .attr("height", function (d) {
-         if(d.layer>25){
+         if(d.layer>25){ /// TODO Arreglar para pillar tiempo actual
             return 2;
          }else{
             return d.dy;
@@ -423,11 +520,8 @@ function drawComponents(graph){
         .attr("target","_blank")
         .style("fill", function (d) {
 
-        if(d.layer>25){
-
-
+        if(d.layer>25){ /// TODO Arreglar para pillar tiempo actual
              return d.color = colors(8);
-
         }else{
            if(d.room==1 || d.room==8){
                return d.color = colors(0);
@@ -528,3 +622,14 @@ function view_artist_data(userselection, rect, room) {
         }
     });
 }
+
+
+
+
+/*window.onmousewheel(
+
+document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})
+
+    GraphParameters.graphWidth += algo;
+    draw();
+);*/
