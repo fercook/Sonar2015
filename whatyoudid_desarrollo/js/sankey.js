@@ -263,17 +263,18 @@ function process_json(json) {
             var dict = getMACDict(new Date(buckets[t][0].time_start));
             for (var ridx = 0; ridx < buckets[t][0].rooms.length; ridx++) {
                 var room = buckets[t][0].rooms[ridx];
-                if (!dict[room.name]) {
+                if (dict[room.name]) {
+                    var v = analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value;
+                    analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value += room.devices;                    
+                } else {
                     console.log("Sensor MAC Address not recognized! " + room.name);
                 }
-                var v = analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value;
-                analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value += room.devices;
             }
             for (var lidx = 0; lidx < buckets[t][0].links.length; lidx++) {
                 var link = buckets[t][0].links[lidx];
                 var s = roomOrder[dict[link.start_room]];
                 var e = roomOrder[dict[link.end_room]];
-                analysis.links[linkidx(t, s, e)].value += link.value;
+                if (s!=null && e != null && linkidx(t, s, e)!=null && link.value) analysis.links[linkidx(t, s, e)].value += link.value;
             }
         }
     }
@@ -634,8 +635,6 @@ function drawComponents(graph) {
             console.log(filteredData);
             if (userselection["room"] == 1 || userselection["room"] == 8) {
                 tooltip("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
-            } else if  (userselection["room"] == 4 || userselection["room"] == 8) {
-                tooltip_general();
             } else {
                 if (filteredData[0]) {
                     tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);

@@ -273,6 +273,8 @@ function init() {
         }
         legendAnimator.start(40);
         d3.selectAll(".value")[0].forEach(function(d,i) {d.innerText = " "+legendNumbers[i]+" people"});
+        setInterval(reloadData(),1000*60*2);
+
     };
 
 
@@ -362,31 +364,6 @@ printRoomLegend(jsonCirclesMap);
          console.log("Communication ok");
             var rawFlows = process_graph(json);
             flows = rawFlows.slice(0, flowImages.length);
-
-        ///////// TESTING POPULATIONS
-        /*
-            console.log("initial flows: ")
-            console.log(flows);
-//AJAX  /*
-/*
-            var Z = 1.0;
-            // Dome inside, in, out,
-            flows = [4000, Z * 780,  Z * 620,
-                    // Hall inside, in, out,
-                    7500,  Z * 1500, Z * 210,
-                    // Planta inside, in, out,
-                    230,   Z * 15,   Z * 50,
-                    // PlusD inside, in, out,
-                    3500,  Z * 1500, Z * 2100,
-                    // Complex inside, in, out,
-                    1000,  Z * 1000, Z * 20,
-                    // Village inside
-                    10500
-            ];
-            console.log("Temp flows: ")
-            console.log(flows);
-
-           ///////// TESTING POPULATIONS   */
             maxFlow = d3max(flows);
             if (maxFlow) {
                 flows = flows.map(function(d) {
@@ -413,8 +390,35 @@ printRoomLegend(jsonCirclesMap);
                 }, startAnimating);
   ///AJAX
      });
+    
+    
 
-
+function reloadData() {
+       $.ajax("http://visualization-case.bsc.es/getGraphLastEntry.jsp?callback=?", {
+// 15 minute graph     $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
+        dataType: "jsonp",
+        crossDomain: true
+    })
+        .done(function(json) {
+         console.log("Communication ok");
+            var rawFlows = process_graph(json);
+            flows = rawFlows.slice(0, flowImages.length);
+            maxFlow = d3max(flows);
+            if (maxFlow) {
+                flows = flows.map(function(d) {
+                    return  d / maxFlow
+                });
+            }
+            legendNumbers = [];
+            for (var k=0;k<numberOfLegends;k++) {
+                legendNumbers.push(Math.floor(k*maxFlow/(numberOfLegends-1)));
+            }
+            console.log(maxFlow);
+            console.log(flows);
+            mapAnimator.listeners[0].field.aggregateSpeeds(flows);
+     });
+}
+    
 
 
 
@@ -449,6 +453,31 @@ function showOnlyCommunication() {
                 mapAnimator.start(40);
         } );
 */
+
+       ///////// TESTING POPULATIONS
+        /*
+            console.log("initial flows: ")
+            console.log(flows);
+//AJAX  /*
+/*
+            var Z = 1.0;
+            // Dome inside, in, out,
+            flows = [4000, Z * 780,  Z * 620,
+                    // Hall inside, in, out,
+                    7500,  Z * 1500, Z * 210,
+                    // Planta inside, in, out,
+                    230,   Z * 15,   Z * 50,
+                    // PlusD inside, in, out,
+                    3500,  Z * 1500, Z * 2100,
+                    // Complex inside, in, out,
+                    1000,  Z * 1000, Z * 20,
+                    // Village inside
+                    10500
+            ];
+            console.log("Temp flows: ")
+            console.log(flows);
+
+           ///////// TESTING POPULATIONS   */
 
 
 
