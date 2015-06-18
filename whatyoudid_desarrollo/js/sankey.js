@@ -399,7 +399,7 @@ function draw() {
 
     leyenda();
 
-    //tooltip();
+    tooltip();
 
 
 
@@ -428,11 +428,11 @@ function zoomHandler() {
 
 
 var i = 0;
+$('.tooltip').tooltipster();
 
 function tooltip(artist_name, img, url) {
     i = i + 1;
-    $(document).ready(function () {
-        //$('.tooltip').tooltipster();
+    $(document).ready(function () {        
         $('.tooltip').tooltipster({
             theme: 'tooltipster-light',
             interactive: true,
@@ -574,7 +574,7 @@ function drawComponents(graph) {
         .attr("d", path)
         .style("stroke-width", function (d) {
             if (d.layer > nowidx) return 0;
-            return Math.max(0, d.dy);
+            return Math.max(0, d.dy/1.5);
         })
         .style("stroke", function (d) {
             //            if (d.source.room == 4 || d.target.room == 4) {
@@ -588,6 +588,10 @@ function drawComponents(graph) {
         })
         .sort(function (a, b) {
             return b.dy - a.dy;
+        })
+        .style("opacity",function(d) {
+            if (d.room ==1 || d.room==8) return 0.01;
+        return 0.1;
         });
     /*    link.append("title")
         .text(function (d) {
@@ -642,7 +646,7 @@ function drawComponents(graph) {
             }
         }
 
-            node.append("rect")
+     node.append("rect")
         .attr("height", function (d) {
             if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
                 return 2;
@@ -715,6 +719,10 @@ function drawHighlight(highlightNode) {
         })
         .sort(function (a, b) {
             return b.dy - a.dy;
+        })
+        .style("opacity",function(d) {
+            if (d.room==1 || d.room==8) return 0.05;
+            return 0.4;
         });
     /*
     var node = svg.append("g").selectAll(".highlightNode")
