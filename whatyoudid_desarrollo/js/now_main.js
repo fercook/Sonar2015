@@ -395,7 +395,7 @@ printRoomLegend(jsonCirclesMap);
             }
             legendNumbers = [];
             for (var k=0;k<numberOfLegends;k++) {
-                legendNumbers.push(k*maxFlow/(numberOfLegends-1));
+                legendNumbers.push(Math.floor(k*maxFlow/(numberOfLegends-1)));
 //                var lscale = Math.exp(k*Math.log(maxFlow)/(numberOfLegends-1));
 //                legendNumbers.push(lscale);
             }
