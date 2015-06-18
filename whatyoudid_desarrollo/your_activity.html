@@ -27,8 +27,9 @@
       <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="now.html">Now</a></li>
-        <li><a href="#contact">You</a></li>
-        <li><a href="#">Flow</a></li>
+        <li><a href="your_activity.html">You</a></li>
+        <li><a href="sankey.html">Flow</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
     </div>
     <div id="main" class="overlay">
@@ -42,10 +43,10 @@
       <script src="js/mainmenu_prefixfree.min.js"></script>
       <div id='buttons'>
         <div class="input-group">
-          <span class="input-group-btn">
+          <input id="macInput" type="text" class="form-control" placeholder="Insert your mac...">
+          <span id="macInputButton" class="input-group-btn">
             <button id="macButton" class="btn btn-default" type="button">Go!</button>
           </span>
-          <input id="macInput" type="text" class="form-control" placeholder="Insert your mac...">
           <button id="randomMac" class="btn btn-default" type="button">Random activity!</button>
         </div>
       </div>
