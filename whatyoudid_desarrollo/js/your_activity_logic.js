@@ -185,7 +185,7 @@ function ready(error, jsonfile, device_mac) {
                 .attr("fill", function(d){return d["titleColor"]});
     };
 
-    var printScenario = function() {
+    var printScenario = function(mac_adress) {
         d3.selectAll("#fingerprint").selectAll("*").remove();
 
         /**
@@ -228,21 +228,24 @@ function ready(error, jsonfile, device_mac) {
 
         printColorShadow(jsonCirclesMap.slice(1, jsonCirclesMap.length));
 
-        var initTime = 0;
-        var lastDot = undefined;
-        var currentRoom = -1;
-        var lastDay = -1;
-        var dayInit;
-        for(var i = 0; i <= userSteps.length && userSteps.length > 0 ; ++i) {
-            if (i >= userSteps.length || currentRoom != userSteps[i].room) {
-                if(currentRoom != -1) {
-                    dayInit = Math.floor(userSteps[i-1].initTime/720) + 1;
-                    var auxReturn = printDot(userSteps[i-1].room, userSteps[i-1].finalTime-userSteps[i-1].initTime, userSteps[i-1].initTime, lastDot, dayInit != lastDay, dayInit);
-                    lastDot = auxReturn[0];
-                    lastDay = auxReturn[1];
-                    initTime = userSteps[i-1].time;
+        //Filter the case of trying to draw default activity but having device_mac. 
+        if(mac_adress || (!mac_adress && window.location.search.substring(1).split('=')[0] != 'device_mac')) {
+            var initTime = 0;
+            var lastDot = undefined;
+            var currentRoom = -1;
+            var lastDay = -1;
+            var dayInit;
+            for(var i = 0; i <= userSteps.length && userSteps.length > 0 ; ++i) {
+                if (i >= userSteps.length || currentRoom != userSteps[i].room) {
+                    if(currentRoom != -1) {
+                        dayInit = Math.floor(userSteps[i-1].initTime/720) + 1;
+                        var auxReturn = printDot(userSteps[i-1].room, userSteps[i-1].finalTime-userSteps[i-1].initTime, userSteps[i-1].initTime, lastDot, dayInit != lastDay, dayInit);
+                        lastDot = auxReturn[0];
+                        lastDay = auxReturn[1];
+                        initTime = userSteps[i-1].time;
+                    }
+                    if(i < userSteps.length) currentRoom = userSteps[i].room;
                 }
-                if(i < userSteps.length) currentRoom = userSteps[i].room;
             }
         }
     };
@@ -947,7 +950,7 @@ function ready(error, jsonfile, device_mac) {
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("z-index", "0");
 
-    printScenario();
+    printScenario(currentDeviceMac);
     printArtist(steps);
     printRoomLegend(jsonCirclesMap);
 
