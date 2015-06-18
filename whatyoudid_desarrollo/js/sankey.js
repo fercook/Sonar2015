@@ -437,8 +437,11 @@ function tooltip(artist_name, img, url) {
             interactive: true,
             debug: false
         });
+        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><a href="'+url+'"><strong><p>'+ artist_name +'</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
+        /*
         var contenido = $('<a href="' + url + '"><img src="' + img + '" style="width:' + "30%" + '" align="left"/></a><a href="' + url + '"><strong><p>' + artist_name + '</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
         $('.tooltip').tooltipster('content', contenido);
+        */
     });
 
 }

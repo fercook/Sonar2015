@@ -5,7 +5,6 @@
  * Fernanda Viegas & Martin Wattenberg
  */
 
-
 var mapAnimator,legendAnimator;
 
 var maxFlow,colorScales, filtering;
@@ -161,6 +160,7 @@ function init() {
             }
         }
     });
+    
     process_graph = function(inputGraphBAD) { // TODO AJAX PROBLEM UNTIL TONI RESETS THE SERVER
         var inputGraph = inputGraphBAD; //.graph[125];
         // Start zeroing out everything, but perhaps we could take previous value if new one is zero???
@@ -182,29 +182,35 @@ function init() {
             });
         });
         ///Finally process stuff
-        inputGraph.rooms.forEach(function(room) {
-            if (dict[room.name]) {
-                flowArray[flowIdx.rooms[dict[room.name]]] += +room.devices;
-                Signals.forEach(function(strength){
-                    categoryGraph.signal[dict[room.name]][strength] += room[strength];
-                });
-            }
-        });
-        inputGraph.links.forEach(function(link) {
-            var endRoom = dict[link.end_room],
-                startRoom = dict[link.start_room];
-            if (endRoom != startRoom) { // Need to deal with the people that stay in the same room
-                if (endRoom != "Village" && // This is people going into a room
-                    endRoom != "Exit" && // We don't count people going out or in
-                    endRoom != "Entry") {
-                    flowArray[flowIdx.to[endRoom]] += +link.value;
-                } else if (startRoom != "Village" && startRoom != "Entry") { // This is people going from this room to anywhere else
-                    // We aggregate them into the center Village
-                    flowArray[flowIdx.from[startRoom]] += +link.value;
+        if (inputGraph.rooms) {
+            inputGraph.rooms.forEach(function(room) {
+                if (dict[room.name]) {
+                    flowArray[flowIdx.rooms[dict[room.name]]] += +room.devices;
+                    Signals.forEach(function(strength){
+                        categoryGraph.signal[dict[room.name]][strength] += room[strength];
+                    });
                 }
-            }
-            categoryGraph.origin[endRoom][startRoom] += +link.value;
-        });
+            });
+        }
+        if (inputGraph.links) {
+            inputGraph.links.forEach(function(link) {
+                var endRoom = dict[link.end_room],
+                    startRoom = dict[link.start_room];
+                if (endRoom && startRoom) {
+                    if (endRoom != startRoom) { // Need to deal with the people that stay in the same room
+                        if (endRoom != "Village" && // This is people going into a room
+                            endRoom != "Exit" && // We don't count people going out or in
+                            endRoom != "Entry") {
+                            flowArray[flowIdx.to[endRoom]] += +link.value;
+                        } else if (startRoom != "Village" && startRoom != "Entry") { // This is people going from this room to anywhere else
+                            // We aggregate them into the center Village
+                            flowArray[flowIdx.from[startRoom]] += +link.value;
+                        }
+                    }                
+                    categoryGraph.origin[endRoom][startRoom] += +link.value;
+                    }
+            });
+        }
         Rooms.forEach(function(startRoomName) {
             console.log("Room " + startRoomName + " has occupancy " + flowArray[flowIdx.rooms[startRoomName]] + ", " + flowArray[flowIdx.to[startRoomName]] + " have gone in, and " + flowArray[flowIdx.from[startRoomName]] + " have gone out");
         });
@@ -238,7 +244,7 @@ function init() {
     var legendNumbers = [];
     var numberOfLegends = 6;
     startAnimating = function(f) {
-        //flows = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+        //flows = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];// AJAX?        
         f.aggregateSpeeds(flows);
         //Create color scales
         colorScales = {positions: roomPos, categories: categories, colorSets: [["#FFFFFF"],roomColors,signalColors]};
@@ -248,7 +254,7 @@ function init() {
         // Scale by numbers from data
         var maxV = f.maxLength;
         for (var i = 0; i < legendNumbers.length; i++) {
-            if (i==0) {
+            if (i==0 || maxV==0 || maxFlow==0) {
                 var c = document.getElementById('legend' + i);
                 var g = c.getContext('2d');
                 g.fillStyle='rgb(0,0,0)';
@@ -382,9 +388,11 @@ printRoomLegend(jsonCirclesMap);
 
            ///////// TESTING POPULATIONS   */
             maxFlow = d3max(flows);
-            flows = flows.map(function(d) {
-                return  d / maxFlow
-            });
+            if (maxFlow) {
+                flows = flows.map(function(d) {
+                    return  d / maxFlow
+                });
+            }
             legendNumbers = [];
             for (var k=0;k<numberOfLegends;k++) {
                 legendNumbers.push(k*maxFlow/(numberOfLegends-1));
