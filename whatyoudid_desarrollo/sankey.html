@@ -8,7 +8,7 @@
     <script src="js/d3.v3.min.js"></script>
     <script src="js/queue.v1.min.js"></script>
     <script src="js/crossfilter.v1.min.js"></script>
-    <!--<script type="text/javascript" src="js/dat.gui.min.js"></script> -->
+    <script type="text/javascript" src="js/dat.gui.min.js"></script>
     <script src="js/sankeyStream.js"></script>
     <script src="js/Rooms.js"></script>
 
@@ -153,13 +153,12 @@
 <div id="svg_main" class="svg_main"></div>
 
 
-
-
 <!-- DIV EGECTO DEGRADADO -->
 
     <!--div class="overlay" style="z-index:200000000000"-->
+
     <script>
-       /* window.onload = function () {
+    /*    window.onload = function () {
             var gui = new dat.GUI();
             gui.remember(GraphParameters);
             gui.add(GraphParameters, 'graphWidth', 100, 6000).onFinishChange(draw);
@@ -169,7 +168,8 @@
             gui.add(GraphParameters, 'nodePadding', 0, 100).onFinishChange(draw);
             gui.add(GraphParameters, 'curvature', 0.0, 1.0).onFinishChange(draw);
             gui.add(GraphParameters, 'offset', ['Centered', 'Top', 'Bottom']).onFinishChange(draw);
-        };*/
+        };
+        */
     </script>
     <script src="js/sankey.js"></script>
 
@@ -188,5 +188,16 @@
 
     Created by <a id="hrefs" href="http://www.bsc.es/computer-applications/scientific-visualization">BSC</a>.
 </div>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-63218291-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
