@@ -1,5 +1,5 @@
 queue()
-  .defer(d3.json, "./DATA/testdata.json")
+  .defer(d3.json, "data/testdata.json")
   .await(ready);
 
 var jsonCirclesMap = [

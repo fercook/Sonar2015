@@ -94,16 +94,16 @@ function ready(error, data) {
 */
 
 function getDataFromServer() {
-    /* ///AJAX    $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
+   $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
         dataType: "jsonp",
         crossDomain: true
     })
         .done(function(json) {
           console.log("Communication ok");
-          */ //AJAX
-    d3.json("data/test_graph.json", function (error, json) { //AJAX
+    
+    //d3.json("data/test_graph.json", function (error, json) { //AJAX
         // nowidx = new Date(); // AJAX
-        nowidx = timeidx(new Date("2015-06-19 14:40:00")); // We stop looking at current time //DEBUG
+      //  nowidx = timeidx(new Date("2015-06-19 14:40:00")); // We stop looking at current time //DEBUG
         process_json(json);
         draw();
     });
@@ -211,7 +211,7 @@ function process_json(json) {
     // Filter out invalid dates (before Sonar, nights)
     // Adjust 15 minute intervals to our intervals
     var buckets = [];
-    for (var n = 0; n < time_steps; n++) buckets[n] = []; //DEBUG
+    for (var n = 0; n < time_steps; n++) buckets[n] = []; 
     json.graph.forEach(function (message) {
         var time_start = new Date(message.time_start);
         tidx = timeidx(time_start);
