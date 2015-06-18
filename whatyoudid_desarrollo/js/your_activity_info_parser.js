@@ -16,12 +16,17 @@ var getDateRange = function (day, dateInit, dateFin) {
 };
 
 paintMacActivity = function(mac_adress) {
+
+    var macContainer = window.location.search.substring(1).split('=');
+
+    if (macContainer[0] != 'device_mac' || macContainer[1] != mac_adress) window.location.search = '?device_mac=' + mac_adress;
+
     $.ajax("http://visualization-case.bsc.es/getActivityJson.jsp?request_type=mac&device_mac="+mac_adress+"&callback=?",
         {dataType:"jsonp", crossDomain: true})
         .done(function( data ) {
             var result = []
             var initialMinute = DAY_INIT_TIME.split(':')[0]*60+DAY_INIT_TIME.split(':')[1]
-            for(var i = 0; i < data.result.length; ++i) {
+            for(var i = 0; data && i < data.result.length; ++i) {
                 var dailyResult = []
                 for(var j=0; j < DAYS.length; ++j) {
                     dateRange = getDateRange(DAYS[j], data.result[i].s, data.result[i].f);
@@ -52,7 +57,8 @@ paintAleatoryMac = function(room) {
     $.ajax("http://visualization-case.bsc.es/getActivityJson.jsp?request_type=random&box_mac=" + mac[0],
         {dataType:"jsonp", crossDomain: true})
         .done(function( data ) {
-            paintMacActivity(data.device_mac);
+            if(data) paintMacActivity(data.device_mac);
+            else paintMacActivity('Server Down');
         }
     );
 }
@@ -103,3 +109,7 @@ eventCsvParser = function(steps) {
         }
     });
 }
+
+var macContainer = window.location.search.substring(1).split('=');
+
+if (macContainer[0] == 'device_mac') paintMacActivity(macContainer[1]);
