@@ -3,7 +3,7 @@ queue()
   .await(ready);
 
 var jsonCirclesMap = [
-    { "x": 400, "y": 400, "diameter": 800, "titleAngle" : Math.PI/4, "titleColor": "#FFFFFF", "lineMargin": 5,  "name": "Limbo", "nameId":"Limbo",      "eventsName": "Limbo",                                  "id":"0", "angle": Math.PI*3/4, "titleX": "0em" },
+    { "x": 400, "y": 400, "diameter": 800, "titleAngle" : Math.PI/4, "titleColor": "#FFFFFF", "lineMargin": 5,  "name": "Limbo", "nameId":"lreadyimbo",      "eventsName": "Limbo",                                  "id":"0", "angle": Math.PI*3/4, "titleX": "0em" },
     { "x": 210, "y": 228, "diameter": 160, "titleAngle" : Math.PI,   "titleColor": "#DB57D0", "lineMargin": 10, "name": "Dome", "nameId":"Dome",        "eventsName": "SonarDome by Red BULL Music Academy",    "id":"1", "angle": Math.PI*3/4, "titleX": "-2.5em"},
     { "x": 222, "y": 546, "diameter": 155, "titleAngle" : Math.PI,   "titleColor": "#DDB0BF", "lineMargin": 10, "name": "Complex", "nameId":"Complex",  "eventsName": "SonarComplex",                           "id":"2", "angle": Math.PI*3/4, "titleX": "-3.7em"},
     { "x": 590, "y": 234, "diameter": 150, "titleAngle" : 0,         "titleColor": "#09AE48", "lineMargin": 10, "name": "Hall", "nameId":"Hall",        "eventsName": "SonarHall",                              "id":"3", "angle": Math.PI*3/4, "titleX": "0em"},
@@ -12,6 +12,17 @@ var jsonCirclesMap = [
     { "x": 500, "y": 618, "diameter": 190, "titleAngle" : 0,         "titleColor": "#B9DBA2", "lineMargin": 10, "name": "Sonar+D", "nameId":"PlusD",    "eventsName": "Hall+D",                                 "id":"6", "angle": Math.PI*3/4, "titleX": "0em"}];
 
 var LIMBO = 0;
+
+var getRoomId = function(roomName) {
+    for(var j = 0; j < jsonCirclesMap.length; ++j) {
+        if(jsonCirclesMap[j].nameId == roomName) {
+            return j;
+        }
+    }
+    //LIMBO: I don't know this room.
+    console.log('WARNING: Room name not recognized.');
+    return 0;
+};
 
 function ready(error, jsonfile, device_mac) {
     var dayColors = ["#FFA800", "#FFFFFF", "#00AFFF"]
@@ -236,13 +247,14 @@ function ready(error, jsonfile, device_mac) {
             var lastDay = -1;
             var dayInit;
             for(var i = 0; i <= userSteps.length && userSteps.length > 0 ; ++i) {
+                if(i == 0) initTime = userSteps[i].initTime;
                 if (i >= userSteps.length || currentRoom != userSteps[i].room) {
                     if(currentRoom != -1) {
-                        dayInit = Math.floor(userSteps[i-1].initTime/720) + 1;
-                        var auxReturn = printDot(userSteps[i-1].room, userSteps[i-1].finalTime-userSteps[i-1].initTime, userSteps[i-1].initTime, lastDot, dayInit != lastDay, dayInit);
+                        dayInit = Math.floor(initTime/720) + 1;
+                        var auxReturn = printDot(userSteps[i-1].room, userSteps[i-1].finalTime-initTime, initTime, lastDot, dayInit != lastDay, dayInit);
                         lastDot = auxReturn[0];
                         lastDay = auxReturn[1];
-                        initTime = userSteps[i-1].time;
+                        if (i < userSteps.length) initTime = userSteps[i].initTime;
                     }
                     if(i < userSteps.length) currentRoom = userSteps[i].room;
                 }
@@ -660,7 +672,7 @@ function ready(error, jsonfile, device_mac) {
                     d3.selectAll("#dailyfingerprint svg g").selectAll("*").remove();
                     var dayIndex = d3.select(event.target).attr("data-day");
                     dayPermission[dayIndex] = !dayPermission[dayIndex];
-                    printScenario();
+                    printScenario(currentDeviceMac);
                 });
         }
     };
