@@ -59,8 +59,11 @@
   border: 2px solid white;
   font-family: 'Nexa';
     font-weight: Light;
-  width: 50%;
-  margin-right: 30px;
+}
+
+#macInputButton {
+  padding-right: 30px;
+  margin:0;
 }
 
 #macButton {
@@ -79,6 +82,7 @@
     font-weight:  Bold;
   background-color: #38be9d;
   border: 1px solid #41ffcf;
+    position: absolute;
 }
 
 .cell {
