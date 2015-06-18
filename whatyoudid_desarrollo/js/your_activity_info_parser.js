@@ -1,8 +1,8 @@
-var DAYS = ["2015-06-03", "2015-06-04", "2015-06-05"];
+var DAYS = ["2015-06-18", "2015-06-19", "2015-06-20"];
 var DAY_INIT_TIME = "07:00:00";
 var DAY_FINAL_TIME = "24:00:00";
 var DAY_MINUTES_DURATION = 720;
-var INITIAL_DAY = 18
+var INITIAL_DAY = 18;
 
 var getDateRange = function (day, dateInit, dateFin) {
     eventFin = new XDate(dateFin.replace(' ', 'T'));
