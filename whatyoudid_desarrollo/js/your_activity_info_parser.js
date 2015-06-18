@@ -1,5 +1,5 @@
 var DAYS = ["2015-06-18", "2015-06-19", "2015-06-20"];
-var DAY_INIT_TIME = "07:00:00";
+var DAY_INIT_TIME = "12:00:00";
 var DAY_FINAL_TIME = "24:00:00";
 var DAY_MINUTES_DURATION = 720;
 var INITIAL_DAY = 18;
@@ -14,6 +14,17 @@ var getDateRange = function (day, dateInit, dateFin) {
     var maxDate = [eventInit, dayInit].reduce(function (a, b) { return a.diffMinutes(b) < 0 ? a : b; });
     return [maxDate, minDate]
 };
+
+getDateInMinutesFormat = function(xdate, day) {
+    initDate = new XDate(DAYS[day]+'T'+DAY_INIT_TIME);
+    if(xdate.diffMinutes(initDate) > 0) {
+        xdate = initDate;
+    }
+    var hour = xdate.getHours()*60+xdate.getMinutes() - DAY_INIT_TIME.split(':')[0]*60;
+    hour += day*DAY_MINUTES_DURATION;
+    //Math.max(hour, 0);
+    return hour;
+}
 
 paintMacActivity = function(mac_adress) {
 
@@ -31,22 +42,28 @@ paintMacActivity = function(mac_adress) {
                 for(var j=0; j < DAYS.length; ++j) {
                     dateRange = getDateRange(DAYS[j], data.result[i].s, data.result[i].f);
                     if(dateRange) {
-                        rooms = getRoomsByMac(data.result[i].b, dateRange[0], dateRange[1]);
-                        //TODO: A lot of suppositions which can fail. Take care.
-                        for(var k = 0; k < rooms.length; ++k) {
-                            var initHour = rooms[k].timeStart.getMinutes()*60+rooms[k].timeStart.getSeconds();
-                            var finalHour = rooms[k].timeEnd.getMinutes()*60+rooms[k].timeEnd.getSeconds();
-                            initHour += j*DAY_MINUTES_DURATION;
-                            finalHour += j*DAY_MINUTES_DURATION;
-                            if(dailyResult.length > 0 && dailyResult[dailyResult.length-1].room == rooms[k].name) 
-                                dailyResult[dailyResult.length-1].finalTime = finalHour;
-                            else
-                                dailyResult[dailyResult.length] = {"initTime": initHour, "finalTime": finalHour, "room": rooms[k].name}
+                        if(data.result[i].b == 'limbo') {
+                            initHour = getDateInMinutesFormat(new XDate(data.result[i].s), j);
+                            finalHour = getDateInMinutesFormat(new XDate(data.result[i].f), j);
+                            dailyResult[dailyResult.length] = {"initTime": initHour, "finalTime": finalHour, "room": 0};
+                        }
+                        else {
+                            rooms = getRoomsByMac(data.result[i].b, dateRange[0], dateRange[1]);
+                            //TODO: A lot of suppositions which can fail. Take care.
+                            for(var k = 0; k < rooms.length; ++k) {
+                                initHour = getDateInMinutesFormat(rooms[k].timeStart, j);
+                                finalHour = getDateInMinutesFormat(rooms[k].timeEnd, j);
+                                if(dailyResult.length > 0 && dailyResult[dailyResult.length-1].room == rooms[k].name) 
+                                    dailyResult[dailyResult.length-1].finalTime = finalHour;
+                                else
+                                    dailyResult[dailyResult.length] = {"initTime": initHour, "finalTime": finalHour, "room": getRoomId(rooms[k].name)}
+                            }
                         }
                     }
                 }
-                result.concat(dailyResult);
+                result = result.concat(dailyResult);
             }
+            result.sort(function(a, b){return a.initTime > b.initTime});
             ready(null, result, mac_adress)
         }
     );
