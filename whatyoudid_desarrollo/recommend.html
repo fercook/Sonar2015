@@ -51,10 +51,11 @@
     <script src="js/itemslide.min.js"></script>
     <!--<script src="dist/itemslide.vanilla.min.js"></script>-->
 
-
+    <script src="./js/d3.v3.min.js"></script>
     <!--Website JS-->
-    <script src="js/recommend_sliding.js"></script>
 
+    <script src="js/recommend_parser.js"></script>
+    <script src="js/recommend_sliding.js" defer></script>
 
 </head>
 
@@ -110,7 +111,7 @@
         <span class="content">
         <!--img id="main-img" src="website-src/img/hero.svg"/-->
         <div id="maintitle">You attended...<br/>
-        <img src="imgs/raphael.png"/><br/>
+        <p id="mainArtistName" ></p><br/>
         <span style="font-weight:400;">You also would like...</span><br/>
         
         </span>
@@ -121,24 +122,6 @@
     <div id="scrolling">
         <!--Slider-->
         <ul id="slide">
-            <li id="slides">
-                Artist<br/>
-                <img src="imgs/raphael.png"/><br/>
-                <span>Little description </span><br/>
-                
-            </li>
-            <li id="slides">
-                Scroll
-            </li>
-            <li id="slides">
-                Swipe Up
-            </li>
-            <li id="slides">
-                Click to Slide
-            </li>
-            <li id="slides">
-                Mobile friendly
-            </li>
         </ul>
     </div>
     <!--//-->
