@@ -63,7 +63,7 @@ paintMacActivity = function(mac_adress) {
                 }
                 result = result.concat(dailyResult);
             }
-            result.sort(function(a, b){return a.initTime > b.initTime});
+            result = result.sort(function(a, b){return a.initTime - b.initTime;});
             ready(null, result, mac_adress)
         }
     );
