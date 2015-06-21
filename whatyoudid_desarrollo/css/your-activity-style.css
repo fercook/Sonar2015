@@ -53,6 +53,18 @@
   top: 80px;
 }
 
+#down_buttons {
+  position: relative;
+  z-index: 380;
+  bottom: -10%;
+  display: table;
+  margin: 0 auto;
+  position: absolute;
+  right: 2%;
+  /*transform: translateX(-50%);*/
+  
+}
+
 #macInput {
   color: white;
   background-color: #565a5b;
@@ -64,6 +76,30 @@
 #macInputButton {
   padding-right: 30px;
   margin:0;
+}
+
+
+#tshirtInput {
+  color: white;
+  background-color: #565a5b;
+  border: 2px solid white;
+  font-family: 'Nexa';
+    font-weight: Light;
+}
+
+#tshirtInputButton {
+  padding-right: 30px;
+  margin:0;
+ 
+}
+
+#tshirtButton {
+  color: white;
+  background-color: #BF0CB9;
+  background-image: none;
+  border: 1px solid #DB57D0;
+  font-family: 'Nexa';
+  font-weight: Bold;
 }
 
 #macButton {

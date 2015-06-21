@@ -158,12 +158,19 @@ RoomRecords = [
           {name: "Village",time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"7C:DD:90:5B:73:92"},
           {name: "Village",time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:C7:10:5B"},
           {name: "Village",time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:CA:0C:53"},
+          {name: "Village",time_start: "2015-06-19 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:0F:60:01:7C:FC"},
           {name: "Complex",time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:CA:0F:9B"},
+          {name: "Dome",   time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:0F:60:01:7D:3C"},
           {name: "Dome",   time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:C0:09:FD"},
           {name: "Hall",   time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:C7:0D:8E"},
           {name: "Planta", time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:C7:10:41"},
-          {name: "PlusD",  time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"48:5D:60:D2:03:A2"},
-          {name: "PlusD",  time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:19:D2:5C:0A:90"}
+          {name: "PlusD",  time_start: "2015-06-18 10:00:00", time_end: "2015-06-19 11:00:00", MAC:"48:5D:60:D2:03:A2"},
+          {name: "PlusD",  time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:19:D2:5C:0A:90"},
+          {name: "PlusD",  time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:13:EF:C7:0E:EA"},
+          {name: "PlusD",  time_start: "2015-06-18 10:00:00", time_end: "2015-06-30 15:55:00", MAC:"00:0F:60:01:7B:F0"}
+
+    
+    
     
 
 ];
