@@ -210,17 +210,26 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
 
 VectorField.prototype.aggregateSpeeds = function(magnitudes) {
     this.magnitudes = magnitudes;
-    for (var x = 0; x < this.w; x++) {
-        for (var y = 0; y < this.h; y++) {
-
-            var L=new Vector(0,0);
-            for (var n=0;n<magnitudes.length;n++) {
-                L = L.plus(this.fields[n][x][y].mult(magnitudes[n]));
-            };
-            this.field[x][y] = L;
-
-            //this.field[x][y] = this.fields[6][x][y];
+    var m = d3.sum(magnitudes);
+    if (m>0) {
+        for (var x = 0; x < this.w; x++) {
+            for (var y = 0; y < this.h; y++) {
+                var L=new Vector(0,0);
+                for (var n=0;n<magnitudes.length;n++) {
+                    L = L.plus(this.fields[n][x][y].mult(magnitudes[n]));
+                };
+                this.field[x][y] = L;
+                //this.field[x][y] = this.fields[6][x][y];
+            }
         }
+    } else {
+        for (var x = 0; x < this.w; x++) {
+            for (var y = 0; y < this.h; y++) {
+                this.field[x][y]=new Vector(0,0);
+            }
+        }
+        loading = 0;
+        this.maxLength=0;
     }
     return;
 }
