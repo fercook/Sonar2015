@@ -74,7 +74,7 @@ paintMacActivity = function(mac_adress) {
 };
 
 paintAleatoryMac = function(room) {
-    var mac = getMACByRoomXDate(room, new XDate(true))
+    var mac = getMACByRoomXDate(room); //, new XDate(true))
     $.ajax("http://visualization-case.bsc.es/getActivityJson.jsp?request_type=random&box_mac=" + mac[0],
         {dataType:"jsonp", crossDomain: true})
         .done(function( data ) {

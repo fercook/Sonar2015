@@ -21,27 +21,23 @@ GraphParameters = {
 
 var analysis, nowidx;
 
-//var color = d3.scale.ordinal()
-//  .domain(["Limbo", "Dome", "Complex" , "Hall", "Planta", "Village" , "Sonar+D"])
-//  .range(["#FF0000", "#009933" , "#0000FF", "#FF0000", "#009933" , "#0000FF", "#0000FF"]);
-
-   var roomOrder = {
-       "Entry": 1,
-       "Village": 2,
-        "Dome": 3,
-        "Complex": 4,
-        "PlusD": 5,
-        "Planta": 6,
-        "Hall": 7,
-        "Exit": 8
-    };
-    var roomNames = ["Limbo", "Dome", "Hall", "Planta",
+var roomOrder = {
+    "Entry": 1,
+    "Village": 2,
+    "Dome": 3,
+    "Complex": 4,
+    "PlusD": 5,
+    "Planta": 6,
+    "Hall": 7,
+    "Exit": 8
+};
+var roomNames = ["Limbo", "Dome", "Hall", "Planta",
                      "PlusD", "Village", "Complex",
                      "Limbo"];
 
 var color = d3.scale.ordinal()
     .domain([0, 1, 2, 3, 4, 5, 6, 7, 8])
-    .range(["#bbbbbb", "#bbbbbb", "#DB57D0", "#DDB0BF", "#09AE48", "#7ED96D", "#BF0CB9", "#B9DBA2", "#bbbbbb", "#3366FF"]);
+    .range(["#bbbbbb", "#bbbbbb", "#BF0CB9", "#DB57D0", "#DDB0BF", "#B9DBA2", "#7ED96D", "#09AE48", "#bbbbbb", "#3366FF"]);
 
 var jsonCirclesMap = [
     {
@@ -49,64 +45,54 @@ var jsonCirclesMap = [
         "name": "Limbo",
         "id": "0"
     },
+        {
+        "titleColor": "#BF0CB9",
+        "name": "Village",
+        "id": "1"
+    },
     {
         "titleColor": "#DB57D0",
         "name": "Dome",
-        "id": "1"
+        "id": "2"
     },
     {
         "titleColor": "#DDB0BF",
         "name": "Complex",
-        "id": "2"
-    },
-    {
-        "titleColor": "#09AE48",
-        "name": "Hall",
         "id": "3"
-    },
-    {
-        "titleColor": "#7ED96D",
-        "name": "Planta",
-        "id": "4"
-    },
-    {
-        "titleColor": "#BF0CB9",
-        "name": "Village",
-        "id": "5"
     },
     {
         "titleColor": "#B9DBA2",
         "name": "Sonar+D",
-        "id": "7"
-    }];
+        "id": "4"
+    },
+    {
+        "titleColor": "#7ED96D",
+        "name": "Planta",
+        "id": "5"
+    },    
+    {
+        "titleColor": "#09AE48",
+        "name": "Hall",
+        "id": "6"
+    }
+];
 
-/*
-queue()
-    //TODO Read actual data format
-    .defer(d3.json, "data/sankey_analysis.json") //"../DATA/prob_separated.json")
-.await(ready);
 
-function ready(error, data) {
-    analysis = data; // TODO Process real data format
-    draw();
-}
-
-*/
 
 function getDataFromServer() {
-   $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
+    $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
         dataType: "jsonp",
         crossDomain: true
     })
-        .done(function(json) {
-          console.log("Communication ok");
-    
-    //d3.json("data/test_graph.json", function (error, json) { //AJAX
-        // nowidx = new Date(); // AJAX
-      //  nowidx = timeidx(new Date("2015-06-19 14:40:00")); // We stop looking at current time //DEBUG
-        process_json(json);
-        draw();
-    });
+        .done(function (json) {
+            console.log("Communication ok");
+
+            //d3.json("data/test_graph.json", function (error, json) { //AJAX
+            // nowidx = new Date(); // AJAX
+            //  nowidx = timeidx(new Date("2015-06-19 14:40:00")); // We stop looking at current time //DEBUG
+            process_json(json);
+            draw();
+        });
 }
 //TIMER: UNCOMMENT FOR PRODUCTION DEBUG
 //setInterval(function(){ getDataFromServer(); }, 5*60*1000 );
@@ -150,7 +136,7 @@ function pad(n, width, z) {
 
 var timeFromIdx = function (idx) { // Given a date, compares to latest time in graph and returns the layer idx
     var day, hour, minutes;
-    if (idx >= 11 * 4 + 10 * 4) {
+    if (idx > 11 * 4 + 10 * 4) {
         day = 20;
         idx -= 11 * 4 + 10 * 4;
     } else if (idx >= 11 * 4) {
@@ -166,7 +152,6 @@ var timeFromIdx = function (idx) { // Given a date, compares to latest time in g
         time: pad(hour, 2) + ":" + pad(minutes, 2)
     };
 }
-
 
 
 var getColor = function (d) {
@@ -211,7 +196,7 @@ function process_json(json) {
     // Filter out invalid dates (before Sonar, nights)
     // Adjust 15 minute intervals to our intervals
     var buckets = [];
-    for (var n = 0; n < time_steps; n++) buckets[n] = []; 
+    for (var n = 0; n < time_steps; n++) buckets[n] = [];
     json.graph.forEach(function (message) {
         var time_start = new Date(message.time_start);
         tidx = timeidx(time_start);
@@ -265,7 +250,7 @@ function process_json(json) {
                 var room = buckets[t][0].rooms[ridx];
                 if (dict[room.name]) {
                     var v = analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value;
-                    analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value += room.devices;                    
+                    analysis.nodes[nodeidx(t, roomOrder[dict[room.name]])].value += room.devices;
                 } else {
                     console.log("Sensor MAC Address not recognized! " + room.name);
                 }
@@ -274,65 +259,12 @@ function process_json(json) {
                 var link = buckets[t][0].links[lidx];
                 var s = roomOrder[dict[link.start_room]];
                 var e = roomOrder[dict[link.end_room]];
-                if (s!=null && e != null && linkidx(t, s, e)!=null && link.value) analysis.links[linkidx(t, s, e)].value += link.value;
+                if (s != null && e != null && linkidx(t, s, e) != null && link != null && link.value != null && analysis.links[linkidx(t, s, e)] != null && analysis.links[linkidx(t, s, e)].value != null) {
+                    analysis.links[linkidx(t, s, e)].value += link.value;
+                }
             }
         }
     }
-
-
-    // Testear que pasa si desaparecen rooms
-    // Put everything in little boxes and ship
-
-    /*
-    for (var t = 0; t < time_steps-1; t++) {
-
-
-        records_by_time.filterExact(t);
-        var ids = records_by_id.group()
-
-        ids.top(Infinity).forEach(function (id) {
-            records_by_id.filterExact(id.key);
-            var start_idx = minindex(records_by_id.top(Infinity), function (d) {
-                return d.time;
-            });
-            var enter_idx = maxindex(records_by_id.top(Infinity), function (d) {
-                return d.time;
-            });
-            if (start_idx>=0 && enter_idx>=0) {
-                var start_room = records_by_id.top(Infinity)[start_idx].room;
-                var end_room = records_by_id.top(Infinity)[enter_idx].room;
-                analysis.links[linkidx(t, start_room+1, end_room+1)]["value"] += 1;
-            }
-        });
-        records_by_id.filterAll();
-    }
-
-
-    for (var t = 1; t < time_steps; t++) {
-        for (var end_room = 2; end_room < total_rooms ; end_room++) {
-            var total_enter = 0;
-            for (var start_room = 2; start_room < total_rooms ; start_room++) {
-                total_enter += analysis.links[linkidx(t-1, start_room, end_room)]["value"];
-            }
-            if (total_enter > 0 ) {
-                analysis.links[linkidx(t-1, 1, end_room)]["value"]+=total_enter;
-            }
-        }
-    }
-    for (var t = 0; t < time_steps-2; t++) {
-        for (var start_room = 2; start_room < total_rooms ; start_room++) {
-            var total_enter = 0;
-            for (var end_room = 2; end_room < total_rooms ; end_room++) {
-                total_enter += analysis.links[linkidx(t+1, start_room, end_room)]["value"];
-            }
-            if (total_enter > 0 ) {
-                analysis.links[linkidx(t+1, start_room, total_rooms)]["value"]+=total_enter;
-            }
-        }
-    }
-    records_by_time.filterAll();
-    var t2 = performance.now();
-*/
 
 
 }
@@ -399,389 +331,304 @@ function draw() {
 
     leyenda();
 
-    tooltip();
 
+    var i = 0;
+    //$('.tooltip').tooltipster();
 
-
-
-    // create the svg
-    //rootSvg = d3.select("#tree-body").append("svg:svg");
-    /*
-    creating your svg image here
-
-
-// create the zoom listener
-var zoomListener = d3.behavior.zoom()
-.scaleExtent([0.33, 1])
-.on("zoom", zoomHandler);
-
-// function for handling zoom event
-function zoomHandler() {
-    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
-    // apply the zoom behavior to the svg image
-    zoomListener(svg);
-
-       */
-
-}
-
-
-var i = 0;
-$('.tooltip').tooltipster();
-
-function tooltip(artist_name, img, url) {
-    i = i + 1;
-    $(document).ready(function () {        
-        $('.tooltip').tooltipster({
-            theme: 'tooltipster-light',
-            interactive: true,
-            debug: false
-        });
-        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><a href="'+url+'"><strong><p>'+ artist_name +'</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
-        /*
+    function tooltip(artist_name, img, url) {
+        i = i + 1;
+        $(document).ready(function () {
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-light',
+                interactive: true,
+                debug: false
+            });
+            var contenido = $('<a href="' + url + '"><img src="' + img + '" style="width:' + "30%" + '" align="left"/></a><a href="' + url + '"><strong><p>' + artist_name + '</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
+            /*
         var contenido = $('<a href="' + url + '"><img src="' + img + '" style="width:' + "30%" + '" align="left"/></a><a href="' + url + '"><strong><p>' + artist_name + '</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
-        $('.tooltip').tooltipster('content', contenido);
         */
-    });
+            $('.tooltip').tooltipster('content', contenido);
 
-}
+        });
 
-            // debug: false
-            //content: $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists</a> ')
-            //content: $('<div class="tooltip"><img src="'+img+'" class="tooltip" style="width:25%" title="kdjlakjdalksjdlakjdlajda asd asdasd" /><a href="#"> <p>kjdalsdjadaldadald </p></a></div>')
+    }
 
-
-        //var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists'+i+'</a>');
-
-
+    function tooltipContent(artist_name, img, url) {
+        var contenido = '<a href="' + url + '"><img src="' + img + '" style="width:' + "30%" + '" align="left"/></a><a href="' + url + '"><strong><p>' + artist_name + '</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>';
+        return contenido;
+    }
 
 
+    function leyenda() {
 
+        var legendWidth = 400,
+            legendHeight = 100;
+        var LEGEND_V_MARGIN = 8;
+        var LEGEND_H_MARGIN_COLOR = 40;
+        var LEGEND_H_MARGIN = 35;
 
-function leyenda() {
-
-    var legendWidth = 400,
-        legendHeight = 100;
-    var LEGEND_V_MARGIN = 8;
-    var LEGEND_H_MARGIN_COLOR = 40;
-    var LEGEND_H_MARGIN = 35;
-
-    var jsonCirclesMap = [
-        {
-            "titleColor": "#575958",
-            "name": "Limbo",
-            "id": "0"
+        var jsonCirclesMap = [
+            {
+                "titleColor": "#575958",
+                "name": "Limbo",
+                "id": "0"
         },
-        {
-            "titleColor": "#DB57D0",
-            "name": "Dome",
-            "id": "1"
+            {
+                "titleColor": "#DB57D0",
+                "name": "Dome",
+                "id": "1"
         },
-        {
-            "titleColor": "#DDB0BF",
-            "name": "Complex",
-            "id": "2"
+            {
+                "titleColor": "#DDB0BF",
+                "name": "Complex",
+                "id": "2"
         },
-        {
-            "titleColor": "#09AE48",
-            "name": "Hall",
-            "id": "3"
+            {
+                "titleColor": "#09AE48",
+                "name": "Hall",
+                "id": "3"
         },
-        {
-            "titleColor": "#7ED96D",
-            "name": "Planta",
-            "id": "4"
+            {
+                "titleColor": "#7ED96D",
+                "name": "Planta",
+                "id": "4"
         },
-        {
-            "titleColor": "#BF0CB9",
-            "name": "Village",
-            "id": "5"
+            {
+                "titleColor": "#BF0CB9",
+                "name": "Village",
+                "id": "5"
         },
-        {
-            "titleColor": "#B9DBA2",
-            "name": "Sonar+D",
-            "id": "7"
+            {
+                "titleColor": "#B9DBA2",
+                "name": "Sonar+D",
+                "id": "7"
         }];
 
 
 
 
-    printRoomLegend = function (circles) {
+        printRoomLegend = function (circles) {
 
-        legendSvgContainer.selectAll("text")
-            .data(jsonCirclesMap)
-            .enter()
-            .append("text")
-            .attr("x", function (d, i) {
-                return (i + 1) * LEGEND_H_MARGIN;
-            })
-            .attr("y", LEGEND_V_MARGIN)
-            .attr("text-anchor", "end")
-            .attr("fill", "#3e78f3")
-            .attr("data-room", function (d) {
-                return d["id"]
-            })
-            .attr("font-family", "Nexa")
-            .attr("class", "opacitySensible legend")
-            .attr("font-size", ".25em")
-            .text(function (d) {
-                return d.name
-            });
-        legendSvgContainer.selectAll("rect")
-            .data(jsonCirclesMap)
-            .enter()
-            .append("rect")
-            .attr("x", function (d, i) {
-                return (i + 1) * LEGEND_H_MARGIN + 4;
-            })
-            .attr("y", LEGEND_V_MARGIN - 4)
-            .attr("width", 4)
-            .attr("class", "opacitySensible legend")
-            .attr("data-room", function (d) {
-                return d["id"]
-            })
-            .attr("height", 4)
-            .style("fill", function (d) {
-                return d.titleColor
-            })
-            .style("stroke", function (d) {
-                return d.titleColor
-            });
-    }
-
-    var legendDiv = d3.select("#legend");
-
-    var legendSvgContainer = legendDiv.append("svg")
-        .attr("class", "legend-svg")
-        .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight)
-        .attr("preserveAspectRatio", "xMinYMin meet");
-
-    printRoomLegend(jsonCirclesMap);
-
-
-
-}
-
-function drawComponents(graph) {
-
-    var link = maing.append("g").selectAll(".link")
-        .data(graph.links).enter();
-    //    console.log("Links");
-    //    console.log(graph.links);
-    link.append("path")
-        .attr("class", "link")
-        .attr("d", path)
-        .style("stroke-width", function (d) {
-            if (d.layer > nowidx) return 0;
-            return Math.max(0, d.dy/1.5);
-        })
-        .style("stroke", function (d) {
-            //            if (d.source.room == 4 || d.target.room == 4) {
-            //return colors(d.source.room);
-            if (d.layer > nowidx) return "#000";
-            return colors(d.source.room);
-
-            //            } else {
-            //                return "#000"
-            //            }
-        })
-        .sort(function (a, b) {
-            return b.dy - a.dy;
-        })
-        .style("opacity",function(d) {
-            if (d.room ==1 || d.room==8) return 0.01;
-        return 0.1;
-        });
-    /*    link.append("title")
-        .text(function (d) {
-            return d.source.name + " → " + d.target.name + "\n" + format(d.value);
-        });
-        */
-
-    var node = maing.append("g").selectAll(".node")
-        .data(graph.nodes)
-        .enter().append("g")
-        .attr("class", "node")
-        .attr("transform", function (d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        });
-    /*        .call(d3.behavior.drag()
-            .origin(function (d) {
-                return d;
-            })
-            .on("dragstart", function () {
-                this.parentNode.appendChild(this);
-            })
-            .on("drag", dragmove));*/
-
-    var sponsors = {
-        "SonarVillage by ESTRELLA DAMM": "Village",
-        "SonarDome by Red BULL Music Academy": "Dome",
-        "SonarHall": "Hall",
-        "Hall+D": "PlusD",
-        "SonarComplex": "Complex"
-    }
-
-    d3.csv("data/artists_by_room.csv", function (data) {
-        artist_data = data;
-        console.log("Artist data read");
-        function view_artist_data(userselection, rect, room) {
-            //    d3.csv("data/artists_by_room.csv", function(data) { // TODO Pasar a memoria
-            var date = timeFromIdx(userselection["layer"]);
-            var filteredData = artist_data.filter(function (d, i) {
-                return (d["DIA"] == date.day &&
-                    sponsors[d["SALA"]] == userselection["fullName"] &&
-                    d["HORA"] == date.time);
-            });
-            console.log(userselection);
-            console.log("filter");
-            console.log(filteredData);
-            if (userselection["room"] == 1 || userselection["room"] == 8) {
-                tooltip("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
-            } else {
-                if (filteredData[0]) {
-                    tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);
-                }
-            }
+            legendSvgContainer.selectAll("text")
+                .data(jsonCirclesMap)
+                .enter()
+                .append("text")
+                .attr("x", function (d, i) {
+                    return (i + 1) * LEGEND_H_MARGIN;
+                })
+                .attr("y", LEGEND_V_MARGIN)
+                .attr("text-anchor", "end")
+                .attr("fill", "#3e78f3")
+                .attr("data-room", function (d) {
+                    return d["id"]
+                })
+                .attr("font-family", "Nexa")
+                .attr("class", "opacitySensible legend")
+                .attr("font-size", ".25em")
+                .text(function (d) {
+                    return d.name
+                });
+            legendSvgContainer.selectAll("rect")
+                .data(jsonCirclesMap)
+                .enter()
+                .append("rect")
+                .attr("x", function (d, i) {
+                    return (i + 1) * LEGEND_H_MARGIN + 4;
+                })
+                .attr("y", LEGEND_V_MARGIN - 4)
+                .attr("width", 4)
+                .attr("class", "opacitySensible legend")
+                .attr("data-room", function (d) {
+                    return d["id"]
+                })
+                .attr("height", 4)
+                .style("fill", function (d) {
+                    return d.titleColor
+                })
+                .style("stroke", function (d) {
+                    return d.titleColor
+                });
         }
 
-     node.append("rect")
-        .attr("height", function (d) {
-            if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
-                return 2;
-            } else {
-                return d.dy;
-            }
-        })
-        .attr("width", sankey.nodeWidth())
-        .attr("class", "tooltipster-default-preview tooltip")
-    //.attr("title","sss")
-    .attr("target", "_blank")
-        .style("fill", function (d) {
+        var legendDiv = d3.select("#legend");
 
-            if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
-                return d.color = colors(8);
-            } else {
-                if (d.room == 1 || d.room == 8) {
-                    return d.color = colors(0);
+        var legendSvgContainer = legendDiv.append("svg")
+            .attr("class", "legend-svg")
+            .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight)
+            .attr("preserveAspectRatio", "xMinYMin meet");
+
+        printRoomLegend(jsonCirclesMap);
+
+    }
+
+    function drawComponents(graph) {
+
+        var link = maing.append("g").selectAll(".link")
+            .data(graph.links).enter();
+        //    console.log("Links");
+        //    console.log(graph.links);
+        link.append("path")
+            .attr("class", "link")
+            .attr("d", path)
+            .style("stroke-width", function (d) {
+                if (d.layer > nowidx) return 0;
+                return Math.max(0, d.dy / 1.5);
+            })
+            .style("stroke", function (d) {
+                //            if (d.source.room == 4 || d.target.room == 4) {
+                //return colors(d.source.room);
+                if (d.layer > nowidx) return "#000";
+                return colors(d.source.room);
+
+                //            } else {
+                //                return "#000"
+                //            }
+            })
+            .sort(function (a, b) {
+                return b.dy - a.dy;
+            })
+            .style("opacity", function (d) {
+                if (d.room == 1 || d.room == 8) return 0.01;
+                return 0.1;
+            });
+
+
+        var node = maing.append("g").selectAll(".node")
+            .data(graph.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function (d) {
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+
+
+        var sponsors = {
+            "SonarVillage by ESTRELLA DAMM": "Village",
+            "SonarDome by Red BULL Music Academy": "Dome",
+            "SonarHall": "Hall",
+            "Hall+D": "PlusD",
+            "SonarComplex": "Complex"
+        }
+
+
+        d3.csv("data/artists_by_room.csv", function (data) {
+            artist_data = data;
+            console.log("Artist data read");
+
+            function get_artist_data(layer, room) {
+                var date = timeFromIdx(layer);
+                var filteredData = artist_data.filter(function (d, i) {
+                    return (d["DIA"] == date.day &&
+                        roomOrder[sponsors[d["SALA"]]] == room &&
+                        d["HORA"] == date.time);
+                });
+                if (room == 1 || room == 8) {
+                    return tooltipContent("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
                 } else {
-                    return d.color = colors(d.room);
+                    if (filteredData[0]) {
+                        return tooltipContent(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);
+                    }
                 }
             }
 
-            //return d.color = d3.scale.ordinal(d.room);
-        })
-        .style("opacity", function (d) {
-            if (d.room == 1 || d.room == 8) { /* Salas marcadas como limbo*/
-                return "0.3";
-            } else if (d.layer > nowidx) {
-                return "1";
+            function view_artist_data(userselection, rect, room) {
+                //    d3.csv("data/artists_by_room.csv", function(data) { // TODO Pasar a memoria
+                var date = timeFromIdx(userselection["layer"]);
+                var filteredData = artist_data.filter(function (d, i) {
+                    return (d["DIA"] == date.day &&
+                        roomOrder[sponsors[d["SALA"]]] == userselection.room && //sponsors[d["SALA"]] == userselection["fullName"] &&
+                        d["HORA"] == date.time);
+                });
+                console.log(userselection);
+                console.log("filter");
+                console.log(filteredData);
+                if (userselection["room"] == 1 || userselection["room"] == 8) {
+                    tooltip("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
+                } else {
+                    if (filteredData[0]) {
+                        tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);
+                    }
+                }
             }
-            //return d.color = d3.scale.ordinal(d.room);
-        })
-        .on("mouseover", function (d) {
-            highlight = drawHighlight(d);
-            view_artist_data(d, this);
-        })
-        .on("mouseout", function (d) {
-            d3.selectAll(".highlightLink").remove();
+
+            node.append("rect")
+                .attr("height", function (d) {
+                    if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
+                        return 2;
+                    } else {
+                        return d.dy;
+                    }
+                })
+                .attr("width", sankey.nodeWidth())
+                .attr("class", "tooltip")
+                .attr("title", function (d) {
+                    return get_artist_data(d.room, d.layer);
+                })
+                .attr("target", "_blank")
+                .style("fill", function (d) {
+
+                    if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
+                        return d.color = colors(8);
+                    } else {
+                        if (d.room == 1 || d.room == 8) {
+                            return d.color = colors(0);
+                        } else {
+                            return d.color = colors(d.room);
+                        }
+                    }
+
+                    //return d.color = d3.scale.ordinal(d.room);
+                })
+                .style("opacity", function (d) {
+                    if (d.room == 1 || d.room == 8) { /* Salas marcadas como limbo*/
+                        return "0.3";
+                    } else if (d.layer > nowidx) {
+                        return "1";
+                    }
+                    //return d.color = d3.scale.ordinal(d.room);
+                })
+                .on("mouseover", function (d) {
+                    highlight = drawHighlight(d);
+                    view_artist_data(d, this);
+                })
+                .on("mouseout", function (d) {
+                    d3.selectAll(".highlightLink").remove();
+                });
+
         });
 
+    }
 
 
-    });
+    function drawHighlight(highlightNode) {
+        graph = {}
+        graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks);
+        var link = maing.append("g").selectAll(".highlightLink")
+            .data(graph.links).enter();
 
+        link.append("path")
+            .attr("class", "highlightLink")
+            .attr("d", path)
+            .style("stroke-width", function (d) {
+                return Math.max(0, d.dy);
+            })
+            .style("fill", "none")
+            .style("stroke", function (d) {
+                return colors(d.source.room);
+            })
+            .sort(function (a, b) {
+                return b.dy - a.dy;
+            })
+            .style("opacity", function (d) {
+                if (d.room == 1 || d.room == 8) return 0.05;
+                return 0.4;
+            });
+
+        return link;
+    }
+
+
+    //// MAIN
 }
-
-
-function drawHighlight(highlightNode) {
-    graph = {}
-    graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks);
-    //        .filter(function(d){return d.value > 0 && d.sy>0 && d.ty >0 ;});
-    //    console.log("highlight:");
-    //    console.log(graph.links);
-    //graph.nodes = [highlightNode];
-
-    //console.log(graph.links.filter(function(d){return d.value > 0;}));
-    var link = maing.append("g").selectAll(".highlightLink")
-        .data(graph.links).enter();
-
-    link.append("path")
-        .attr("class", "highlightLink")
-        .attr("d", path)
-        .style("stroke-width", function (d) {
-            return Math.max(0, d.dy);
-        })
-        .style("fill", "none")
-        .style("stroke", function (d) {
-            return colors(d.source.room);
-        })
-        .sort(function (a, b) {
-            return b.dy - a.dy;
-        })
-        .style("opacity",function(d) {
-            if (d.room==1 || d.room==8) return 0.05;
-            return 0.4;
-        });
-    /*
-    var node = svg.append("g").selectAll(".highlightNode")
-        .data(graph.nodes)
-        .enter().append("g")
-        .attr("class", "highlightNode")
-        .attr("transform", function (d) {
-            return "translate(" + d.x + "," + d.y + ")";
-        });
-
-    node.append("rect")
-        .attr("height", function (d) {
-            return d.dy;
-        })
-        .attr("width", sankey.nodeWidth())
-        .style("fill", function (d) {
-            return d.color = colors(d.room);
-        });
-*/
-    return link;
-}
-
-
-
-
-//);}
-
-
-/*
-"": ""ACTIVIDAD: "No Activity",AFINIDAD: "",DIA: "20",FOTO1: "imgs/artist/no_activity.png",HORA: "22:35",SALA: "SonarComplex",URL: "http://sonar.es/es/2015"
-
-
-color: "#DDB0BF"
-dx: 5.941463414634146
-dy: 18.719918715072883
-fullName: "Hall"
-layer: 9
-name: 74
-room: 3
-row: 2
-sourceLinks: Array[8]
-targetLinks: Array[8]
-value: 12831x: 133.6829268292683y: 319.21746323289955
-
-
-
-*/
-
-
-
-//// MAIN
-
-getDataFromServer();
-
-
-/*window.onmousewheel(
-
-document.attachEvent("on"+mousewheelevt, function(e){alert('Mouse wheel movement detected!')})
-
-    GraphParameters.graphWidth += algo;
-    draw();
-);*/
+    getDataFromServer();
+ 
