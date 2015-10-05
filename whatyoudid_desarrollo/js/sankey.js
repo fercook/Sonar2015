@@ -353,7 +353,6 @@ function draw() {
     var i = 0;
     //$('.tooltip').tooltipster();
 
-<<<<<<< HEAD
     function tooltip(artist_name, img, url) {
         i = i + 1;
         $(document).ready(function () {
@@ -369,316 +368,224 @@ function draw() {
             $('.tooltip').tooltipster('content', contenido);
 
         });
-=======
-
-// create the zoom listener
-var zoomListener = d3.behavior.zoom()
-.scaleExtent([0.33, 1])
-.on("zoom", zoomHandler);
-
-// function for handling zoom event
-function zoomHandler() {
-    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-}
-    // apply the zoom behavior to the svg image
-    zoomListener(svg);
-
-       */
-
-}
 
 
-var i=0;
-
-function tooltip(artist_name,img,url){
-    i=i+1;
-    $(document).ready(function() {
-            //$('.tooltip').tooltipster();
-            $('.tooltip').tooltipster({
-                theme: 'tooltipster-light',
-                interactive: true
-               
-            });
-       
-        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><a href="'+url+'"><strong><p>'+ artist_name +'</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
-
-            $('.tooltip').tooltipster('content',contenido);
-
-
-});
-    
-}
-
-         
-                      
-                      
-                      
-
-
-function tooltip_general(){
-
-     $(document).ready(function() {
-            //$('.tooltip').tooltipster();
-            $('.tooltip').tooltipster({
-                theme: 'tooltipster-light',
-                interactive: true
-      });
-        
- });
-         var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sonar 2015</strong></p><br/>');
->>>>>>> 89c161c36bf54f750f2e9b612e41774c5d15c05a
-
-    }
-
-<<<<<<< HEAD
-    function tooltipContent(artist_name, img, url) {
-        var contenido = '<a href="' + url + '"><img src="' + img + '" style="width:' + "30%" + '" align="left"/></a><a href="' + url + '"><strong><p>' + artist_name + '</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>';
-        return contenido;
-    }
-=======
         //var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists'+i+'</a>');
 }
                     
->>>>>>> 89c161c36bf54f750f2e9b612e41774c5d15c05a
 
 
-    function leyenda() {
+function leyenda() {
 
-        var legendWidth = 400,
-            legendHeight = 100;
-        var LEGEND_V_MARGIN = 8;
-        var LEGEND_H_MARGIN_COLOR = 40;
-        var LEGEND_H_MARGIN = 35;
+    var legendWidth = 400,
+        legendHeight = 100;
+    var LEGEND_V_MARGIN = 8;
+    var LEGEND_H_MARGIN_COLOR = 40;
+    var LEGEND_H_MARGIN = 35;
 
-        var jsonCirclesMap = [
-            {
-                "titleColor": "#575958",
-                "name": "Limbo",
-                "id": "0"
+    var jsonCirclesMap = [
+        {
+            "titleColor": "#575958",
+            "name": "Limbo",
+            "id": "0"
         },
-            {
-                "titleColor": "#DB57D0",
-                "name": "Dome",
-                "id": "1"
+        {
+            "titleColor": "#DB57D0",
+            "name": "Dome",
+            "id": "1"
         },
-            {
-                "titleColor": "#DDB0BF",
-                "name": "Complex",
-                "id": "2"
+        {
+            "titleColor": "#DDB0BF",
+            "name": "Complex",
+            "id": "2"
         },
-            {
-                "titleColor": "#09AE48",
-                "name": "Hall",
-                "id": "3"
+        {
+            "titleColor": "#09AE48",
+            "name": "Hall",
+            "id": "3"
         },
-            {
-                "titleColor": "#7ED96D",
-                "name": "Planta",
-                "id": "4"
+        {
+            "titleColor": "#7ED96D",
+            "name": "Planta",
+            "id": "4"
         },
-            {
-                "titleColor": "#BF0CB9",
-                "name": "Village",
-                "id": "5"
+        {
+            "titleColor": "#BF0CB9",
+            "name": "Village",
+            "id": "5"
         },
-            {
-                "titleColor": "#B9DBA2",
-                "name": "Sonar+D",
-                "id": "7"
+        {
+            "titleColor": "#B9DBA2",
+            "name": "Sonar+D",
+            "id": "7"
         }];
 
 
 
 
-        printRoomLegend = function (circles) {
+    printRoomLegend = function (circles) {
 
-            legendSvgContainer.selectAll("text")
-                .data(jsonCirclesMap)
-                .enter()
-                .append("text")
-                .attr("x", function (d, i) {
-                    return (i + 1) * LEGEND_H_MARGIN;
-                })
-                .attr("y", LEGEND_V_MARGIN)
-                .attr("text-anchor", "end")
-                .attr("fill", "#3e78f3")
-                .attr("data-room", function (d) {
-                    return d["id"]
-                })
-                .attr("font-family", "Nexa")
-                .attr("class", "opacitySensible legend")
-                .attr("font-size", ".25em")
-                .text(function (d) {
-                    return d.name
-                });
-            legendSvgContainer.selectAll("rect")
-                .data(jsonCirclesMap)
-                .enter()
-                .append("rect")
-                .attr("x", function (d, i) {
-                    return (i + 1) * LEGEND_H_MARGIN + 4;
-                })
-                .attr("y", LEGEND_V_MARGIN - 4)
-                .attr("width", 4)
-                .attr("class", "opacitySensible legend")
-                .attr("data-room", function (d) {
-                    return d["id"]
-                })
-                .attr("height", 4)
-                .style("fill", function (d) {
-                    return d.titleColor
-                })
-                .style("stroke", function (d) {
-                    return d.titleColor
-                });
-        }
-
-        var legendDiv = d3.select("#legend");
-
-        var legendSvgContainer = legendDiv.append("svg")
-            .attr("class", "legend-svg")
-            .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight)
-            .attr("preserveAspectRatio", "xMinYMin meet");
-
-        printRoomLegend(jsonCirclesMap);
-
-    }
-
-    function drawComponents(graph) {
-
-        var link = maing.append("g").selectAll(".link")
-            .data(graph.links).enter();
-        //    console.log("Links");
-        //    console.log(graph.links);
-        link.append("path")
-            .attr("class", "link")
-            .attr("d", path)
-            .style("stroke-width", function (d) {
-                if (d.layer > nowidx) return 0;
-                return Math.max(0, d.dy / 1.5);
+        legendSvgContainer.selectAll("text")
+            .data(jsonCirclesMap)
+            .enter()
+            .append("text")
+            .attr("x", function (d, i) {
+                return (i + 1) * LEGEND_H_MARGIN;
+            })
+            .attr("y", LEGEND_V_MARGIN)
+            .attr("text-anchor", "end")
+            .attr("fill", "#3e78f3")
+            .attr("data-room", function (d) {
+                return d["id"]
+            })
+            .attr("font-family", "Nexa")
+            .attr("class", "opacitySensible legend")
+            .attr("font-size", ".25em")
+            .text(function (d) {
+                return d.name
+            });
+        legendSvgContainer.selectAll("rect")
+            .data(jsonCirclesMap)
+            .enter()
+            .append("rect")
+            .attr("x", function (d, i) {
+                return (i + 1) * LEGEND_H_MARGIN + 4;
+            })
+            .attr("y", LEGEND_V_MARGIN - 4)
+            .attr("width", 4)
+            .attr("class", "opacitySensible legend")
+            .attr("data-room", function (d) {
+                return d["id"]
+            })
+            .attr("height", 4)
+            .style("fill", function (d) {
+                return d.titleColor
             })
             .style("stroke", function (d) {
-                //            if (d.source.room == 4 || d.target.room == 4) {
-                //return colors(d.source.room);
-                if (d.layer > nowidx) return "#000";
-                return colors(d.source.room);
-
-                //            } else {
-                //                return "#000"
-                //            }
-            })
-            .sort(function (a, b) {
-                return b.dy - a.dy;
-            })
-            .style("opacity", function (d) {
-                if (d.room == 1 || d.room == 8) return 0.01;
-                return 0.1;
+                return d.titleColor
             });
+    }
+
+    var legendDiv = d3.select("#legend");
+
+    var legendSvgContainer = legendDiv.append("svg")
+        .attr("class", "legend-svg")
+        .attr("viewBox", "0 0 " + legendWidth + " " + legendHeight)
+        .attr("preserveAspectRatio", "xMinYMin meet");
+
+    printRoomLegend(jsonCirclesMap);
 
 
-        var node = maing.append("g").selectAll(".node")
-            .data(graph.nodes)
-            .enter().append("g")
-            .attr("class", "node")
-            .attr("transform", function (d) {
-                return "translate(" + d.x + "," + d.y + ")";
+
+}
+
+function drawComponents(graph) {
+
+    var link = maing.append("g").selectAll(".link")
+        .data(graph.links).enter();
+    //    console.log("Links");
+    //    console.log(graph.links);
+    link.append("path")
+        .attr("class", "link")
+        .attr("d", path)
+        .style("stroke-width", function (d) {
+            if (d.layer > nowidx) return 0;
+            return Math.max(0, d.dy/1.5);
+        })
+        .style("stroke", function (d) {
+            //            if (d.source.room == 4 || d.target.room == 4) {
+            //return colors(d.source.room);
+            if (d.layer > nowidx) return "#000";
+            return colors(d.source.room);
+
+            //            } else {
+            //                return "#000"
+            //            }
+        })
+        .sort(function (a, b) {
+            return b.dy - a.dy;
+        })
+        .style("opacity",function(d) {
+            if (d.room ==1 || d.room==8) return 0.01;
+        return 0.1;
+        });
+    /*    link.append("title")
+        .text(function (d) {
+            return d.source.name + " → " + d.target.name + "\n" + format(d.value);
+        });
+        */
+
+    var node = maing.append("g").selectAll(".node")
+        .data(graph.nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
+        });
+    /*        .call(d3.behavior.drag()
+            .origin(function (d) {
+                return d;
+            })
+            .on("dragstart", function () {
+                this.parentNode.appendChild(this);
+            })
+            .on("drag", dragmove));*/
+
+    var sponsors = {
+        "SonarVillage by ESTRELLA DAMM": "Village",
+        "SonarDome by Red BULL Music Academy": "Dome",
+        "SonarHall": "Hall",
+        "Hall+D": "PlusD",
+        "SonarComplex": "Complex"
+    }
+
+    d3.csv("data/artists_by_room.csv", function (data) {
+        artist_data = data;
+        console.log("Artist data read");
+        function view_artist_data(userselection, rect, room) {
+            //    d3.csv("data/artists_by_room.csv", function(data) { // TODO Pasar a memoria
+            var date = timeFromIdx(userselection["layer"]);
+            var filteredData = artist_data.filter(function (d, i) {
+                return (d["DIA"] == date.day &&
+                    sponsors[d["SALA"]] == userselection["fullName"] &&
+                    d["HORA"] == date.time);
             });
-
-
-        var sponsors = {
-            "SonarVillage by ESTRELLA DAMM": "Village",
-            "SonarDome by Red BULL Music Academy": "Dome",
-            "SonarHall": "Hall",
-            "Hall+D": "PlusD",
-            "SonarComplex": "Complex"
+            console.log(userselection);
+            console.log("filter");
+            console.log(filteredData);
+            if (userselection["room"] == 1 || userselection["room"] == 8) {
+                tooltip("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
+            } else {
+                if (filteredData[0]) {
+                    tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);
+                }
+            }
         }
 
+     node.append("rect")
+        .attr("height", function (d) {
+            if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
+                return 2;
+            } else {
+                return d.dy;
+            }
+        })
+        .attr("width", sankey.nodeWidth())
+        .attr("class", "tooltipster-default-preview tooltip")
+    //.attr("title","sss")
+    .attr("target", "_blank")
+        .style("fill", function (d) {
 
-        d3.csv("data/artists_by_room.csv", function (data) {
-            artist_data = data;
-            console.log("Artist data read");
-
-            function get_artist_data(layer, room) {
-                var date = timeFromIdx(layer);
-                var filteredData = artist_data.filter(function (d, i) {
-                    return (d["DIA"] == date.day &&
-                        roomOrder[sponsors[d["SALA"]]] == room &&
-                        d["HORA"] == date.time);
-                });
-                if (room == 1 || room == 8) {
-                    return tooltipContent("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
+            if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
+                return d.color = colors(8);
+            } else {
+                if (d.room == 1 || d.room == 8) {
+                    return d.color = colors(0);
                 } else {
-                    if (filteredData[0]) {
-                        return tooltipContent(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);
-                    }
+                    return d.color = colors(d.room);
                 }
             }
 
-            function view_artist_data(userselection, rect, room) {
-                //    d3.csv("data/artists_by_room.csv", function(data) { // TODO Pasar a memoria
-                var date = timeFromIdx(userselection["layer"]);
-                var filteredData = artist_data.filter(function (d, i) {
-                    return (d["DIA"] == date.day &&
-                        roomOrder[sponsors[d["SALA"]]] == userselection.room && //sponsors[d["SALA"]] == userselection["fullName"] &&
-                        d["HORA"] == date.time);
-                });
-                console.log(userselection);
-                console.log("filter");
-                console.log(filteredData);
-                if (userselection["room"] == 1 || userselection["room"] == 8) {
-                    tooltip("Out of Sonar 2015", "imgs/artist/general.png", "http://sonar.es/en");
-                } else {
-                    if (filteredData[0]) {
-                        tooltip(filteredData[0].ACTIVIDAD, filteredData[0].FOTO1, filteredData[0].URL);
-                    }
-                }
-            }
-
-<<<<<<< HEAD
-            node.append("rect")
-                .attr("height", function (d) {
-                    if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
-                        return 2;
-                    } else {
-                        return d.dy;
-                    }
-                })
-                .attr("width", sankey.nodeWidth())
-                .attr("class", "tooltip")
-                .attr("title", function (d) {
-                    return get_artist_data(d.room, d.layer);
-                })
-                .attr("target", "_blank")
-                .style("fill", function (d) {
-
-                    if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
-                        return d.color = colors(8);
-                    } else {
-                        if (d.room == 1 || d.room == 8) {
-                            return d.color = colors(0);
-                        } else {
-                            return d.color = colors(d.room);
-                        }
-                    }
-
-                    //return d.color = d3.scale.ordinal(d.room);
-                })
-                .style("opacity", function (d) {
-                    if (d.room == 1 || d.room == 8) { /* Salas marcadas como limbo*/
-                        return "0.3";
-                    } else if (d.layer > nowidx) {
-                        return "1";
-                    }
-                    //return d.color = d3.scale.ordinal(d.room);
-                })
-                .on("mouseover", function (d) {
-                    highlight = drawHighlight(d);
-                    view_artist_data(d, this);
-                })
-                .on("mouseout", function (d) {
-                    d3.selectAll(".highlightLink").remove();
-                });
-=======
             //return d.color = d3.scale.ordinal(d.room);
         })
         .style("opacity", function (d) {
@@ -703,39 +610,64 @@ function tooltip_general(){
 
 
     });
->>>>>>> 89c161c36bf54f750f2e9b612e41774c5d15c05a
 
+}
+
+
+function drawHighlight(highlightNode) {
+    graph = {}
+    graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks);
+    //        .filter(function(d){return d.value > 0 && d.sy>0 && d.ty >0 ;});
+    //    console.log("highlight:");
+    //    console.log(graph.links);
+    //graph.nodes = [highlightNode];
+
+    //console.log(graph.links.filter(function(d){return d.value > 0;}));
+    var link = maing.append("g").selectAll(".highlightLink")
+        .data(graph.links).enter();
+
+    link.append("path")
+        .attr("class", "highlightLink")
+        .attr("d", path)
+        .style("stroke-width", function (d) {
+            return Math.max(0, d.dy);
+        })
+        .style("fill", "none")
+        .style("stroke", function (d) {
+            return colors(d.source.room);
+        })
+        .sort(function (a, b) {
+            return b.dy - a.dy;
+        })
+        .style("opacity",function(d) {
+            if (d.room==1 || d.room==8) return 0.05;
+            return 0.4;
+        });
+    /*
+    var node = svg.append("g").selectAll(".highlightNode")
+        .data(graph.nodes)
+        .enter().append("g")
+        .attr("class", "highlightNode")
+        .attr("transform", function (d) {
+            return "translate(" + d.x + "," + d.y + ")";
         });
 
-    }
+    node.append("rect")
+        .attr("height", function (d) {
+            return d.dy;
+        })
+        .attr("width", sankey.nodeWidth())
+        .style("fill", function (d) {
+            return d.color = colors(d.room);
+        });
+*/
+    return link;
+}
 
 
-    function drawHighlight(highlightNode) {
-        graph = {}
-        graph.links = highlightNode.sourceLinks.concat(highlightNode.targetLinks);
-        var link = maing.append("g").selectAll(".highlightLink")
-            .data(graph.links).enter();
 
-        link.append("path")
-            .attr("class", "highlightLink")
-            .attr("d", path)
-            .style("stroke-width", function (d) {
-                return Math.max(0, d.dy);
-            })
-            .style("fill", "none")
-            .style("stroke", function (d) {
-                return colors(d.source.room);
-            })
-            .sort(function (a, b) {
-                return b.dy - a.dy;
-            })
-            .style("opacity", function (d) {
-                if (d.room == 1 || d.room == 8) return 0.05;
-                return 0.4;
-            });
 
-        return link;
-    }
+//);}
 
 
     //// MAIN
