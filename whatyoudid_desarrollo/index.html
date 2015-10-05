@@ -19,6 +19,8 @@
         document.write('<'+'link rel="stylesheet" href="css/landing_safari.css" />');
     }
 </script>
+    
+
 
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -36,7 +38,7 @@
 <a href="#menu" id="toggle"><span></span></a>
 <div id="menu">
   <ul>
-    <li><a href="#">Homes</a></li>
+    <li><a href="#">Home</a></li>
     <li><a href="now.html">Now</a></li>
     <li><a href="your_activity.html">You</a></li>
     <li><a href="sankey.html">Flow</a></li>
@@ -54,44 +56,11 @@
        </div>
 </div>
     
-<!--header>
-  <button><i class="fa fa-bars"></i></button>  <!-- nMenu -->
-<!--/header-->
-    
-<!--nav>
-  <ul>
-    <li><a href="#"> Right now...</a></li>
-    <li><a href="#"> People flow</a></li>
-    <li><a href="#"> Your activity</a></li>
-    <!--li><a href="#"> cosas</a></li-->
-  <!--/ul>
-</nav-->
-    
-
-<!--nav class="menu">
-  <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open"/>
-  <label class="menu-open-button" for="menu-open">
-    <span class="hamburger hamburger-1"></span>
-    <span class="hamburger hamburger-2"></span>
-    <span class="hamburger hamburger-3"></span>
-  </label>
-
-
-  <a href="index.html" class="menu-item"><i class="fa fa-home"></i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-facebook"></i></a>
-  <a href="sankey.html" class="menu-item"><i class="fa">flow</i> </a>
-  <a href="#" class="menu-item"> <i class="fa ">you</i> </a>
-  <a href="#" class="menu-item"> <i class="fa">now</i> </a>
-  <a href="#" class="menu-item"> <i class="fa fa-twitter"></i> </a>
-  
-
-
-</nav-->
-    
     
 
 
-
+<!-- menu style -->
+<script src='js/mainmenu_index.js'></script>
     
     <script>
         var w = window.innerWidth,
@@ -135,7 +104,12 @@
             else { Parameters.particles= 300; }
             update();
             });
-
+        
+        
+        
+        var theToggle = document.getElementById('toggle');
+        toggleClass(theToggle, 'on');
+     
     </script>
     <script src="flocks/flock.js"></script>
 
@@ -152,8 +126,7 @@
 
     
 <script src='http://codepen.io/assets/libs/fullpage/jquery.js'></script>
-<!-- menu style -->
-<script src='js/mainmenu_index.js'></script>
+
 
 
     

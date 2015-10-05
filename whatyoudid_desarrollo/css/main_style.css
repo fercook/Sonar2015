@@ -318,6 +318,10 @@ main article p {
           transition-delay: 0.3s;
 }
 
+#svg img{
+    overflow: visible;
+    z-index: 99999999999999999999999999999;
+}
 
 
 /*Footer    */

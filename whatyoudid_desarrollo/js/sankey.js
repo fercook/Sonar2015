@@ -79,6 +79,23 @@ var jsonCirclesMap = [
 
 
 
+function put_time(){
+    
+    var jj = //d3.selectAll("rect")//
+              d3.select("#svg")  //rect
+               // .enter()
+                .append("svg:image")
+                //.attr("xlink:href", "../imgs/time.png")
+                .attr("xlink:href","http://www.2dcodeabode.com/wp-content/uploads/2010/07/129130-simple-red-square-icon-media-media2-arrow-down-300x300.png")
+                .attr("src","http://www.2dcodeabode.com/wp-content/uploads/2010/07/129130-simple-red-square-icon-media-media2-arrow-down-300x300.png")
+                //.attr("style","overflow:visible;")
+                //.attr("x", "60")
+                //.attr("y", "60")
+                .attr("width", "250")
+                .attr("height", "250");
+    
+}
+
 function getDataFromServer() {
     $.ajax("http://visualization-case.bsc.es/getGraph.jsp?type=15&callback=?", {
         dataType: "jsonp",
@@ -287,6 +304,7 @@ function draw() {
 
     svg = d3.select("#svg_main").append("svg")
         .attr("preserveAspectRatio", "xMidYMid")
+        .attr("id","lcf")
         .attr("viewBox", "0 0 " + GraphParameters.graphWidth + " " + height)
         .attr("width", GraphParameters.graphWidth)
         .attr("height", height);
@@ -335,6 +353,7 @@ function draw() {
     var i = 0;
     //$('.tooltip').tooltipster();
 
+<<<<<<< HEAD
     function tooltip(artist_name, img, url) {
         i = i + 1;
         $(document).ready(function () {
@@ -350,13 +369,77 @@ function draw() {
             $('.tooltip').tooltipster('content', contenido);
 
         });
+=======
+
+// create the zoom listener
+var zoomListener = d3.behavior.zoom()
+.scaleExtent([0.33, 1])
+.on("zoom", zoomHandler);
+
+// function for handling zoom event
+function zoomHandler() {
+    svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+}
+    // apply the zoom behavior to the svg image
+    zoomListener(svg);
+
+       */
+
+}
+
+
+var i=0;
+
+function tooltip(artist_name,img,url){
+    i=i+1;
+    $(document).ready(function() {
+            //$('.tooltip').tooltipster();
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-light',
+                interactive: true
+               
+            });
+       
+        var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><a href="'+url+'"><strong><p>'+ artist_name +'</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>');
+
+            $('.tooltip').tooltipster('content',contenido);
+
+
+});
+    
+}
+
+         
+                      
+                      
+                      
+
+
+function tooltip_general(){
+
+     $(document).ready(function() {
+            //$('.tooltip').tooltipster();
+            $('.tooltip').tooltipster({
+                theme: 'tooltipster-light',
+                interactive: true
+      });
+        
+ });
+         var contenido = $('<a href="+http://sonar.es/en"><img src="imgs/artist/general.png" style="width:'+"30%" +'" align="left"/></a><strong><p>Out of Sonar 2015</strong></p><br/>');
+>>>>>>> 89c161c36bf54f750f2e9b612e41774c5d15c05a
 
     }
 
+<<<<<<< HEAD
     function tooltipContent(artist_name, img, url) {
         var contenido = '<a href="' + url + '"><img src="' + img + '" style="width:' + "30%" + '" align="left"/></a><a href="' + url + '"><strong><p>' + artist_name + '</p></strong></a><br/><a href="recommend.html" id="kkk">Similar artists</a>';
         return contenido;
     }
+=======
+        //var contenido = $('<a href="'+url+'"><img src="'+img+'" style="width:'+"30%" +'" align="left"/></a><strong><p>'+ artist_name +'</strong></p><br/><a href="recommend.html" id="kkk">Similar artists'+i+'</a>');
+}
+                    
+>>>>>>> 89c161c36bf54f750f2e9b612e41774c5d15c05a
 
 
     function leyenda() {
@@ -551,6 +634,7 @@ function draw() {
                 }
             }
 
+<<<<<<< HEAD
             node.append("rect")
                 .attr("height", function (d) {
                     if (d.layer > nowidx) { /// TODO Arreglar para pillar tiempo actual
@@ -594,6 +678,32 @@ function draw() {
                 .on("mouseout", function (d) {
                     d3.selectAll(".highlightLink").remove();
                 });
+=======
+            //return d.color = d3.scale.ordinal(d.room);
+        })
+        .style("opacity", function (d) {
+            if (d.room == 1 || d.room == 8) { /* Salas marcadas como limbo*/
+                return "0.3";
+            } else if (d.layer > nowidx) {
+                return "1";
+            }
+            //return d.color = d3.scale.ordinal(d.room);
+        })
+        .on("mouseover", function (d) {
+            highlight = drawHighlight(d);
+            view_artist_data(d, this);
+        })
+        .on("mouseout", function (d) {
+            d3.selectAll(".highlightLink").remove();
+        });
+    
+    
+    put_time();
+
+
+
+    });
+>>>>>>> 89c161c36bf54f750f2e9b612e41774c5d15c05a
 
         });
 
