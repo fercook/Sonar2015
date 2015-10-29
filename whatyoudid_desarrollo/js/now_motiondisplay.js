@@ -90,7 +90,7 @@ MotionDisplay.prototype.showOnlyCommunication = function() {
         this.field.oldMagnitudes=this.field.magnitudes;
         this.field.magnitudes = this.field.magnitudes.map(function(num,i){return i%3==0? 0:num;});
         this.field.aggregateSpeeds(this.field.magnitudes);
-    } 
+    }
 }
 
 
@@ -268,7 +268,7 @@ MotionDisplay.prototype.filter = function(filterName){
      var h = this.canvas.height;
 
      var data = g.getImageData(0,0,w,h);
-    
+
      for (var xy = 0; xy < h*w; xy++) {
          var d = data.data[xy]/255.0;
          if (d>=0.5) {

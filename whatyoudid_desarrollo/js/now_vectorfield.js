@@ -64,70 +64,10 @@ var VectorField = function(field, x0, y0, x1, y1,maxLen) {
 };
 
 /**
- * Reads data from raw object in form:
- * {
- *   x0: -126.292942,
- *   y0: 23.525552,
- *   x1: -66.922962,
- *   y1: 49.397231,
- *   gridWidth: 501.0,
- *   gridHeight: 219.0,
- *   field: [
- *     0,0,
- *     0,0,
- *     ... (list of vectors)
- *   ]
- * }
- *
- * If the correctForSphere flag is set, we correct for the
- * distortions introduced by an equirectangular projection.
- */
-VectorField.read = function(data, correctForSphere) {
-    var field = [];
-    var w = data.gridWidth;
-    var h = data.gridHeight;
-    var n = 2 * w * h;
-    var i = 0;
-    // OK, "total" and "weight"
-    // are kludges that you should totally ignore,
-    // unless you are interested in the average
-    // vector length on vector field over lat/lon domain.
-    var total = 0;
-    var weight = 0;
-    for (var x = 0; x < w; x++) {
-        field[x] = [];
-        for (var y = 0; y < h; y++) {
-            var vx = data.field[i++];
-            var vy = data.field[i++];
-            var v = new Vector(vx, vy);
-            // Uncomment to test a constant field:
-            // v = new Vector(10, 0);
-            if (correctForSphere) {
-                var ux = x / (w - 1);
-                var uy = y / (h - 1);
-                var lon = data.x0 * (1 - ux) + data.x1 * ux;
-                var lat = data.y0 * (1 - uy) + data.y1 * uy;
-                var m = Math.PI * lat / 180;
-                var length = v.length();
-                if (length) {
-                total += length * m;
-                weight += m;
-            }
-                v.x /= Math.cos(m);
-                v.setLength(length);
-            }
-            field[x][y] = v;
-        }
-    }
-    var result = new VectorField(field, data.x0, data.y0, data.x1, data.y1);
-  //window.console.log('total = ' + total);
-    //window.console.log('weight = ' + weight);
-  if (total && weight) {
+ * Reads data from png files where RGB are used to annotate xyz strengths of vectors,
+   aka a normals file. In this case B==0 always as we have two dimensional arrows
 
-      result.averageLength = total / weight;
-    }
-    return result;
-};
+ */
 
 
 
@@ -166,8 +106,9 @@ VectorField.gridFromNormals = function(bounds, masks, gridSize, callback) {
             img.src=="http://localhost/whatyoudid/imgs/now/NormalFill_Planta.png") {
                 sx=-1; sy=1;}
         else { sx=1; sy=-1;}
-        console.log(loading+img.src+":"+data.data[0]+","+data.data[1]);
+        //console.log(loading+img.src+":"+data.data[0]+","+data.data[1]);
         loading--;
+        percent = (17.0-loading)/17;
         //console.log("x:"+data.data[w*4/2]+", y:"+data.data[h*4/2]);
             for (var y = 0; y < h; y++) {
                 for (var x = 0; x < w; x++) {
@@ -292,6 +233,8 @@ VectorField.constant = function(dx, dy, x0, y0, x1, y1,maxlen) {
     return field;
 }
 
+
+// PREVIOUS ATTEMPTS DO NOT WORK SO WELL, we went with the normals idea
 VectorField.circle = function(maxspeed,bounds,params) {
     var x0=bounds.x0, y0=bounds.y0, x1=bounds.x1, y1=bounds.y1;
     var field = new VectorField([[]], x0, y0, x1, y1);

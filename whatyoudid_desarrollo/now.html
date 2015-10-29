@@ -88,8 +88,9 @@
 
     <div id='roomLegend'>
 
-    <div id="timeStamp">Last measurement:
+    <div id="timeStamp">Measurement at:
         <br> <div id="hora">time</div>
+        <div id="slider" class="slider"></div>
         </div>
 
     <form>
@@ -175,27 +176,27 @@
 <script type="application/javascript">
 
 var loading = 17;
-
-var step = 0;
+var percent = 0;
+var lastText = "";
 function showLoading() {
+    //if (percent < 1.0) requestAnimationFrame(showLoading);
     var canvas = document.getElementById('display');
     if (canvas) {
-      var g = canvas.getContext('2d');
-      var w = canvas.width;
-      var h = canvas.height;
-      g.fillStyle = 'rgba(0,0,0,0.5)';
-      g.fillRect(0, 0, w, h);
-      step++;
-        console.log(loading);
+        var g = canvas.getContext('2d');
+        var w = canvas.width;
+        var h = canvas.height;
+        var num = 255*percent.toFixed(2);
+        g.fillStyle = '#000000';
+        g.fillRect(0,0,w,h);
         var alpha = 0.5; //.3 + (1 + Math.sin(step * .3)) / 3;
-        g.fillStyle = 'rgba(255, 255, 255, '  + alpha + ')';
         g.textAlign = 'center';
         g.font = '14pt Verdana';
-        g.fillText('Loading '+(100*(17.0-loading)/17)+'%', w/2, h/2);
+        g.fillStyle = 'rgba(255, 255, 255, '  + alpha + ')';
+        lastText = 'Loading ';//+(100*percent.toFixed(2))+'%';
+        g.fillText(lastText, 0.95*w/2, 0.85*h/2);
+        console.log(lastText);
   }
-    if (loading) {
-        setTimeout('showLoading()', 50);
-    }
+
 }
 
 showLoading();
